@@ -5,6 +5,21 @@ import ZoomIn from 'material-ui/svg-icons/action/zoom-in';
 
 
 export class ProductGridView extends Component {
+    state = {
+        isShowDialog: false,
+        currentImage: ''
+    }
+    handelOpen = (img) => {
+        this.setState({
+            isShowDialog: true,
+            currentImage: img.largeImageURL
+        })
+    }
+    handleClose = () => {
+        this.setState({
+            isShowDialog: false
+        })
+    }
   render() {
       let imageListContent;
       const {images, cols} = this.props;
@@ -21,7 +36,7 @@ export class ProductGridView extends Component {
                             </span>
                         }
                         actionIcon = {
-                            <IconButton>
+                            <IconButton onClick = {() => this.handelOpen(image)}>
                                 <ZoomIn/>
                             </IconButton>
                         }
@@ -33,9 +48,22 @@ export class ProductGridView extends Component {
           )
       }
       else imageListContent = null;
+      const actions = [
+        <FlatButton onClick = {this.handleClose} primary = {true}>Close</FlatButton>
+      ]
     return (
       <div>
         {imageListContent}
+        <Dialog
+            style = {{position: 'static', width: '100%', height: '100%'}}
+
+            actions = {actions}
+            modal = {false}
+            open = {this.state.isShowDialog}
+            onRequestClose = {this.handleClose}
+        >
+        <img src = {this.state.currentImage} alt = ''/>
+        </Dialog>
       </div>
     )
   }

@@ -1,7 +1,8 @@
 # DA
 
 sudo npm cache clean -f
-sudo npm install -g n
+//sudo npm install -g n
+npm install -g npm
 sudo n stable
 
 npm install -g npm@latest

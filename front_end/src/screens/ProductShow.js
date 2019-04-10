@@ -9,7 +9,7 @@ export class ProductShow extends Component {
         amount: 15,
         apiUrl: 'https://pixabay.com/api/',
         apiKey: '12139360-3ed8cea9be791129340f6026f', 
-        images: []
+        images: [],
     }
 
     onChangeText = (e) => {
