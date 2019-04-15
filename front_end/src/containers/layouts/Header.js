@@ -16,6 +16,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import logo from '../../logo.png'
 
 const styles1 = {
   
@@ -167,14 +168,18 @@ class PrimarySearchAppBar extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
+        <AppBar position="static" style = {{maxHeight:'50px', flexDirection:'row', paddingBottom:'3px'}} color = 'default' display = 'flex' >
+        <div style = {{flex:2}}>
+          <img src = {logo} alt = 'logo' style = {{position: 'relative' , left:'0px',bottom:'0px', top:'0px',height:'100%', objectFit: 'fill', margin:'1px'}}/>
+        </div>
+          <Toolbar style = {{paddingBottom:'5px', marginBottom:'5px', display:'flex', flexDirection:'row' ,flex:'10'}}>
+            {/* <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
               Material-UI
-            </Typography>
+            </Typography> */}
+              
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

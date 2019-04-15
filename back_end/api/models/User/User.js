@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const config = require('../../config');
+const config = require('../../../config');
 
 const UserSchema = mongoose.Schema({
         username: {

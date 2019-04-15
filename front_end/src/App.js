@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import Header from './containers/layouts/Header';
 import ProductShow from './screens/ProductShow';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {Provider} from 'react-redux';
+import store from './redux/store'
 import './App.css';
+import Router from './screens/router';
+import LoginDialog from './components/LoginDialog';
+import HeaderTop from './containers/layouts/HeaderTop'
 
 class App extends Component {
+  componentDidMount(){
+    
+  }
   render() {
     return (
-      <MuiThemeProvider>
-        <div>
-          <Header/>
-          <ProductShow/>
-        </div>
-      </MuiThemeProvider>
+      <Provider store = {store}>
+        <MuiThemeProvider>
+            <Header/>
+            <Router/>
+            <LoginDialog/>
+        </MuiThemeProvider>
+      </Provider>
     );
   }
 }
