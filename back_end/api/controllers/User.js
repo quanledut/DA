@@ -38,6 +38,16 @@ const register = (req, res) => {
     }
 }
 
+const checkToken = (req, res) => {
+    let {token} = req.body;
+    jwt.verify(token, config.secretKey,(err,decoded) => {
+        if(decoded) {
+            res.status(200).send(decoded);
+        }
+        else res.status(404).send(err);
+    })
+}
+
 const login = (req, res) => {
     let {username, password} = req.body;
     User.findOne({username}, (err, user)=>{
@@ -65,5 +75,6 @@ const login = (req, res) => {
 module.exports = {
     find,
     register,
-    login
+    login,
+    checkToken
 }

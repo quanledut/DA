@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Dialog, TextField, Fab, Paper, Typography, Button, Link} from '@material-ui/core';
+import {Dialog, TextField, Paper, Typography, Button, Link} from '@material-ui/core';
 import {Send, Cancel} from '@material-ui/icons';
 import {connect} from 'react-redux'
 
@@ -41,7 +41,7 @@ export class LoginDialog extends Component {
     return (
         <Dialog open = {open} style = {{}}>
             <Paper style = {{display: 'flex', flexDirection: 'column', justifyContent: 'center', width:'500px'}}>
-                <Typography variant = 'display2' centered style = {{textAlign:'center'}}>Login</Typography>
+                <Typography variant = 'display2' style = {{textAlign:'center'}}>Login</Typography>
                 <TextField
                     error = {this.state.emailErr}
                     name = 'email'

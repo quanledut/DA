@@ -16,7 +16,7 @@ export class ProductShow extends Component {
         this.setState({
             [e.target.name]: e.target.value
         }, () => {
-            Axios.get(`${this.state.apiUrl}\?key=${this.state.apiKey}&q=${this.state.searchText}
+            Axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}
                 &image_type=photo&per_page=${this.state.amount}&safesearch=true`)
                 .then(res => {
                     this.setState({images: res.data.hits})
