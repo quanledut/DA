@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -9,8 +8,9 @@ import {
 } from '@material-ui/icons';
 import { blue, red, purple } from '@material-ui/core/colors';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { connect } from 'react-redux'
-
+import { connect } from 'react-redux';
+import LoginDialog from '../../components/LoginDialog';
+import SignUpDialog from '../../components/SignUpDialog'
 
 const styles = (theme) => ({
   root: {
@@ -18,7 +18,8 @@ const styles = (theme) => ({
     width: '100%',
   },
   appBar: {
-    color: purple
+    color: purple,
+    width:'100%'
   },
   grow: {
     flexGrow: 1,
@@ -46,10 +47,47 @@ const styles = (theme) => ({
   },
 });
 
-class ButtonAppBar extends Component {
+class Header extends React.Component {
   state = {
-    mobileMoreAnchorEl: {}
+    accountAnchorEl: null,
+    isShowMenu: false,
+    isShowAccount: false,
+    isShowLogin: false
   }
+
+  handleUserOpen = e => {
+    this.setState({ accountAnchorEl: e.currentTarget })
+  }
+
+  profilePressHandle = () => {
+    this.handleAccountClose();
+    this.props.showSignUpDialog();
+  }
+
+  loginPressHandle = () => {
+    this.setState({
+      isShowLogin: true
+    })
+  }
+
+  requestLogin = (username, password, remember) => {
+    this.hideLoginForm();
+  }
+
+  hideLoginForm = () => {
+    this.setState({ isShowLogin: false })
+  }
+
+  logoutPressHandle = () => {
+    this.handleAccountClose();
+    this.props.handleLogout();
+    //this.props.showSignUpDialog();
+  }
+
+  handleAccountClose = () => {
+    this.setState({ accountAnchorEl: null })
+  }
+
   render() {
     const { classes } = this.props;
     const theme = createMuiTheme({
@@ -61,9 +99,48 @@ class ButtonAppBar extends Component {
       typography: { useNextVariants: true },
     });
 
+    const renderAccountMenu = (this.props.role ?
+      (<Menu
+        anchorEl={this.state.accountAnchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        getContentAnchorEl={null}
+        open={Boolean(this.state.accountAnchorEl)}
+        onClose={this.handleAccountClose}
+      >
+        <MenuItem onClick={this.profilePressHandle}>
+          <IconButton color="inherit">
+            <Person />
+          </IconButton>
+          <p>Thông tin cá nhân</p>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={this.logoutPressHandle}>
+          <IconButton color="inherit">
+            <BubbleChart />
+          </IconButton>
+          <p>Đăng xuất</p>
+        </MenuItem>
+      </Menu>)
+      :
+      ((<Menu
+        anchorEl={this.state.accountAnchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        // transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        getContentAnchorEl={null}
+        open={Boolean(this.state.accountAnchorEl)}
+        onClose={this.handleAccountClose}
+      >
+        <MenuItem onClick={this.loginPressHandle}>
+          <IconButton color="inherit">
+            <Person />
+          </IconButton>
+          <p>Đăng nhập</p>
+        </MenuItem>
+      </Menu>))
+    );
+
     return (
-      <div>
-        <MuiThemeProvider className={classes.root} theme={theme} position='fixed'>
+        <MuiThemeProvider theme={theme}>
           <AppBar className={classes.appBar} position='static'>
             <Toolbar >
               <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.toggleMenuDisplay}>
@@ -78,8 +155,19 @@ class ButtonAppBar extends Component {
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>
-                <IconButton onClick={this.handleUserOpen}>
-                  <Avatar alt='User' src={this.props.isLoggedIn ? '' : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
+                <IconButton
+                  aria-owns='material-appbar'
+                  aria-haspopup="true"
+                  onClick={this.handleUserOpen}
+                  color="inherit"
+                  display='flex'
+                >
+                  <Avatar id='userAvatar' alt='User' src={this.props.isLoggedIn ? '' : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
+                  <div style={{ display: 'flex', flexDirection: 'column',right: -10, marginLeft: 10, justifyContent: 'left' }}>
+                    <label htmlFor='userAvatar' style={{ fontSize: 15 }}>{!this.props.email ? 'example@gmail.com' : this.props.email}</label>
+                    <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{!this.props.role ? 'Guess' : this.props.role == 'admin' ? 'Admin' : 'Employee'}</label>
+                  </div>
+
                 </IconButton>
               </div>
               <div className={classes.isMobileMenu}>
@@ -89,57 +177,18 @@ class ButtonAppBar extends Component {
               </div>
             </Toolbar>
           </AppBar>
+          {renderAccountMenu}
+          <LoginDialog
+            open={this.state.isShowLogin}
+            hideLoginForm={this.hideLoginForm}
+            requestLogin={this.requestLogin}
+          />
+          <SignUpDialog
+            open={this.props.isShowSignUp}
+            closeDialogFormHandle={this.props.hideSignUpDialog}
+          />
         </MuiThemeProvider>
-        {renderAccountMenu}
-      </div>
     );
-
-    const handleUserOpen = e => {
-      this.setState({ mobileMoreAnchorEl: e.currentTarget },(err,done) => {
-        this.props.toggleAccountDisplay();
-      }); 
-    }
-
-    const renderAccountMenu = (this.props.isLoggedIn ?
-      (<Menu
-        anchorEl={this.state.mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={this.props.isUserPopupOpen}
-      // onClose={this.handleMenuClose}
-      >
-        <MenuItem onClick={this.props.toggleAccountDisplay}>
-          <IconButton color="inherit">
-            <Person />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={this.props.toggleAccountDisplay}>
-          <IconButton color="inherit">
-            <BubbleChart />
-          </IconButton>
-          <p>Logout</p>
-        </MenuItem>
-      </Menu>)
-      :
-      ((<Menu
-        anchorEl={this.state.mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={this.props.isUserPopupOpen}
-        onClose={this.handleMenuClose}
-      >
-        <Divider />
-        <MenuItem onClick={this.props.toggleAccountDisplay}>
-          <IconButton color="inherit">
-            <BubbleChart />
-          </IconButton>
-          <p>Logout</p>
-        </MenuItem>
-      </Menu>))
-    );
-
   }
 }
 
@@ -148,21 +197,26 @@ const mapState2Props = (state) => {
     mail: state.PageReducer.mail,
     order: state.PageReducer.order,
     isLoggedIn: state.LoginReducer.isLoggedIn,
-    isAdmin: state.LoginReducer.isAdmin,
-    isUserPopupOpen: state.PageReducer.isUserPopupOpen
+    role: state.LoginReducer.role,
+    isShowSignUp: state.PageReducer.isShowSignUp,
+    email: state.LoginReducer.email
   }
 }
 
 const mapDispatch2Props = (dispatch) => {
   return {
-    toggleMenuDisplay: () => {
-      console.log('Menu pressed')
-      return dispatch({ type: 'TOGGLE_MENU_DISPLAY' })
-    },
-    toggleAccountDisplay: () => {
-      return dispatch({ type: 'TOGGLE_ACCOUNT_DISPLAY' })
-    }
+    hideSignUpDialog: () => { return dispatch({ type: 'HIDE_SIGNUP_DIALOG' }) },
+    showSignUpDialog: () => { return dispatch({ type: 'SHOW_SIGNUP_DIALOG' }) },
+    toggleMenuDisplay: () => { return dispatch({ type: 'TOGGLE_MENU_DISPLAY' }) },
+    handleLogout: () => {return dispatch({type: 'HANDLE_LOGOUT'})}
   }
 }
 
-export default connect(mapState2Props, mapDispatch2Props)(withStyles(styles)(ButtonAppBar));
+Header.propTypes = {
+  mail: PropTypes.number.isRequired,
+  order: PropTypes.number.isRequired,
+  role: PropTypes.string,
+  isShowSignUp: PropTypes.bool.isRequired
+}
+
+export default connect(mapState2Props, mapDispatch2Props)(withStyles(styles)(Header));

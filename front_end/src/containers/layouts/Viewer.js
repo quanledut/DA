@@ -4,24 +4,26 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
-import { withStyles, Paper } from '@material-ui/core'
-import PageReducer from '../../redux/reducers/PageReducer';
+import { withStyles, Paper } from '@material-ui/core';
 import classNames from 'classnames'
-import { Inbox as InboxIcon, Mail as MailIcon } from '@material-ui/icons'
+import { Menu } from '../../data/MenuBar'
+import ScreenRouter from '../../screens/router';
+
 const styles = (theme) => ({
-	container: {
+	root: {
 		display: 'flex'
 	},
 	content: {
 		flexGrow: 1,
-		backgroundColor: theme.palette.background.default,
-		padding: theme.spacing.unit * 2,
+		padding: 2
 	},
 	drawer: {
 		flexShrink: 0,
 		width: theme.spacing.unit * 25,
+		height: '100%',
 		whiteSpace: 'nowrap',
 		position: 'relative',
+		display: 'flex'
 	},
 	drawerOpen: {
 		width: theme.spacing.unit * 25,
@@ -48,12 +50,15 @@ export class Viewer extends Component {
 		const { classes } = this.props
 		const theme = createMuiTheme({
 			palette: {
-				primary: { main: blue[400] }
-			}
-		})
+				primary: { main: blue[500] }, // Purple and green play nicely together.
+				secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+				type: 'dark'
+			},
+			typography: { useNextVariants: true },
+		});
 		return (
-			<MuiThemeProvider theme={theme} classes={{ paper: classes.container }}>
-				<div className={classes.container}>
+			<MuiThemeProvider theme={theme}>
+				<div className = {classes.root}>
 					<Drawer
 						classes={{
 							paper: classes.drawer
@@ -69,18 +74,24 @@ export class Viewer extends Component {
 						open={this.props.open}
 					>
 						<List>
-							{['Inbox', 'Starred', 'Send email', 'Drafts', 'ABC', 'DEF', 'GHU','','','','','','','','','','','',''].map((text, index) => (
-								<ListItem button key={text}>
-									<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-									<ListItemText primary={text} />
+							{(Menu[this.props.role || 'guess']).map((data, index) => (
+								data.icon?
+								<ListItem selected={this.props.screen == data.name} button key={data.name} onClick={() => this.props.router(data.name)}>
+									<ListItemIcon>{data.icon}</ListItemIcon>
+									<ListItemText primary={data.caption} />
+								</ListItem>
+								:
+								<ListItem disabled>
+									<div style = {{height: 800}}></div>
 								</ListItem>
 							))}
 						</List>
 					</Drawer>
-					<main className = {classes.content}>
-
+					<main className={classes.content}>
+						<ScreenRouter />
 					</main>
 				</div>
+
 			</MuiThemeProvider>
 		)
 	}
@@ -91,12 +102,17 @@ Viewer.propTypes = {
 }
 
 const mapState2Props = (state) => {
-	console.log(state.PageReducer.isShowFullMenu)
 	return {
-		open: state.PageReducer.isShowFullMenu
+		open: state.PageReducer.isShowFullMenu,
+		role: state.LoginReducer.role,
+		screen: state.PageReducer.screen
 	}
 }
 const mapDispatch2Props = (dispatch) => {
-
+	return {
+		router: (screenName) => {
+			dispatch({ type: 'SCREEN_ROUTER', payload: screenName })
+		}
+	}
 }
 export default connect(mapState2Props, mapDispatch2Props)(withStyles(styles)(Viewer))

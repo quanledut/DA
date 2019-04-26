@@ -1,9 +1,9 @@
 import axios from 'axios';
 import {apiUrl} from '../../config'
 const initState = {
-    isLoggedIn: false,
-    isShowLoginForm: false,
-    isAdmin: true
+    currentUser: null,
+    email: null,
+    role: null
 }
 
 export const LoginReducer = (state = initState, action) => {
@@ -23,7 +23,25 @@ export const LoginReducer = (state = initState, action) => {
                 ...state
                 }
         case 'TOKEN_CHECKED': 
-            return state
+            return {
+                ...state,
+                email: action.payload.email,
+                role: action.payload.role
+            }
+        case 'SET_CURRENT_USER':{
+            return {
+                ...state,
+                email: action.payload.email,
+                role: action.payload.role
+            }
+        }
+        case 'LOGOUT':{
+            return {
+                ...state,
+                email: null,
+                role: null
+            }
+        }
         default:
             return state
     }

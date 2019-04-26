@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const config = require('../../../config');
 
 const UserSchema = mongoose.Schema({
-        username: {
+        email: {
             type: String,
             required: true,
             trim: true,
@@ -16,6 +16,12 @@ const UserSchema = mongoose.Schema({
         hash: {
             type: String,
             required: true
+        },
+        avatar: {
+            type: String
+        },
+        role: {
+            type: String
         }
     },
     {

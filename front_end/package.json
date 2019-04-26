@@ -5,8 +5,12 @@
   "dependencies": {
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
+    "@material-ui/system": "^3.0.0-alpha.2",
+    "atob": "^2.1.2",
     "axios": "^0.18.0",
+    "base-64": "^0.1.0",
     "classnames": "^2.2.6",
+    "history": "^4.9.0",
     "material-ui": "^0.20.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",

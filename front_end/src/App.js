@@ -5,18 +5,18 @@ import './App.css';
 import LoginDialog from './components/LoginDialog';
 import Viewer from './containers/layouts/Viewer';
 import Header from './containers/layouts/Header';
+import { BrowserRouter } from 'react-router-dom'
 
 class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
+			{/* <div style = {{width: '100vw', height: '100vh'}}> */}
 				<Header />
 				<Viewer />
-				<LoginDialog />
+			{/* </div> */}
 			</Provider>
 		);
 	}
 }
-
-
 export default App;

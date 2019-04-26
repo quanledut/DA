@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
+const multer = require('multer');
+const atob = require('atob')
+
 
 const find = async (req, res) => { 
     try{
@@ -17,13 +20,13 @@ const register = (req, res) => {
         res.status(400).send('Invalid datatype');
     }
     else{
-        let {username, password} = req.body;
-        User.findOne({username}, (err, matchUser)=>{
+        let {email, password, role, avatar} = req.body;
+        User.findOne({email}, (err, matchUser)=>{
             if(matchUser){
-                res.status(404).send('Username is exist');
+                res.status(404).send('Email is exist');
             }
             else{
-                    user = new User({username});
+                    user = new User({email, role, avatar});
                     user.generateHash(password);
                     user.save((err,result)=>{
                         if(err){
@@ -49,24 +52,33 @@ const checkToken = (req, res) => {
 }
 
 const login = (req, res) => {
-    let {username, password} = req.body;
-    User.findOne({username}, (err, user)=>{
+    let {email, password} = req.body;
+    User.findOne({email}, (err, user)=>{
         if(err){
             res.status(404,err.message);
         }
         else{
-            if(user.validPassword(password)){
-                let token = jwt.sign({username},config.secretKey,{expiresIn: '2m'},(err, token) =>{
+            if(user && user.validPassword(password)){
+                console.log(user)
+                let token = jwt.sign({
+                    email: user.email,
+                    role: user.role,
+                }
+                ,config.secretKey
+                ,{expiresIn: '1h'}
+                ,(err, token) =>{
                     if(err){
                        res.status(404).send('Can not create token'); 
                     }
                     else{
+                        console.log('.'+token+'.')
+                        console.log(atob(token))
                         res.status(200).send({token})
                     }
                 })
             }
             else{
-                res.status(400).send('Password is wrong');
+                res.status(400).send('Login failed');
             }
         }
     })
