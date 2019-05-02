@@ -84,9 +84,14 @@ const login = (req, res) => {
     })
 }
 
+const uploadIcon = (req, res) => {
+
+}
+
 module.exports = {
     find,
     register,
     login,
-    checkToken
+    checkToken,
+    uploadIcon
 }

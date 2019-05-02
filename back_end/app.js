@@ -11,7 +11,7 @@ require('./api/models');
 
 app.listen(config.PORT, function() {
     console.log('Server running on port ',config.PORT);
-    mongoose.connect(config.DB_URI,{useNewUrlParser: true});   
+    mongoose.connect(config.DB_URI, {useNewUrlParser: true});   
 });
 
 mongoose.connection.once('open',() => {
