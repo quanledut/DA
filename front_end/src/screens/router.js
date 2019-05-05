@@ -5,7 +5,8 @@ import { About } from '../screens/About';
 import { Employees } from '../screens/Employees';
 import { withRouter } from 'react-router-dom';
 import history from '../history';
-import Test from './Test'
+import ForgotPassword from './ForgotPassword';
+import NewProduct from './NewProduct'
 
 import React, { Component } from 'react'
 
@@ -17,6 +18,8 @@ export class ScreenRouter extends Component {
                 <Route exact path='/products/:id?' component={ProductDetail} />
                 <Route exact path='/about' component={About} />
                 <Route exact path='/employees' component={Employees} />
+                <Route path = '/reset/:token?' component = {ForgotPassword}/>
+                <Route path='/product/new' component={NewProduct} />
             </Router>
         )
     }

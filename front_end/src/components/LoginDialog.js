@@ -5,9 +5,9 @@ import { Send, Cancel } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { MuiThemeProvider, withStyles, createMuiTheme } from '@material-ui/core/styles';
 import { blue, red } from '@material-ui/core/colors';
-import {requestLogin} from '../api/AccountApi';
-import {decode} from 'base-64'
-import atob from 'atob'
+import {login} from '../api/AccountApi';
+import {decode} from 'base-64';
+import atob from 'atob';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -42,8 +42,9 @@ export class LoginDialog extends Component {
         }
     };
 
-    handleClickForgotPassword = () => {
-
+    showForgotPassForm = () => {
+        this.props.hideLoginForm();
+        this.props.showForgotPassForm();
     }
 
     requestLogin = () => {
@@ -52,9 +53,10 @@ export class LoginDialog extends Component {
             password: this.state.password,
             remember: this.state.remember
         }
-        requestLogin(userInfo).then(res => {
+        login(userInfo).then(res => {
             if(this.state.remember) localStorage.setItem('token', res.data.token);
             else localStorage.removeItem('token');
+            localStorage.setItem('tokenTempt', res.data.token);
             let tokenInfo = res.data.token.split('.')[1];
             tokenInfo = tokenInfo.replace('-','+').replace('_','/');
             let userInfo = JSON.parse(atob(tokenInfo));
@@ -131,7 +133,7 @@ export class LoginDialog extends Component {
                                 }
                                 label="Duy trì đăng nhập"
                             />
-                            <Link onClick={this.handleClickForgotPassword} style={{ bottom: '0px', fontSize: '1em', paddingTop: '5px' }}>Quên mật khẩu ?</Link>
+                            <Link onClick={this.showForgotPassForm} style={{ bottom: '0px', fontSize: '1em', paddingTop: '5px' }}>Quên mật khẩu ?</Link>
                         </div>
                         <Divider />
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
@@ -170,6 +172,9 @@ const mapDispatch2Props = (dispatch) => {
                         email: userInfo.email,
                         role: userInfo.role
                     }})
+        },
+        showForgotPassForm: () => {
+            return dispatch({type: 'SHOW_FORGOT_PASSWORD_FORM'})
         }
     }
 }

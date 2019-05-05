@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {apiUrl} from '../config'
-export const LoadProductDepartment = () => {
+
+export const loadDepartment = () => {
     return new Promise((resolve, reject) => {
         axios.get(`${apiUrl}/department`)
         .then(res => {
@@ -11,6 +12,32 @@ export const LoadProductDepartment = () => {
         })
         .catch(err => {
             reject(err)
+        })
+    })
+}
+
+export const requestNewProduct = (data) => {
+    return new Promise((resolve, reject) =>{
+        console.log(localStorage.getItem('tokenTempt'));
+        axios.post(`${apiUrl}/products/new`,data,{headers:{'Authorization': `Bearer ${localStorage.getItem('tokenTempt')}`}})
+        .then(product => {
+            if(product == null) reject('Cannot create product');
+            else resolve(product);
+        })
+        .catch(err => {
+            reject(err);
+        })
+    })
+}
+
+export const loadProduct = (data) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/products`,{data}).then(products => {
+            if(products != null) resolve(products);
+            else reject('Not found');
+        })
+        .catch(err => {
+            reject('Not found');
         })
     })
 }

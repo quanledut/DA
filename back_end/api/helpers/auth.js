@@ -10,8 +10,6 @@ const auth = (req, res, next) => {
     else{
         token = bearerToken.trim().split(' ')[1];
         req.token = token;
-
-        console.log(atob(token));
         jwt.verify(token, config.secretKey, (err, auth) => {
             if(err){
                 res.status(404).send('Authentication failed');

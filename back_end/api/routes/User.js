@@ -4,8 +4,10 @@ const {checkRoleAdmin} = require('../helpers/checkRole')
 const {upload} = require('../helpers/uploadImage')
 module.exports = (router) => {
     router.get('/users',auth,UserController.find);
-    router.post('/register',checkRoleAdmin, UserController.register);
+    router.post('/register',checkRoleAdmin, upload.single('file'), UserController.register);
     router.post('/login', UserController.login);
     router.post('/checkToken', UserController.checkToken);
-    router.post('/register/image',upload('single'),UserController.uploadIcon);
+    router.post('/reset',UserController.forgotPassword);
+    router.get('/reset', UserController.checkResetToken);
+    router.post('/updatepass', UserController.setNewPassword)
 }

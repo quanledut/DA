@@ -16,6 +16,11 @@ export const ProductReducer = (state = initialState, action) => {
             }
             break;
         }
+        case 'HANDLE_CHANGE_DEPARTMENT':{
+            return {
+                ...state, department: state.departments.filter(dept => dept.name == action.payload)[0]
+            }
+        }
         default: {
             return state;
         }

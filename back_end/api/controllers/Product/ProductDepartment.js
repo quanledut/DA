@@ -17,7 +17,6 @@ const newDepartment = (req, res) => {
         return;
     }
     let departments  = req.body;
-    //console.log(de)
     let name = departments.map(department => department.name);
     ProductDepartment.find({name: {$all:name}},(err, matchDepartment) => {
 

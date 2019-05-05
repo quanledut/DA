@@ -13,13 +13,13 @@ const checkRoleAdmin = (req, res, next) => {
     let userData = tokenData.trim().split('}')[1];
     if(!userData) 
     {
-        res.status(404).send('User info not found in token');
+        res.status(401).send('User info not found in token');
         return;
     }
     userData = JSON.parse(userData + '}');
     if(userData.role != 'admin') 
     {
-        res.status(404).send('Permission denied');
+        res.status(403).send('Permission denied');
         return;
     }
     return next();

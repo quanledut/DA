@@ -3,7 +3,8 @@ import {apiUrl} from '../../config'
 const initState = {
     currentUser: null,
     email: null,
-    role: null
+    role: null,
+    avatar: null
 }
 
 export const LoginReducer = (state = initState, action) => {
@@ -26,7 +27,8 @@ export const LoginReducer = (state = initState, action) => {
             return {
                 ...state,
                 email: action.payload.email,
-                role: action.payload.role
+                role: action.payload.role,
+                avatar: action.payload.avatar
             }
         case 'SET_CURRENT_USER':{
             return {

@@ -10,7 +10,11 @@ import { blue, red, purple } from '@material-ui/core/colors';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import LoginDialog from '../../components/LoginDialog';
-import SignUpDialog from '../../components/SignUpDialog'
+import SignUpDialog from '../../components/SignUpDialog';
+import ForgotPasswordDialog from '../../components/ForgotPasswordDialog';
+import {NotificationContainer} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import {Roles} from '../../data/Role'
 
 const styles = (theme) => ({
   root: {
@@ -141,6 +145,7 @@ class Header extends React.Component {
 
     return (
         <MuiThemeProvider theme={theme}>
+          <div><NotificationContainer/></div>
           <AppBar className={classes.appBar} position='static'>
             <Toolbar >
               <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.toggleMenuDisplay}>
@@ -162,12 +167,11 @@ class Header extends React.Component {
                   color="inherit"
                   display='flex'
                 >
-                  <Avatar id='userAvatar' alt='User' src={this.props.isLoggedIn ? '' : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
+                  <Avatar id='userAvatar' alt='User' src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
                   <div style={{ display: 'flex', flexDirection: 'column',right: -10, marginLeft: 10, justifyContent: 'left' }}>
                     <label htmlFor='userAvatar' style={{ fontSize: 15 }}>{!this.props.email ? 'example@gmail.com' : this.props.email}</label>
-                    <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{!this.props.role ? 'Guess' : this.props.role == 'admin' ? 'Admin' : 'Employee'}</label>
+                    <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{Roles.filter(role => role.name == this.props.role)[0] != null ? Roles.filter(role => role.name == this.props.role)[0].caption : 'Khách hàng'}</label>
                   </div>
-
                 </IconButton>
               </div>
               <div className={classes.isMobileMenu}>
@@ -187,6 +191,7 @@ class Header extends React.Component {
             open={this.props.isShowSignUp}
             closeDialogFormHandle={this.props.hideSignUpDialog}
           />
+          <ForgotPasswordDialog/>
         </MuiThemeProvider>
     );
   }
@@ -195,9 +200,10 @@ class Header extends React.Component {
 const mapState2Props = (state) => {
   return {
     mail: state.PageReducer.mail,
+    role: state.LoginReducer.role,
+    userAvatar: state.LoginReducer.avatar,
     order: state.PageReducer.order,
     isLoggedIn: state.LoginReducer.isLoggedIn,
-    role: state.LoginReducer.role,
     isShowSignUp: state.PageReducer.isShowSignUp,
     email: state.LoginReducer.email
   }

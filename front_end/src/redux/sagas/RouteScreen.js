@@ -5,10 +5,16 @@ import {put, call} from 'redux-saga/effects';
 export function* handleRouteScreen(action) {
     try {
         switch (action.payload){
+            case '/':{
+                yield put({type: 'ROUTE_SCREEN_BY_REDUX_SAGA', payload:{screen: 'products'}})
+                //return (<Redirect to = '/products'/>)
+                yield call(history.push,'/');
+                break;
+            }
             case 'products':{
                 yield put({type: 'ROUTE_SCREEN_BY_REDUX_SAGA', payload:{screen: 'products'}})
                 //return (<Redirect to = '/products'/>)
-                yield call(history.push,'/products');
+                yield call(history.push,'/');
                 break;
             }
             case 'employees':{
@@ -22,6 +28,9 @@ export function* handleRouteScreen(action) {
                 //return (<Redirect to = '/about'/>)
                 yield call(history.push,'/about');
                 break;
+            }
+            default:{
+                yield call(history.push,action.payload)
             }
         }
         

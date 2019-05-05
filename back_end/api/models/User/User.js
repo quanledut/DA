@@ -22,6 +22,12 @@ const UserSchema = mongoose.Schema({
         },
         role: {
             type: String
+        },
+        resetPasswordToken: {
+            type: String
+        },
+        resetPasswordExpires: {
+            type: Date
         }
     },
     {
@@ -36,7 +42,7 @@ UserSchema.methods.generateHash = function(password){
 
 UserSchema.methods.validPassword = function(password){
     let passHash = crypto.pbkdf2Sync(password,this.salt,1000,64,config.algorithm).toString('hex');
-    return passHash = this.hash;
+    return passHash == this.hash;
 }
 
 mongoose.model('User', UserSchema);

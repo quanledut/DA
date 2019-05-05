@@ -14,18 +14,19 @@ var storage =  new GridFsStorage({
                 if(err){
                     return reject(null)
                 }
-                const fileName = buff.toString('hex') + path.extname(file.originalname)
+                const filename = buff.toString('hex') + path.extname(file.originalname)
                 resolve({
                     filename,
-                    bucketName: 'uploads'
+                    bucketName: 'images'
                 })
             })
         })
     }
 })
-const gfs = Grid(mongoose.connection.db, mongoose.mongo);
+
+var gfs = Grid(mongoose.connection.db, mongoose.mongo);
     gfs.collection('images');
-const upload = multer({storage});
+var upload = multer({storage: storage});
 module.exports = {
     gfs,
     upload
