@@ -27,7 +27,30 @@ var storage =  new GridFsStorage({
 var gfs = Grid(mongoose.connection.db, mongoose.mongo);
     gfs.collection('images');
 var upload = multer({storage: storage});
+
+const getSubImage = (filename) => {
+    return new Promise((resolve, reject) => {
+        image = gfs.files.findOne({filename}).then(image => {
+            if(image){
+                var readstream = gfs.createReadStream({filename: image.filename});
+                readstream.on('data',(chunk) => 
+                    {
+                        return resolve(chunk.toString('base64'));
+                    })
+            }
+            else {
+                return reject(filename)
+            };
+        })
+        .catch(err => {
+            return reject(filename)
+        })
+    })
+}
+
 module.exports = {
     gfs,
-    upload
+    upload,
+    getSubImage
 }
+

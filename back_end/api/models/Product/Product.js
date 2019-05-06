@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const {gfs} = require('../../helpers/uploadImage');
 
 const ProductSchema = mongoose.Schema({
         name:  {
@@ -46,17 +45,5 @@ const ProductSchema = mongoose.Schema({
     }
 )
 
-ProductSchema.methods.getSubImage = function(){
-    gfs.files.findOne({filename: this.subImage}).then(image=>{
-        if(image){
-            var readstream = gfs.createReadStream({filename: image.filename});
-            readstream.on('data',(chunk) => 
-                {
-                    this.subImage = chunk.toString('base64');
-                })
-        }
-    })
-    return this.subImage;
-}
 
 mongoose.model('Product', ProductSchema);

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
+const {getSubImage} = require('../../helpers/uploadImage')
 
 
 const requestNewProduct = (req, res) => {
@@ -44,12 +45,8 @@ const getProduct = async (req, res) => {
         if (!page && !limit && !department && !condition) {
             const productCount = await Product.count({});
             const products = await Product.find({});
-            const products1 = await products.map(product => {product.getSubImage()},() => {
-            var result = Promise.map(products, async item => {
-                item.getSubImage();
-            })
-            });
-            await res.status(200).send({productCount, result});
+            const products1 = await Promise.all(products.map(async product => {product.subImage = await getSubImage(product.subImage); return product;})); 
+            await res.status(200).send({productCount, products1});
         }
     }
     catch(err){
