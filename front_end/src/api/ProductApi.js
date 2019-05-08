@@ -5,7 +5,7 @@ export const loadDepartment = () => {
     return new Promise((resolve, reject) => {
         axios.get(`${apiUrl}/department`)
         .then(res => {
-            if(res.status == 200){
+            if(res.status === 200){
                 resolve(res.data)
             }
             reject(res)
@@ -21,7 +21,7 @@ export const requestNewProduct = (data) => {
         console.log(localStorage.getItem('tokenTempt'));
         axios.post(`${apiUrl}/products/new`,data,{headers:{'Authorization': `Bearer ${localStorage.getItem('tokenTempt')}`}})
         .then(product => {
-            if(product == null) reject('Cannot create product');
+            if(product === null) reject('Cannot create product');
             else resolve(product);
         })
         .catch(err => {
@@ -32,8 +32,8 @@ export const requestNewProduct = (data) => {
 
 export const loadProduct = (data) => {
     return new Promise((resolve, reject) => {
-        axios.get(`${apiUrl}/products`,{data}).then(products => {
-            if(products != null) resolve(products);
+        axios.get(`${apiUrl}/products`,data).then(response => {
+            if(response.status == 200) resolve(response.data);
             else reject('Not found');
         })
         .catch(err => {

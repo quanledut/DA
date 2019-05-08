@@ -33,7 +33,7 @@ export const signUp = (data) => {
 export const login = (userInfo) => {
     return new Promise((resolve, reject) => {
         axios.post(`${apiUrl}/login`,{email: userInfo.email, password: userInfo.password}).then(res => {
-            if(res.status == 200) return resolve(res)
+            if(res.status === 200) return resolve(res)
             else reject(res);
         })
         .catch(err => {return reject(err)})
@@ -45,7 +45,7 @@ export const requestForgotPassword = (email) => {
         axios.post(`${apiUrl}/reset`, {email}, {headers:{
             'Content-Type': 'application/json'
         }}).then(res => {
-            if(res.status == 200) return resolve(res);
+            if(res.status === 200) return resolve(res);
             else return reject(res);
         })
         .catch(err => {return reject(err)});
@@ -57,7 +57,7 @@ export const requestSetNewPassword = (email, newPassword, token) => {
         axios.post(`${apiUrl}/updatepass`, {email, password: newPassword, token}, {headers:{'Content-Type': 'application/json'}})
         .then(response => {
             console.log(response.status)
-            if(response.status == 200) resolve('Đã đặt lại mật khẩu');
+            if(response.status === 200) resolve('Đã đặt lại mật khẩu');
             else reject('Thất bại')
         })
         .catch(err => 

@@ -52,7 +52,7 @@ export class Viewer extends Component {
 			palette: {
 				primary: { main: blue[500] }, // Purple and green play nicely together.
 				secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
-				type: 'dark'
+				type: 'light'
 			},
 			typography: { useNextVariants: true },
 		});
@@ -76,7 +76,7 @@ export class Viewer extends Component {
 						<List>
 							{(Menu[this.props.role || 'guess']).map((data, index) => (
 								data.icon?
-								<ListItem selected={this.props.screen == data.name} button key={data.name} onClick={() => this.props.router(data.name)}>
+								<ListItem selected={this.props.screen === data.name} button key={data.name} onClick={() => this.props.router(data.name)}>
 									<ListItemIcon>{data.icon}</ListItemIcon>
 									<ListItemText primary={data.caption} />
 								</ListItem>

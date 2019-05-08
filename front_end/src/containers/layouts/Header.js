@@ -47,7 +47,7 @@ const styles = (theme) => ({
     right: -10
   },
   badge: {
-    border: `2px solid ${theme.palette.type == 'light' ? theme.palette.grey[200] : theme.palette.grey[2000]}`
+    border: `2px solid ${theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[2000]}`
   },
 });
 
@@ -98,7 +98,7 @@ class Header extends React.Component {
       palette: {
         primary: { main: blue[500] }, // Purple and green play nicely together.
         secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
-        type: 'dark'
+        type: 'light'
       },
       typography: { useNextVariants: true },
     });
@@ -170,7 +170,7 @@ class Header extends React.Component {
                   <Avatar id='userAvatar' alt='User' src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
                   <div style={{ display: 'flex', flexDirection: 'column',right: -10, marginLeft: 10, justifyContent: 'left' }}>
                     <label htmlFor='userAvatar' style={{ fontSize: 15 }}>{!this.props.email ? 'example@gmail.com' : this.props.email}</label>
-                    <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{Roles.filter(role => role.name == this.props.role)[0] != null ? Roles.filter(role => role.name == this.props.role)[0].caption : 'Khách hàng'}</label>
+                    <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{Roles.filter(role => role.name === this.props.role)[0] != null ? Roles.filter(role => role.name === this.props.role)[0].caption : 'Khách hàng'}</label>
                   </div>
                 </IconButton>
               </div>

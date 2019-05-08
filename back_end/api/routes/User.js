@@ -1,13 +1,15 @@
-const UserController = require('../controllers/User')
-const {auth} = require('../helpers/auth')
-const {checkRoleAdmin} = require('../helpers/checkRole')
-const {upload} = require('../helpers/uploadImage')
+const UserController = require('../controllers/User');
+const {auth} = require('../helpers/auth');
+const {checkRoleAdmin} = require('../helpers/checkRole');
+const {upload} = require('../helpers/uploadImage');
+const {showReqInfo} = require('../helpers/showInfo.js')
+
 module.exports = (router) => {
-    router.get('/users',auth,UserController.find);
-    router.post('/register',checkRoleAdmin, upload.single('file'), UserController.register);
-    router.post('/login', UserController.login);
-    router.post('/checkToken', UserController.checkToken);
-    router.post('/reset',UserController.forgotPassword);
-    router.get('/reset', UserController.checkResetToken);
-    router.post('/updatepass', UserController.setNewPassword)
+    router.get('/users',showReqInfo,auth,UserController.find);
+    router.post('/register',checkRoleAdmin, upload.single('file'),showReqInfo, UserController.register);
+    router.post('/login',showReqInfo, UserController.login);
+    router.post('/checkToken',showReqInfo, UserController.checkToken);
+    router.post('/reset',showReqInfo,UserController.forgotPassword);
+    router.get('/reset',showReqInfo, UserController.checkResetToken);
+    router.post('/updatepass',showReqInfo, UserController.setNewPassword)
 }

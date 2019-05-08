@@ -6,17 +6,21 @@ import {handleRouteScreen} from './RouteScreen';
 
 function* rootSaga(){
     yield all ([
+        //user
         yield fork(LoadUser),
-        yield fork(LoadDepartment),
-        yield fork(LoadProduct,{}),
-        yield takeLatest('HANDLE_LOGOUT', handleLogout),
-        yield takeLatest('SCREEN_ROUTER', handleRouteScreen),
         yield takeLatest('CREATE_NEW_EMPLOYEE', CreateNewEmployee),
         yield takeLatest('SEND_REQUEST_FORGOT_PASSWORD', RequestForgotPassword ),
         yield takeLatest('REQUEST_SET_NEW_PASSWORD', RequestSetNewPassword ),
-        //yield takeLatest('HANDLE_CHANGE_DEPARTMENT', RequestNewProduct),
+        
+        //product
+        yield fork(LoadDepartment),
+        yield fork(LoadProduct,{}),
         yield takeLatest('REQUEST_CREATE_NEW_PRODUCT', RequestNewProduct),
-        yield takeLatest('LOAD_ALL_PRODUCT', LoadProduct)
+        yield takeLatest('LOAD_ALL_PRODUCT', LoadProduct),
+
+        //page
+        yield takeLatest('HANDLE_LOGOUT', handleLogout),
+        yield takeLatest('SCREEN_ROUTER', handleRouteScreen),
     ])
 }
 

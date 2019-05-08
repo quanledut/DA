@@ -34,7 +34,7 @@ export class ForgotPassword extends Component {
         await axios.get(`${apiUrl}/reset`, {
             params: { token: this.props.match.params.token }
         }).then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 this.setState({ email: response.data.email, linkOK: true, token: this.props.match.params.token })
             }
         })
@@ -48,7 +48,7 @@ export class ForgotPassword extends Component {
                 primary: { main: green.A400 },
                 error: { main: red[500] },
                 secondary: { main: grey[700] },
-                type: 'dark'
+                type: 'light'
             },
             typography: { useNextVariants: true }
         })

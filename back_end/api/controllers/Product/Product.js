@@ -44,9 +44,9 @@ const getProduct = async (req, res) => {
         const { page, limit, department, condition } = req.headers
         if (!page && !limit && !department && !condition) {
             const productCount = await Product.count({});
-            const products = await Product.find({});
-            const products1 = await Promise.all(products.map(async product => {product.subImage = await getSubImage(product.subImage); return product;})); 
-            await res.status(200).send({productCount, products1});
+            const products1 = await Product.find({});
+            const products = await Promise.all(products1.map(async product => {product.subImage = await getSubImage(product.subImage); return product;})); 
+            await res.status(200).send({productCount, products});
         }
     }
     catch(err){

@@ -87,7 +87,7 @@ export class LoginDialog extends Component {
                 primary: { main: blue[500] }, // Purple and green play nicely together.
                 secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
                 inherit: { main: red[600] },
-                type: 'dark'
+                type: 'light'
             },
             typography: { useNextVariants: true },
         });
