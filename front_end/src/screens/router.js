@@ -6,7 +6,7 @@ import { Employees } from '../screens/Employees';
 import { withRouter } from 'react-router-dom';
 import history from '../history';
 import ForgotPassword from './ForgotPassword';
-import NewProduct from './NewProduct'
+import NewProduct from './NewProduct';
 
 import React, { Component } from 'react'
 

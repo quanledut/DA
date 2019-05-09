@@ -3,14 +3,16 @@ import { withRouter } from 'react-router-dom';
 import { AppBar, Tabs, Tab, Paper } from '@material-ui/core';
 import { MuiThemeProvider, withStyles, createMuiTheme } from '@material-ui/core/styles'
 import { InputBase, Divider, IconButton, Button, TextField, MenuItem, GridList, GridListTile, ListSubheader, GridListTileBar } from '@material-ui/core'
-import { Search as SearchIcon, RateReview, Info as InfoIcon } from '@material-ui/icons'
+import { Search as SearchIcon, RateReview, Info as InfoIcon, AddShoppingCart } from '@material-ui/icons'
 import { blue, red, green, grey, white } from '@material-ui/core/colors';
 import _colors from '@material-ui/core/colors';
 import { connect } from 'react-redux';
 import { RemoveSignString } from '../helpers/RemoveSignString';
 import Pagination from 'material-ui-flat-pagination';
 import {numberOfProductPerPage, numberOfProductPerLine} from '../config';
-import {PropTypes} from 'prop-types'
+import {PropTypes} from 'prop-types';
+import Rating from '../components/RatingStart'
+
 
 const sortBy = [
   {
@@ -87,9 +89,19 @@ const styles = theme => ({
     justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
+  },
+  rating: {
+      iconButton: {
+        width: 30,
+        height: 30,
+        padding: 10
+      },
+      icon: {
+        width: 20,
+        height: 20
+      }
   }
 })
-
 
 export class Products extends Component {
   constructor(props) {
@@ -101,14 +113,19 @@ export class Products extends Component {
     }
   }
 
-  changePageOfProduct = (offset) => {
+  handleClickToProduct = (id) => {
+    this.props.showProductDetail(id);
+  }
+
+  changePageOfProduct = (number) => {
     this.setState({
-      pageOfProduct: offset
+      pageOfProduct: number
     });
     let data = {
       department: this.props.department,
       name: this.state.name,
-      page: offset
+      page: number,
+      limit: numberOfProductPerPage
     }
     if(this.props.department.name === 'all' || !this.props.department.name){
       delete data.department;
@@ -124,11 +141,12 @@ export class Products extends Component {
   }
 
   onSearch = (event) => {
-    this.setState({name: event.target.value});
+    this.setState({name: event.target.value, pageOfProduct: 1});
     let data = {
       department: this.props.department,
       name: event.target.value,
-      page: this.state.page || 1
+      page: 1,
+      limit: numberOfProductPerPage
     }
     if(this.props.department.name === 'all' || !this.props.department.name){
       delete data.department;
@@ -151,7 +169,6 @@ export class Products extends Component {
     return (
       <div theme={theme}>
         <Paper className={classes.departmentTab}>
-
           <Tabs
             variant='fullWidth'
             value={this.props.departments.map(dept => { return dept.name }).indexOf(this.props.department.name) >= 0 ?
@@ -202,30 +219,34 @@ export class Products extends Component {
 
           {/* List Product */}
           <div className={classes.productRoot}>
-            <GridList cellHeight={180} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>
+            <GridList cellHeight={220} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>
               <GridListTile key="Subheader" cols={numberOfProductPerLine} style={{ height: 'auto' }}>
                 <ListSubheader component="div">{`Sản phẩm: ${this.props.productCount}`}</ListSubheader>
               </GridListTile>
               {(products).map(product => (
                 <GridListTile key={product.name}>
-                  <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} onClick={() => { console.log('Click Image') }} />
+                  <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} style = {{width:'100%', height:'auto'}} onClick={() => {this.handleClickToProduct(product._id)}} />
                   <GridListTileBar
                     title={product.name}
-                    subtitle={<span>by: {product.description}</span>}
+                    subtitle={product.saleprice[product.saleprice.length - 1].value? <span>Giá: {product.saleprice[product.saleprice.length - 1].value} VNĐ</span> : <span>Liên hệ</span>}
                     actionIcon={
-                      <IconButton className={classes.icon}>
-                        <InfoIcon />
-                      </IconButton>
+                      <div style = {{display: 'flex', flexDirection: 'column', alignItems:'flex-end', }}>
+                        <Rating
+                        value = {3}
+                        max = {5}
+                        />
+                      </div>
                     }
                   />
                 </GridListTile>
               ))}
             </GridList>
             <Pagination
-              limit={12}
-              offset={12}
+              limit={numberOfProductPerPage}
+              offset={numberOfProductPerPage* this.state.pageOfProduct - 1}
               total={this.props.productCount}
-              onClick={(e, offset) => this.changePageOfProduct(offset)}
+              onClick={(e, offset, number) => this.changePageOfProduct(number)}
+              otherPageColor = 'inherit'
             />
           </div>
 
@@ -255,6 +276,9 @@ const mapDispatch2Props = (dispatch) => {
     },
     getProduct: (data) => {
       dispatch({ type: 'GET_PRODUCT', payload: data })
+    },
+    showProductDetail: (id) => {
+      dispatch({type: 'HANDLE_SHOW_PRODUCT_DETAIL', payload: id})
     }
   }
 }

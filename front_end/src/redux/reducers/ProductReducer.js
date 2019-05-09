@@ -27,6 +27,11 @@ export const ProductReducer = (state = initialState, action) => {
                 ...state, products: action.payload.products, productCount: action.payload.productCount
             }
         }
+        case 'LOAD_PRODUCT_DETAIL_SUCCESS':{
+            return {
+                ...state, product: action.payload
+            }
+        }
         default: {
             return state;
         }

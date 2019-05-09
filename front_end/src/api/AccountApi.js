@@ -7,7 +7,6 @@ export const checkToken = (token) => {
             'Content-Type': 'application/json'
         }})
             .then((res => {
-                console.log(res)
                 if(res.status === 200) return resolve(res.data);
                 return reject(res);
             }))
@@ -17,12 +16,10 @@ export const checkToken = (token) => {
 
 export const signUp = (data) => {
     return new Promise((resolve, reject) => {
-        console.log('SignUpData' + data);
         axios.post(`${apiUrl}/register`,data, {headers:{
             authorization: localStorage.getItem('tokenTempt')
         }})
             .then((res => {
-                console.log(res);
                 if(res.status === 200) return resolve(res);
                 return reject(res);
             }))
@@ -56,7 +53,6 @@ export const requestSetNewPassword = (email, newPassword, token) => {
     return new Promise((resolve, reject) => {
         axios.post(`${apiUrl}/updatepass`, {email, password: newPassword, token}, {headers:{'Content-Type': 'application/json'}})
         .then(response => {
-            console.log(response.status)
             if(response.status === 200) resolve('Đã đặt lại mật khẩu');
             else reject('Thất bại')
         })

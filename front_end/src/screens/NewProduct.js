@@ -94,7 +94,7 @@ export class NewProduct extends Component {
   }
 
   onChangeText = (event) => {
-    console.log('EVENT: ' + [event.target.name] + ':' + event.target.value);
+
     this.setState({ [event.target.name]: event.target.value });
   }
 
@@ -104,14 +104,13 @@ export class NewProduct extends Component {
 
   onSubmitButton = () => {
     const data = new FormData();
-    console.log([this.state.subImage,...this.state.images]);
     data.append('name', this.state.name);
     data.append('description', this.state.description);
     data.append('length', this.state.length);
     data.append('width', this.state.width);
     data.append('height', this.state.height);
     data.append('unitprice', this.state.unitprice);
-    data.append('saleprice', [{time:Date.now(), amount: this.state.saleprice}]);
+    data.append('saleprice',this.state.saleprice);
     data.append('importqty', this.state.importqty);
     data.append('files', this.state.subImage, this.state.subImage.name);
     this.state.images.map(image => {data.append('files',image,image.name)})

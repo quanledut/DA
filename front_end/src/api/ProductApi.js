@@ -32,9 +32,7 @@ export const requestNewProduct = (data) => {
 
 export const loadProduct = (data) => {
     return new Promise((resolve, reject) => {
-        console.log('Load product data: '+ JSON.stringify(data))
         if(!data){
-            console.log('Get default data')
             axios.get(`${apiUrl}/products`).then(response => {
                 if(response.status == 200) resolve(response.data);
                 else reject('Not found');
@@ -53,4 +51,17 @@ export const loadProduct = (data) => {
             })
         }
     })
+}
+
+export const getProductDetail = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/products/${id}`).then(res => {
+            if(res.status === 200 && res.data){
+                resolve(res.data);
+            }
+            reject(res.data)
+        })
+        .catch(err => {reject(err)})
+    })
+  
 }

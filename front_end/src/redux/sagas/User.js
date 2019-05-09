@@ -8,7 +8,6 @@ export function* LoadUser() {
 		let token = yield localStorage.getItem('token');
 		console.log('Token check: ' + token)
 		const userInfo = yield call(checkToken, token);
-		//console.log('respoonse: ' + res.body)
 		yield put({
 			type: 'TOKEN_CHECKED',
 			payload: {
@@ -65,7 +64,6 @@ export function* RequestForgotPassword(action){
 export function* RequestSetNewPassword(action){
 	try{
 		const response = yield call (requestSetNewPassword, action.payload.email, action.payload.newPassword, action.payload.token)
-		console.log(action.payload)
 		yield NotificationManager.success('Đã đặt lại mật khẩu', 'Success', 3000);
 	}
 	catch(err){

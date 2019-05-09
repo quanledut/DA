@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
-const {getSubImage} = require('../../helpers/uploadImage');
-const {removeSignString} = require('../../helpers/removeSignText')
+const { getSubImage } = require('../../helpers/uploadImage');
+const { removeSignString } = require('../../helpers/removeSignText')
 
 
 const requestNewProduct = (req, res) => {
@@ -19,7 +19,7 @@ const requestNewProduct = (req, res) => {
             newProduct.width = width;
             newProduct.height = height
             newProduct.unitprice = unitprice
-            newProduct.saleprice = saleprice;
+            newProduct.saleprice = [{ time: Date.now(), value: saleprice }];
             newProduct.importqty = importqty;
             newProduct.images = files.filter(file => file.filename != files[0].filename).map(file => { return file.filename });
             newProduct.subImage = files[0] != null ? files[0].filename : '';
@@ -43,18 +43,39 @@ const requestNewProduct = (req, res) => {
 const getProduct = async (req, res) => {
     try {
         const { name, page, limit, department, sortBy } = req.query;
-        let products = await (department ? Product.find({department}) : Product.find({}));
+        let products = await (department ? Product.find({ department }) : Product.find({}));
         let productFilter = name ? products.filter(product => removeSignString(product.name).indexOf(removeSignString(name)) >= 0) : products;
-        let result = await productFilter.slice((page-1)*limit,limit);
-        const resultRes = await Promise.all(result.map(async product => {product.subImage = await getSubImage(product.subImage); return product;})); 
-        await res.status(200).send({products:resultRes});
+        let result = await productFilter.slice((page - 1) * limit, (page - 1) * limit + limit);
+        const resultRes = await Promise.all(result.map(async product => { product.subImage = await getSubImage(product.subImage); return product; }));
+        console.log('So luong sp trang : ' + result.length)
+        await res.status(200).send({ products: resultRes, productCount: productFilter.length });
     }
-    catch(err){
+    catch (err) {
         res.status(404).send(err)
+    }
+}
+
+const getProductDetail = async (req, res) => {
+    try {
+        console.log(req.params)
+        const { id } = req.params;
+        if (id != null && id != '') {
+            let product = await Product.findOne({ _id: id });
+            product.subImage = await getSubImage(product.subImage);
+            product.images = await Promise.all(product.images.map(async (image) => { return await getSubImage(image)}));
+            res.status(200).send(product);
+        }
+        else {
+            res.status(400).send('id required')
+        }
+    }
+    catch (err) {
+        res.status(404).send(err);
     }
 }
 
 module.exports = {
     requestNewProduct,
-    getProduct
+    getProduct,
+    getProductDetail
 }

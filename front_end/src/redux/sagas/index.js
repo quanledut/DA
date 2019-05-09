@@ -1,8 +1,8 @@
 import {fork,takeLatest,takeEvery, all} from 'redux-saga/effects';
 import {LoadUser, handleLogout, CreateNewEmployee, RequestForgotPassword, RequestSetNewPassword} from './User';
-import {LoadDepartment, RequestNewProduct, LoadProduct} from './Product';
+import {LoadDepartment, RequestNewProduct, LoadProduct, ShowProductDetail} from './Product';
 import {handleRouteScreen} from './RouteScreen';
-
+import {numberOfProductPerPage} from '../../config'
 
 function* rootSaga(){
     yield all ([
@@ -14,10 +14,11 @@ function* rootSaga(){
         
         //product
         yield fork(LoadDepartment),
-        yield fork(LoadProduct,{payload:{limit: 20, page:1}}),
+        yield fork(LoadProduct,{payload:{limit: numberOfProductPerPage, page:1}}),
         yield takeLatest('GET_PRODUCT', LoadProduct),
         yield takeLatest('REQUEST_CREATE_NEW_PRODUCT', RequestNewProduct),
         yield takeLatest('LOAD_ALL_PRODUCT', LoadProduct),
+        yield takeLatest('HANDLE_SHOW_PRODUCT_DETAIL', ShowProductDetail),
 
         //page
         yield takeLatest('HANDLE_LOGOUT', handleLogout),
