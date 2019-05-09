@@ -29,8 +29,10 @@ export function* RequestNewProduct(action) {
 
 export function* LoadProduct(action) {
     try {
-        let products = yield call(loadProduct, action.payload)
-        yield put({ type: 'LOAD_PRODUCT_SUCCESS', payload: products });
+        console.log('Load product')
+        let response = yield call(loadProduct, action.payload)
+        yield put({ type: 'LOAD_PRODUCT_SUCCESS', payload: response });
+        console.log('Check xem may co chay tiep khiong')
     }
     catch (err) {
         yield put({ type: 'LOAD_PRODUCT_FAILED' })

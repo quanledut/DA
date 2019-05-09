@@ -8,7 +8,6 @@ const initState = {
 }
 
 export const LoginReducer = (state = initState, action) => {
-    console.log(action.type)
     switch (action.type){
         case 'SHOW_LOGIN_FORM':
             return {

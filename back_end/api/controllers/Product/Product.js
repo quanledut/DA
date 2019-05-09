@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
-const {getSubImage} = require('../../helpers/uploadImage')
+const {getSubImage} = require('../../helpers/uploadImage');
+const {removeSignString} = require('../../helpers/removeSignText')
 
 
 const requestNewProduct = (req, res) => {
@@ -41,13 +42,12 @@ const requestNewProduct = (req, res) => {
 
 const getProduct = async (req, res) => {
     try {
-        const { page, limit, department, condition } = req.headers
-        if (!page && !limit && !department && !condition) {
-            const productCount = await Product.count({});
-            const products1 = await Product.find({});
-            const products = await Promise.all(products1.map(async product => {product.subImage = await getSubImage(product.subImage); return product;})); 
-            await res.status(200).send({productCount, products});
-        }
+        const { name, page, limit, department, sortBy } = req.query;
+        let products = await (department ? Product.find({department}) : Product.find({}));
+        let productFilter = name ? products.filter(product => removeSignString(product.name).indexOf(removeSignString(name)) >= 0) : products;
+        let result = await productFilter.slice((page-1)*limit,limit);
+        const resultRes = await Promise.all(result.map(async product => {product.subImage = await getSubImage(product.subImage); return product;})); 
+        await res.status(200).send({products:resultRes});
     }
     catch(err){
         res.status(404).send(err)

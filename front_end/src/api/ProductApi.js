@@ -32,12 +32,25 @@ export const requestNewProduct = (data) => {
 
 export const loadProduct = (data) => {
     return new Promise((resolve, reject) => {
-        axios.get(`${apiUrl}/products`,data).then(response => {
-            if(response.status == 200) resolve(response.data);
-            else reject('Not found');
-        })
-        .catch(err => {
-            reject('Not found');
-        })
+        console.log('Load product data: '+ JSON.stringify(data))
+        if(!data){
+            console.log('Get default data')
+            axios.get(`${apiUrl}/products`).then(response => {
+                if(response.status == 200) resolve(response.data);
+                else reject('Not found');
+            })
+            .catch(err => {
+                reject('Not found');
+            })
+        }
+        else {
+            axios.get(`${apiUrl}/products`,{params:data}).then(response => {
+                if(response.status == 200) resolve(response.data);
+                else reject('Not found');
+            })
+            .catch(err => {
+                reject('Not found');
+            })
+        }
     })
 }

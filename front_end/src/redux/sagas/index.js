@@ -14,7 +14,8 @@ function* rootSaga(){
         
         //product
         yield fork(LoadDepartment),
-        yield fork(LoadProduct,{}),
+        yield fork(LoadProduct,{payload:{limit: 20, page:1}}),
+        yield takeLatest('GET_PRODUCT', LoadProduct),
         yield takeLatest('REQUEST_CREATE_NEW_PRODUCT', RequestNewProduct),
         yield takeLatest('LOAD_ALL_PRODUCT', LoadProduct),
 

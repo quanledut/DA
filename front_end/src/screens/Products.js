@@ -8,10 +8,14 @@ import { blue, red, green, grey, white } from '@material-ui/core/colors';
 import _colors from '@material-ui/core/colors';
 import { connect } from 'react-redux';
 import { RemoveSignString } from '../helpers/RemoveSignString';
+import Pagination from 'material-ui-flat-pagination';
+import {numberOfProductPerPage, numberOfProductPerLine} from '../config';
+import {PropTypes} from 'prop-types'
+
 const sortBy = [
   {
     value: 'rate',
-    caption: 'Yếu thích'
+    caption: 'Yêu thích'
   },
   {
     value: 'pricedecending',
@@ -86,42 +90,57 @@ const styles = theme => ({
   }
 })
 
+
 export class Products extends Component {
   constructor(props) {
     super(props);
     this.state = {
       productShow: null,
-      exampleItems: exampleItems,
-      pageOfItems: []
+      pageOfProduct: 1,
+      name: ''
     }
-    this.onChangePage = this.onChangePage.bind(this);
-    var exampleItems = [...Array(150).keys()].map(i => ({ id: (i+1), name: 'Item ' + (i+1) }));
   }
 
-  onChangePage(pageOfItems) {
-    // update state with new page of items
-    this.setState({ pageOfItems: pageOfItems });
-}
+  changePageOfProduct = (offset) => {
+    this.setState({
+      pageOfProduct: offset
+    });
+    let data = {
+      department: this.props.department,
+      name: this.state.name,
+      page: offset
+    }
+    if(this.props.department.name === 'all' || !this.props.department.name){
+      delete data.department;
+    }
+    if(this.state.name === ''){
+      delete data.name
+    }
+    this.props.getProduct(data);
+  }
 
   onSelectDepartment = (event, value) => {
     this.props.handleChangeDepartment(this.props.departments[value].name)
   }
 
   onSearch = (event) => {
-    console.log(event.target.value)
-    this.props.products.map(product => { console.log(RemoveSignString(product.name)); console.log(RemoveSignString(product.name).indexOf(RemoveSignString(event.target.value))) })
-    if (event.target.value !== '') {
-      this.setState({
-        productShow: this.props.products.filter(product => RemoveSignString(product.name).indexOf(RemoveSignString(event.target.value)) >= 0)
-      })
+    this.setState({name: event.target.value});
+    let data = {
+      department: this.props.department,
+      name: event.target.value,
+      page: this.state.page || 1
     }
-    else {
-      this.setState({ productShow: null })
+    if(this.props.department.name === 'all' || !this.props.department.name){
+      delete data.department;
     }
+    if(event.target.value === ''){
+      delete data.name
+    }
+    this.props.getProduct(data);
   }
 
   render() {
-    var exampleItems = [...Array(150).keys()].map(i => ({ id: (i+1), name: 'Item ' + (i+1) }));
+    var exampleItems = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
     const { classes, products, productCount } = this.props;
     const { history } = this.props;
     const theme = createMuiTheme({
@@ -183,11 +202,11 @@ export class Products extends Component {
 
           {/* List Product */}
           <div className={classes.productRoot}>
-            <GridList cellHeight={180} className={classes.gridList} cols={4}>
-              <GridListTile key="Subheader" cols={4} style={{ height: 'auto' }}>
-                <ListSubheader component="div">{`Sản phẩm: ${this.state.productShow ? this.state.productShow.length : productCount}`}</ListSubheader>
+            <GridList cellHeight={180} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>
+              <GridListTile key="Subheader" cols={numberOfProductPerLine} style={{ height: 'auto' }}>
+                <ListSubheader component="div">{`Sản phẩm: ${this.props.productCount}`}</ListSubheader>
               </GridListTile>
-              {(this.state.productShow || products).map(product => (
+              {(products).map(product => (
                 <GridListTile key={product.name}>
                   <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} onClick={() => { console.log('Click Image') }} />
                   <GridListTileBar
@@ -202,9 +221,14 @@ export class Products extends Component {
                 </GridListTile>
               ))}
             </GridList>
-            <Pagination items={this.state.exampleItems} onChangePage={() => {}} />
+            <Pagination
+              limit={12}
+              offset={12}
+              total={this.props.productCount}
+              onClick={(e, offset) => this.changePageOfProduct(offset)}
+            />
           </div>
-        
+
         </Paper>
       </div>
     )
@@ -228,6 +252,9 @@ const mapDispatch2Props = (dispatch) => {
     },
     routerScreen: (screenName) => {
       dispatch({ type: 'SCREEN_ROUTER', payload: screenName })
+    },
+    getProduct: (data) => {
+      dispatch({ type: 'GET_PRODUCT', payload: data })
     }
   }
 }
