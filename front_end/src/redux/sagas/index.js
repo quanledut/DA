@@ -13,6 +13,7 @@ function* rootSaga(){
         yield takeLatest('REQUEST_SET_NEW_PASSWORD', RequestSetNewPassword ),
         
         //product
+        yield fork(ShowProductDetail, {payload:'5cd3dab16837282324c40d98'}),
         yield fork(LoadDepartment),
         yield fork(LoadProduct,{payload:{limit: numberOfProductPerPage, page:1}}),
         yield takeLatest('GET_PRODUCT', LoadProduct),
