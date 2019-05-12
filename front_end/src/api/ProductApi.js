@@ -65,3 +65,12 @@ export const getProductDetail = (id) => {
     })
   
 }
+
+export const changeProductDetail = (product) => {
+    return new Promise((resolve, reject) => {
+        axios.put(`${apiUrl}/products/${product._id}`,product).then(res => {
+            if(res.status == 200) resolve('Updated');
+            else reject('Not Updated')
+        }).catch(err => reject(err))
+    })
+}

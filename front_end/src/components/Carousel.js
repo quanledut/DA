@@ -3,12 +3,12 @@ import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDB
 import 'bootstrap/dist/css/bootstrap.css';
 
 export const CarouselPage = (props) => {
-    let { images } = props;
+    let { images, active } = props;
     return (
         <MDBContainer>
             <MDBCarousel
-                activeItem={props.active}
-                length={3}
+                activeItem={active}
+                length={images.length}
                 showControls={true}
                 showIndicators={false}
                 className="z-depth-1"

@@ -23,7 +23,7 @@ const styles = (theme) => ({
   },
   appBar: {
     color: purple,
-    width:'100%'
+    width:'100%',
   },
   grow: {
     flexGrow: 1,
@@ -49,6 +49,9 @@ const styles = (theme) => ({
   badge: {
     border: `2px solid ${theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[2000]}`
   },
+  toolBar:{
+    height:'7%'
+  }
 });
 
 class Header extends React.Component {
@@ -147,7 +150,7 @@ class Header extends React.Component {
         <MuiThemeProvider theme={theme}>
           <div><NotificationContainer/></div>
           <AppBar className={classes.appBar} position='static'>
-            <Toolbar >
+            <Toolbar className = {classes.toolBar}>
               <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.toggleMenuDisplay}>
                 <MenuIcon />
               </IconButton>
@@ -166,9 +169,10 @@ class Header extends React.Component {
                   onClick={this.handleUserOpen}
                   color="inherit"
                   display='flex'
+                  style = {{height:50}}
                 >
-                  <Avatar id='userAvatar' alt='User' src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
-                  <div style={{ display: 'flex', flexDirection: 'column',right: -10, marginLeft: 10, justifyContent: 'left' }}>
+                  <Avatar style = {{top: -5}} id='userAvatar' alt='User' src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
+                  <div style={{ display: 'flex', flexDirection: 'column',right: -10, marginLeft: 10, justifyContent: 'left', lineHeight: 0.8 }}>
                     <label htmlFor='userAvatar' style={{ fontSize: 15 }}>{!this.props.email ? 'example@gmail.com' : this.props.email}</label>
                     <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{Roles.filter(role => role.name === this.props.role)[0] != null ? Roles.filter(role => role.name === this.props.role)[0].caption : 'Khách hàng'}</label>
                   </div>
@@ -202,7 +206,7 @@ const mapState2Props = (state) => {
     mail: state.PageReducer.mail,
     role: state.LoginReducer.role,
     userAvatar: state.LoginReducer.avatar,
-    order: state.PageReducer.order,
+    order: state.ProductReducer.saleOrderItemCount,
     isLoggedIn: state.LoginReducer.isLoggedIn,
     isShowSignUp: state.PageReducer.isShowSignUp,
     email: state.LoginReducer.email

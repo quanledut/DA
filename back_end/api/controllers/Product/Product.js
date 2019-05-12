@@ -74,8 +74,40 @@ const getProductDetail = async (req, res) => {
     }
 }
 
+const changeProductDetail = async (req,res) => {
+    try{
+        const {_id,name,description,width, height,length,saleprice} = req.body;
+        let product = await Product.findOne({_id: req.body._id});
+        if(product != null){
+            product.name = name || product.name;
+            product.description = description || product.description;
+            product.width = width  || product.width;
+            product.height = height   || product.height;
+            product.length = length  || product.length;
+            product.saleprice = saleprice  || product.saleprice;
+            await product.save();
+            res.status(200).send('Updated')
+        }
+        else {
+            res.status(404).send('_id not found')
+        }
+    }
+   catch(err){
+       res.status(403).send(err)
+   }
+}
+
+const deleteProduct = (req, res) => {
+    // try{
+    //     const {_id} = req.params;
+    //     Product.findOneAndRemove({_id},);
+    // }
+}
+
 module.exports = {
     requestNewProduct,
     getProduct,
-    getProductDetail
+    getProductDetail,
+    changeProductDetail,
+    deleteProduct
 }

@@ -179,7 +179,7 @@ export class Products extends Component {
             >
             {(this.props.departments).map((department, index) =>
               (
-                <Tab label={department.caption} className={classes.tab}
+                <Tab key = {department.name} label={department.caption} className={classes.tab}
                   style={{ height: 40 }}
                 />
               )
