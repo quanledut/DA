@@ -3,6 +3,7 @@ const initialState = {
     order: 1,
     isShowFullMenu: true,
     isUserPopupOpen: true,
+    loginFormState : false,
     isShowSignUp: false,
     screen: 'products',
     isShowForgotPasswordForm: false
@@ -20,6 +21,18 @@ const PageReducer = (state = initialState, action) => {
         }
         case 'TOGGLE_ACCOUNT_DISPLAY':{
             return {...state, isUserPopupOpen:!state.isUserPopupOpen}
+            break;
+        }
+        case 'SHOW_LOGIN_FORM':{
+            return {...state,loginFormState: true}
+            break;
+        }
+        case 'HIDE_LOGIN_FORM':{
+            return {...state,loginFormState: false}
+            break;
+        }
+        case 'LOGIN_SUCCESS':{
+            return {...state,loginFormState: false}
             break;
         }
         case 'HIDE_SIGNUP_DIALOG': {

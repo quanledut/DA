@@ -104,10 +104,28 @@ const deleteProduct = (req, res) => {
     // }
 }
 
+const getProductMainInfo = async (req,res) => {
+    try {
+        const { id } = req.params;
+        if (id != null && id != '') {
+            let product = await Product.findOne({ _id: id });
+            product.subImage = await getSubImage(product.subImage);
+            res.status(200).send(product);
+        }
+        else {
+            res.status(400).send('id required')
+        }
+    }
+    catch (err) {
+        res.status(404).send(err);
+    }
+}
+
 module.exports = {
     requestNewProduct,
     getProduct,
     getProductDetail,
     changeProductDetail,
-    deleteProduct
+    deleteProduct,
+    getProductMainInfo
 }

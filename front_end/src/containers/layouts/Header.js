@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Avatar, Button, IconButton, Menu, MenuItem, Badge, Divider } from '@material-ui/core';
 import {
   Menu as MenuIcon, Mail as MailIcon, MoreVert as MoreIcon, Notifications as NotificationsIcon,
-  ShoppingCart as ShoppingCartIcon, BubbleChart, Person
+  ShoppingCart as ShoppingCartIcon, BubbleChart, Person, TrainRounded
 } from '@material-ui/icons';
 import { blue, red, purple } from '@material-ui/core/colors';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -59,7 +59,8 @@ class Header extends React.Component {
     accountAnchorEl: null,
     isShowMenu: false,
     isShowAccount: false,
-    isShowLogin: false
+    isShowLogin: false,
+    showForgotPasswordForm: false
   }
 
   handleUserOpen = e => {
@@ -71,20 +72,6 @@ class Header extends React.Component {
     this.props.showSignUpDialog();
   }
 
-  loginPressHandle = () => {
-    this.setState({
-      isShowLogin: true
-    })
-  }
-
-  requestLogin = (username, password, remember) => {
-    this.hideLoginForm();
-  }
-
-  hideLoginForm = () => {
-    this.setState({ isShowLogin: false })
-  }
-
   logoutPressHandle = () => {
     this.handleAccountClose();
     this.props.handleLogout();
@@ -93,6 +80,10 @@ class Header extends React.Component {
 
   handleAccountClose = () => {
     this.setState({ accountAnchorEl: null })
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log('NextProps: ' +JSON.stringify(nextProps));
   }
 
   render() {
@@ -137,7 +128,7 @@ class Header extends React.Component {
         open={Boolean(this.state.accountAnchorEl)}
         onClose={this.handleAccountClose}
       >
-        <MenuItem onClick={this.loginPressHandle}>
+        <MenuItem onClick={this.props.showLoginForm}>
           <IconButton color="inherit">
             <Person />
           </IconButton>
@@ -158,8 +149,11 @@ class Header extends React.Component {
                 Vinmus Community
                 </Typography>
               <div className={classes.isDesktopMenu}>
-                <IconButton>
-                  <Badge badgeContent={this.props.order} color='secondary' classes={{ badge: classes.badge }}>
+                <IconButton onClick = {() => {
+                  this.props.reloadSaleOrder(this.props.SaleOrder);
+                  this.props.showCards(this.props.SaleOrder);
+                }}>
+                  <Badge badgeContent={this.props.SaleOrder.length} color='secondary' classes={{ badge: classes.badge }}>
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>
@@ -187,9 +181,13 @@ class Header extends React.Component {
           </AppBar>
           {renderAccountMenu}
           <LoginDialog
-            open={this.state.isShowLogin}
-            hideLoginForm={this.hideLoginForm}
-            requestLogin={this.requestLogin}
+            open={this.props.loginFormState}
+            hideLoginForm={this.props.hideLoginForm}
+            requestLogin = {this.props.requestLogin}
+            showForgotPassForm = {() => {
+              this.setState({showLoginForm: false,
+                            showForgotPasswordForm: true})
+            }}
           />
           <SignUpDialog
             open={this.props.isShowSignUp}
@@ -206,27 +204,25 @@ const mapState2Props = (state) => {
     mail: state.PageReducer.mail,
     role: state.LoginReducer.role,
     userAvatar: state.LoginReducer.avatar,
-    order: state.ProductReducer.saleOrderItemCount,
-    isLoggedIn: state.LoginReducer.isLoggedIn,
-    isShowSignUp: state.PageReducer.isShowSignUp,
-    email: state.LoginReducer.email
+    SaleOrder: state.ProductReducer.SaleOrder,
+    email: state.LoginReducer.email,
+    token: state.LoginReducer.token,
+    loginFormState: state.PageReducer.loginFormState
   }
 }
 
 const mapDispatch2Props = (dispatch) => {
   return {
+    showLoginForm: () => {dispatch({type: 'SHOW_LOGIN_FORM'})},
+    hideLoginForm: () => {dispatch({type: 'HIDE_LOGIN_FORM'})},
     hideSignUpDialog: () => { return dispatch({ type: 'HIDE_SIGNUP_DIALOG' }) },
     showSignUpDialog: () => { return dispatch({ type: 'SHOW_SIGNUP_DIALOG' }) },
     toggleMenuDisplay: () => { return dispatch({ type: 'TOGGLE_MENU_DISPLAY' }) },
-    handleLogout: () => {return dispatch({type: 'HANDLE_LOGOUT'})}
+    handleLogout: () => {return dispatch({type: 'HANDLE_LOGOUT'})},
+    showCards: () => {return dispatch({type:'SCREEN_ROUTER',payload:  '/cards'})},
+    reloadSaleOrder: (SaleOrder) => {return dispatch({type: 'RELOAD_SALE_ORDER', payload: SaleOrder})},
+    requestLogin: (data) => {return dispatch({type: 'REQUEST_LOGIN', payload:data})}
   }
-}
-
-Header.propTypes = {
-  mail: PropTypes.number.isRequired,
-  order: PropTypes.number.isRequired,
-  role: PropTypes.string,
-  isShowSignUp: PropTypes.bool.isRequired
 }
 
 export default connect(mapState2Props, mapDispatch2Props)(withStyles(styles)(Header));

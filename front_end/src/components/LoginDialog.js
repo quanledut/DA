@@ -1,23 +1,29 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Dialog, TextField, Paper, Typography, Button, Link, Divider , FormControlLabel, Checkbox} from '@material-ui/core';
+import { Dialog, Grid, Divider, IconButton } from '@material-ui/core';
 import { Send, Cancel } from '@material-ui/icons';
 import { connect } from 'react-redux';
-import { MuiThemeProvider, withStyles, createMuiTheme } from '@material-ui/core/styles';
-import { blue, red } from '@material-ui/core/colors';
-import {login} from '../api/AccountApi';
-import {decode} from 'base-64';
-import atob from 'atob';
+import { logo } from '../data/logo.png';
+import { StyledButton } from '../components/Components'
+import { Close as CloseIcon } from '@material-ui/icons';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
 
-const styles = {
-
-}
-
 export class LoginDialog extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: '',
+            password: '',
+            emailErr: false,
+            passwordErr: false,
+            canRequestLogin: false,
+            remember: false,
+            loginFail: false
+        }
+    }
 
     onChangeText = (e) => {
         this.setState({
@@ -42,6 +48,10 @@ export class LoginDialog extends Component {
         }
     };
 
+    onCheckRemember = (event) => {
+        this.setState({remember: !this.state.remember})
+    }
+
     showForgotPassForm = () => {
         this.props.hideLoginForm();
         this.props.showForgotPassForm();
@@ -53,130 +63,55 @@ export class LoginDialog extends Component {
             password: this.state.password,
             remember: this.state.remember
         }
-        login(userInfo).then(res => {
-            if(this.state.remember) localStorage.setItem('token', res.data.token);
-            else localStorage.removeItem('token');
-            localStorage.setItem('tokenTempt', res.data.token);
-            let tokenInfo = res.data.token.split('.')[1];
-            tokenInfo = tokenInfo.replace('-','+').replace('_','/');
-            let userInfo = JSON.parse(atob(tokenInfo));
-            this.props.setCurrentUser(userInfo);
-            this.props.hideLoginForm();
-        }).catch(err => {this.setState({loginFail: true})})
+        this.props.requestLogin(userInfo);
     }
-
-    handleCheckRemember = name => event => {
-        this.setState({[name]:event.target.checked})
-    }
-
-    state = {
-        email: '',
-        password: '',
-        emailErr: false,
-        passwordErr: false,
-        canRequestLogin: false,
-        remember: false,
-        loginFail: false
-    }
-
 
     render() {
-        const { open, classes } = this.props;
-        const theme = createMuiTheme({
-            palette: {
-                primary: { main: blue[500] }, // Purple and green play nicely together.
-                secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
-                inherit: { main: red[600] },
-                type: 'light'
-            },
-            typography: { useNextVariants: true },
-        });
         return (
-            <Dialog open={open}>
-                <MuiThemeProvider theme={theme}>
-                    <Paper style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '500px' }} color='primary'>
-                        <Typography variant='h3' style={{ textAlign: 'center' }}>Đăng nhập</Typography>
-                        <Typography variant='h3' color = 'secondary' style={{ textAlign: 'center' , fontSize: '0.8em', color: 'red'}}>{this.state.loginFail ? 'Email hoặc mật khẩu không đúng' : ''}</Typography>
-                        <Divider />
-                        <TextField
-                            error={this.state.emailErr}
-                            name='email'
-                            onChange={this.onChangeText}
-                            value={this.state.email}
-                            id="standard-dense"
-                            label="Email"
-                            className={'textField'}
-                            style={{ marginLeft: 20, marginRight: 20 }}
-                            helperText={this.state.emailErr ? 'Vui lòng kiểm tra định dạng email' : ' '}
-                        />
-                        <br />
-                        <TextField
-                            name='password'
-                            error={this.state.passwordErr}
-                            onChange={this.onChangeText}
-                            value={this.state.password}
-                            label="Mật khẩu"
-                            className={'textField'}
-                            type='password'
-                            style={{ marginLeft: 20, marginRight: 20 }}
-                            helperText={this.state.passwordErr ? 'Mật khẩu phải có ít nhất 8 ký tự' : ' '}
-                        />
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.state.remember}
-                                        onChange={this.handleCheckRemember('remember')}
-                                        value="remember"
-                                        color="primary"
-                                    />
-                                }
-                                label="Duy trì đăng nhập"
-                            />
-                            <Link onClick={this.showForgotPassForm} style={{ bottom: '0px', fontSize: '1em', paddingTop: '5px' }}>Quên mật khẩu ?</Link>
-                        </div>
-                        <Divider />
-                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                            <Button variant="contained" color="secondary" className='button' style={{ margin: '10px' }} onClick={this.props.hideLoginForm}>
-                                Trở lại
-                                <Cancel className={classes.iconRight} style={{ paddingLeft: '20px' }}></Cancel>
-                            </Button>
-                            <Button variant="contained" color="primary" className='button' style={{ margin: '10px' }} disabled={this.state.passwordErr || this.state.emailErr} onClick={this.requestLogin}>
-                                Đăng nhập
-                                <Send className='iconRight' style={{ paddingLeft: '20px' }}></Send>
-                            </Button>
-                        </div>
-                    </Paper>
-                </MuiThemeProvider>
-            </Dialog>
+            <Dialog open={this.props.open}>
+            <div style={{ width: 500, display: 'flex',flexDirection: 'column', justifyContent:'center', alignItems: 'center'}}>
+                <div item xs = {12} style = {{width:'100%', height: 30, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <IconButton style = {{height: 30}} onClick = {this.props.hideLoginForm}><CloseIcon/></IconButton>
+                </div>
+                <div style={{ width: 400, height: 400, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                    <Grid container style={{ fontFamily: 'Helvetica Neue",Helvetica,Arial,sans-serif', color: '#333',fontSize:'14px', display: 'flex', flexDirection: 'row', alignItems: 'flex-start' , justifyContent: 'center'}}>
+                    <Grid item xs = {12} style = {{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                            <img src={require('../data/logo.png')} style={{ height: 100 }} />
+                        </Grid>
+                        <Divider/>
+                        <Grid item xs={12} style={{ paddingTop: 20  }}>Email</Grid>
+                        <Grid item xs={12} style={{ width: '100%'}}>
+                            <input value={this.state.email} placeholder='your_name@example.com' style={!this.state.emailErr ? { border: '1px solid #bdbdbd', paddingLeft: 5, width: '100%', borderRadius: 1 , backgroundColor:'#e0e0e0', height:30} : { border: '1px solid red', paddingLeft: 5, width: '100%', borderRadius: 1, backgroundColor:'#e0e0e0' , height:30 }} name='email' onChange={this.onChangeText} />
+                        </Grid>
+                        <Grid item xs={12} style={{ paddingTop: 20  }}>Mật khẩu</Grid>
+                        <Grid item xs={12} style={{ width: '100%' }}>
+                            <input value={this.state.password} type = 'password' placeholder='**********' style={!this.state.passwordErr ? { border: '1px solid #bdbdbd', paddingLeft: 5, width: '100%', borderRadius: 1, backgroundColor:'#e0e0e0',  height:30 } : { border: '1px solid red', paddingLeft: 5, width: '100%', borderRadius: 1, backgroundColor:'#e0e0e0' , height:30}} name='password' onChange={this.onChangeText} />
+                        </Grid>
+                        <Grid item xs = {6} style={{ paddingTop: 20 ,display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+                            <input type="checkbox" name="remember" value={'remember'} onClick = {this.onCheckRemember} style = {{paddingRight: 20}}/>{` Nhớ đăng nhập`} <br/>
+                        </Grid>
+                        <Grid item xs = {6} style={{ paddingTop: 20 ,display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+                            <a onClick = {this.props.showForgotPassForm} href = '#'> Quên mật khẩu</a>
+                        </Grid>
+                        <Grid item xs={12} style={{ paddingTop: 20 , display: 'flex', justifyContent: 'center'}}>
+                            <StyledButton onClick={this.requestLogin}>Đăng nhập</StyledButton>
+                        </Grid>
+                    </Grid>
+                </div>
+                </div>
+            </Dialog >
         )
     }
 }
 
-LoginDialog.propTypes = {
-    open: PropTypes.bool,
-    hideLoginForm: PropTypes.func,
-}
-
 const mapState2Props = (state) => {
     return {
-
     }
 }
 
 const mapDispatch2Props = (dispatch) => {
     return {
-        setCurrentUser: (userInfo) => {
-            dispatch({type: 'SET_CURRENT_USER',
-                    payload: {
-                        email: userInfo.email,
-                        role: userInfo.role
-                    }})
-        },
-        showForgotPassForm: () => {
-            return dispatch({type: 'SHOW_FORGOT_PASSWORD_FORM'})
-        }
     }
 }
 
-export default connect(mapState2Props, mapDispatch2Props)(withStyles(styles)(LoginDialog))
+export default connect(mapState2Props, mapDispatch2Props)(LoginDialog)

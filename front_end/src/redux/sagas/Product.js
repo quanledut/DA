@@ -1,7 +1,7 @@
 import { call, put, } from 'redux-saga/effects';
 import { checkToken } from '../../api/AccountApi';
 import { apiUrl } from '../../config'
-import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail } from '../../api/ProductApi'
+import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder} from '../../api/ProductApi'
 import { NotificationManager } from 'react-notifications';
 
 export function* LoadDepartment() {
@@ -47,45 +47,23 @@ export function* ShowProductDetail(action){
     }
 }
 
-export function* AddProductToOrder(action){
-    console.log('Sunction Load product')
-    let {productId, productQty} = action.payload;
-    let SaleOrder = localStorage.getItem('SaleOrder');
-    console.log('SaleOrder: '+JSON.stringify(SaleOrder));
-    if(!SaleOrder){
-        console.log('Null SaleOrder')
-        // localStorage.setItem('SaleOrder', (new Array()).push(action.payload), () => {
-        //     put({type: 'CHANGE_SALEORDER'})
-        // });
-    }
-    else {
-        // let SaleOrderItem = SaleOrder.filter(item => item.productId == action.payload.productId);
-        // if(SaleOrderItem.length == 0){
-        //     let UpdatedSaleOrder = [...SaleOrder,action.payload];
-        //     localStorage.setItem('SaleOrder', UpdatedSaleOrder,() => {
-        //         put({type: 'CHANGE_SALEORDER'})
-        //     })
-        // }
-        // else {
-        //     let UpdatedSaleOrder = SaleOrder.map(item => {
-        //         if(item.productId == action.payload.productId) item.productQty = item.productQty + action.payload.productQty;
-        //         return item;
-        //     })
-        //     localStorage.setItem('SaleOrder', UpdatedSaleOrder,() => {
-        //         put({type: 'CHANGE_SALEORDER'})
-        //     })
-        // }
-    }
-}
-
 export function* CleanSaleOrder(){
     console.log('CLEAN SALEORDER')
     localStorage.removeItem('SaleOrder',() => console.log(localStorage.getItem('SaleOrder')))
 }
 
 export function* LoadSaleOrder() {
-    let SaleOrder = localStorage.getItem('SaleOrder')
-    yield put({type:'LOADED_SALE_ORDER',payload: SaleOrder})
+    let SaleOrder = JSON.parse(localStorage.getItem('SaleOrder'));
+    if(SaleOrder != null)
+    {
+        yield put({type:'RELOAD_SALE_ORDER_SUCCESS',payload: SaleOrder})
+    }
+}
+
+export function* UpdateSaleOrderItem(action){
+    console.log('Update SaleOrder payload: '+ action.payload)
+    localStorage.setItem('SaleOrder',JSON.stringify(action.payload));
+    yield put({type: 'UPDATED_SALE_ORDER_ITEM_STORAGE', payload: action.payload});
 }
 
 export function* ChangeProductDetail(action){
@@ -97,4 +75,14 @@ export function* ChangeProductDetail(action){
     catch(err){
         NotificationManager.error('Lỗi khi cập nhật thông tin sản phẩm', 'Error', 2000);
     }   
+}
+
+export function* ReloadSaleOrder(action){
+    try{
+        let SaleOrder = yield call(reloadSaleOrder, action.payload)
+        yield put({type: 'RELOAD_SALE_ORDER_SUCCESS',payload: SaleOrder})
+    }
+    catch(err){
+        yield put({type: 'RELOAD_SALE_ORDER_FAILED',payload: err})
+    }
 }

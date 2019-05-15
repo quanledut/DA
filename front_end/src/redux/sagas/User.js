@@ -1,27 +1,24 @@
 import { call, put, } from 'redux-saga/effects';
-import { checkToken, signUp , requestForgotPassword, requestSetNewPassword} from '../../api/AccountApi';
-import {LoadDepartment} from './Product'
+import { checkToken, signUp , requestForgotPassword, requestSetNewPassword, login} from '../../api/AccountApi';
 import {NotificationManager} from 'react-notifications'
 
 export function* LoadUser() {
-	try {
 		let token = yield localStorage.getItem('token');
-		console.log('Token check: ' + token)
-		const userInfo = yield call(checkToken, token);
-		yield put({
-			type: 'TOKEN_CHECKED',
-			payload: {
-				email: userInfo.email,
-				role: userInfo.role,
-				avatar: userInfo.avatar
-			}
-		})
-	}
-	catch (err) {
-		localStorage.removeItem('token');
-		yield put({ type: 'TOKEN_NOT_CHECKED' })
-	}
+		if(token) yield put({type: 'LOGIN_SUCCESS',payload: token})
 };
+
+export function* RequestLogin(action){
+	try{
+		let token = yield call(login, action.payload);
+		if(action.payload.remember) localStorage.setItem('token', token);
+		NotificationManager.success('Đăng nhập thành công','Success',2000);
+		yield put({type: 'LOGIN_SUCCESS', payload: token})
+	}
+	catch(err){
+		NotificationManager.error('Đăng nhập thất bại','Error',2000);
+		yield put({type: 'LOGIN_FAILED', payload: err})
+	}
+}
 
 export function* handleLogout(action) {
 	try {
@@ -32,15 +29,6 @@ export function* handleLogout(action) {
 	}
 	catch (err) { }
 }
-
-export function* RequestLogin(action) {
-	try {
-	}
-	catch (err) {
-		localStorage.removeItem('token');
-		yield put({ type: 'TOKEN_NOT_CHECKED' })
-	}
-};
 
 export function* CreateNewEmployee(action) {
 	try {
@@ -68,5 +56,23 @@ export function* RequestSetNewPassword(action){
 	}
 	catch(err){
 		yield NotificationManager.error('Lỗi khi đặt lại mật khẩu', 'Lỗi', 3000);
+	}
+}
+
+export function* LoadUserFromToken(action){
+	try {
+		const userInfo = yield call(checkToken, action.payload);
+		yield put({
+			type: 'TOKEN_CHECKED',
+			payload: {
+				email: userInfo.email,
+				role: userInfo.role,
+				avatar: userInfo.avatar
+			}
+		})
+	}
+	catch (err) {
+		localStorage.removeItem('token');
+		yield put({ type: 'TOKEN_NOT_CHECKED' })
 	}
 }

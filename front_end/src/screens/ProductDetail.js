@@ -123,7 +123,7 @@ export class ProductDetail extends Component {
 											onChange={this.onChangeText}
 										/>
 										<StyledButton style={{ bottom: 7, marginLeft: 20 }}
-											onClick={() => this.props.addProductToOrders(product._id, this.state.buyQty)}
+											onClick={() => this.props.addProductToOrders(product, this.state.buyQty)}
 										> Thêm vào giỏ hàng</StyledButton>
 									</div>
 								</div>
@@ -303,8 +303,8 @@ const mapDispatch2Props = (dispatch) => {
 		getProduct: (data) => {
 			dispatch({ type: 'GET_PRODUCT', payload: data })
 		},
-		addProductToOrders: (productId, productQty) => {
-			dispatch({ type: 'ADD_PRODUCT_TO_ORDERS', payload: { productId, productQty } })
+		addProductToOrders: (product, productQty) => {
+			dispatch({ type: 'ADD_PRODUCT_TO_ORDERS', payload: { product, productQty } })
 		},
 		ChangeProductDetail: (product) => {
 			dispatch({ type: 'CHANGE_PRODUCT_DETAIL', payload: product })

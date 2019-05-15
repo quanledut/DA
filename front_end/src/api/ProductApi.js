@@ -74,3 +74,24 @@ export const changeProductDetail = (product) => {
         }).catch(err => reject(err))
     })
 }
+
+export const reloadSaleOrder = (SaleOrder) => {
+    console.log(SaleOrder)
+    return new Promise(async (resolve, reject) => {
+        try
+        {
+            let NewSaleOrder = await Promise.all(SaleOrder.map(async(item) => {
+                let res = await axios.get(`${apiUrl}/products/mainInfo/${item.product._id}`);
+                if(res.status == 200) {
+                    console.log('Product reloaded')
+                    item.product = res.data;
+                };
+                return item;
+            }))
+            return resolve(NewSaleOrder)
+        }
+        catch(err) {
+            reject(err)
+        }
+    })
+}

@@ -82,7 +82,7 @@ export class Viewer extends Component {
 								</ListItem>
 								:
 								<ListItem disabled>
-									<div style = {{height: 800}}></div>
+									<div style = {{height: '100%'}}></div>
 								</ListItem>
 							))}
 						</List>

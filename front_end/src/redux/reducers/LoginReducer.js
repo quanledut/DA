@@ -4,19 +4,12 @@ const initState = {
     currentUser: null,
     email: null,
     role: null,
-    avatar: null
+    avatar: null,
+    token: null
 }
 
 export const LoginReducer = (state = initState, action) => {
     switch (action.type){
-        case 'SHOW_LOGIN_FORM':
-            return {
-                ...state, isShowLoginForm: true
-            }
-        case 'HIDE_LOGIN_FORM':
-            return {
-                ...state, isShowLoginForm: false
-            }
         case 'CHECKED_TOKEN':
             return {
                 isLoggedIn: true,
@@ -29,6 +22,9 @@ export const LoginReducer = (state = initState, action) => {
                 role: action.payload.role,
                 avatar: action.payload.avatar
             }
+        case 'LOGIN_SUCCESS':{
+            return {...state, token: action.payload}
+        }
         case 'SET_CURRENT_USER':{
             return {
                 ...state,
@@ -40,8 +36,13 @@ export const LoginReducer = (state = initState, action) => {
             return {
                 ...state,
                 email: null,
-                role: null
+                role: null,
+                token: null,
+                avatar: null
             }
+        }
+        case 'LOGIN_SUCCESS':{
+            return {...state,token: action.payload}
         }
         default:
             return state

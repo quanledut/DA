@@ -7,9 +7,11 @@ import { withRouter } from 'react-router-dom';
 import history from '../history';
 import ForgotPassword from './ForgotPassword';
 import NewProduct from './NewProduct';
+import NewSaleOrder from './NewSaleOrder';
+import InvoicePdf from './InvoicePdf';
+import SaleOrder_ChooseCustomer from './SaleOrder_ChooseCustomer';
 
 import React, { Component } from 'react'
-
 export class ScreenRouter extends Component {
     render() {
         return (
@@ -20,6 +22,9 @@ export class ScreenRouter extends Component {
                 <Route exact path='/employees' component={Employees} />
                 <Route path = '/reset/:token?' component = {ForgotPassword}/>
                 <Route path='/product/new' component={NewProduct} />
+                <Route path = '/cards' component = {NewSaleOrder} />
+                <Route path = '/pdf' component = {InvoicePdf} />
+                <Route path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
             </Router>
         )
     }

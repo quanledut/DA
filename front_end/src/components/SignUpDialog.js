@@ -89,7 +89,7 @@ export class SignUpDialog extends Component {
   }
 
   onSubmitButton = () => {
-    const data = new FormData();
+    let data = new FormData();
     data.append('file', this.state.avatar);
     data.append('email', this.state.email);
     data.append('password', this.state.password);

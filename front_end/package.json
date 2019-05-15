@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/system": "^3.0.0-alpha.2",
+    "@react-pdf/renderer": "^1.5.6",
     "atob": "^2.1.2",
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
@@ -28,8 +29,10 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
+    "react-select": "^2.4.3",
     "react-slick": "^0.24.0",
     "react-swipeable-views": "^0.13.1",
+    "react-to-print": "^2.1.2",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
     "styled-components": "^4.2.0"

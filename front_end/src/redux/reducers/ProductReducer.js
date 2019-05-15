@@ -1,4 +1,5 @@
 import { stat } from "fs";
+import { number } from "prop-types";
 
 const initialState = {
     departments: [],
@@ -55,16 +56,23 @@ export const ProductReducer = (state = initialState, action) => {
         }
         case 'ADD_PRODUCT_TO_ORDERS':{
             if(state.SaleOrder.length > 0){
-                let SaleOrderItem = state.SaleOrder.filter(item => item.productId == action.payload.productId);
+                let SaleOrderItem = state.SaleOrder.filter(item => item.product._id == action.payload.product._id);
                 if(SaleOrderItem.length > 0){
-                    let NewSaleOrder = state.SaleOrder.map(item => { if(item.productId == action.payload.productId) item.productQty += action.payload.productQty; return item})
-                    console.log(NewSaleOrder);
+                    let NewSaleOrder = state.SaleOrder.map(item => { if(item.product._id == action.payload.product._id) item.productQty = parseInt(item.productQty) + parseInt(action.payload.productQty) ; return item})
+                    localStorage.setItem('SaleOrder',JSON.stringify(NewSaleOrder.map(item => {item.images = []; return item })));
                     return {
                         ...state, SaleOrder: NewSaleOrder, saleOrderItemCount: NewSaleOrder.length
                     }
                 }
             }
+            localStorage.setItem('SaleOrder',JSON.stringify([...state.SaleOrder,action.payload]));
             return {...state, SaleOrder: [...state.SaleOrder,action.payload], saleOrderItemCount: state.saleOrderItemCount + 1}
+        }
+        case 'RELOAD_SALE_ORDER_SUCCESS': {
+            return {...state, SaleOrder: action.payload}
+        }
+        case 'UPDATED_SALE_ORDER_ITEM_STORAGE':{
+            return {...state, SaleOrder: action.payload}
         }
         default: {
             return state;

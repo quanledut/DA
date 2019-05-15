@@ -30,7 +30,7 @@ export const signUp = (data) => {
 export const login = (userInfo) => {
     return new Promise((resolve, reject) => {
         axios.post(`${apiUrl}/login`,{email: userInfo.email, password: userInfo.password}).then(res => {
-            if(res.status === 200) return resolve(res)
+            if(res.status === 200) return resolve(res.data.token)
             else reject(res);
         })
         .catch(err => {return reject(err)})

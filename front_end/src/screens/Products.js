@@ -167,9 +167,10 @@ export class Products extends Component {
       spacing: value => value
     })
     return (
-      <div theme={theme}>
+      <div theme={theme} style = {{backgroundColor: '#d7ccc8'}}>
         <Paper className={classes.departmentTab}>
-          <Tabs
+
+          {/*<Tabs
             variant='fullWidth'
             value={this.props.departments.map(dept => { return dept.name }).indexOf(this.props.department.name) >= 0 ?
               this.props.departments.map(dept => { return dept.name }).indexOf(this.props.department.name) : 0}
@@ -184,9 +185,8 @@ export class Products extends Component {
                 />
               )
             )}
-          </Tabs>
+              </Tabs>*/}
 
-          {/* Search Field */}
           <div style={{ height: 30, display: 'flex', margin: 3 }}>
             <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, paddingRight: '5px' }}>
               <SearchIcon style={{ fontSize: 25 }} color='primary' className={classes.searchIcon} />
@@ -218,7 +218,7 @@ export class Products extends Component {
           </div>
 
           {/* List Product */}
-          <div className={classes.productRoot}>
+          <div className={classes.productRoot} style = {{backgroundColor: '#d7ccc8'}}>
             <GridList cellHeight={220} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>
               <GridListTile key="Subheader" cols={numberOfProductPerLine} style={{ height: 'auto' }}>
                 <ListSubheader component="div">{`Sản phẩm: ${this.props.productCount}`}</ListSubheader>
@@ -228,7 +228,7 @@ export class Products extends Component {
                   <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} style = {{width:'100%', height:'auto'}} onClick={() => {this.handleClickToProduct(product._id)}} />
                   <GridListTileBar
                     title={product.name}
-                    subtitle={product.saleprice[product.saleprice.length - 1].value? <span>Giá: {product.saleprice[product.saleprice.length - 1].value} VNĐ</span> : <span>Liên hệ</span>}
+                    subtitle={product.saleprice[product.saleprice.length - 1].value ? <span>Giá: {parseFloat(product.saleprice[product.saleprice.length - 1].value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} VNĐ</span> : <span>Liên hệ</span>}
                     actionIcon={
                       <div style = {{display: 'flex', flexDirection: 'column', alignItems:'flex-end', }}>
                         <Rating

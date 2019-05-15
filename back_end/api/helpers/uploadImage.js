@@ -30,6 +30,7 @@ var upload = multer({storage: storage});
 
 const getSubImage = (filename) => {
     return new Promise((resolve, reject) => {
+        if(!filename || filename == '') resolve('');
         image = gfs.files.findOne({filename}).then(image => {
             if(image){
                 var readstream = gfs.createReadStream({filename: image.filename});
