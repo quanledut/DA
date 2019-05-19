@@ -11,10 +11,10 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-			{/* <div style = {{width: '100vw', height: '100vh'}}> */}
-				<Header />
-				<Viewer />
-			{/* </div> */}
+				<div style = {{width: '100%', height: '100%'}}>
+					<Header />
+					<Viewer />
+				</div>
 			</Provider>
 		);
 	}

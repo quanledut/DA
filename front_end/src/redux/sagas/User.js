@@ -67,7 +67,8 @@ export function* LoadUserFromToken(action){
 			payload: {
 				email: userInfo.email,
 				role: userInfo.role,
-				avatar: userInfo.avatar
+				avatar: userInfo.avatar,
+				user_id: userInfo.user_id
 			}
 		})
 	}

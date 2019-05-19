@@ -16,10 +16,16 @@ export function* handleRouteScreen(action) {
                 yield call(history.push,'/');
                 break;
             }
-            case 'employees':{
-                yield put({type: 'ROUTE_SCREEN_BY_REDUX_SAGA', payload:{screen: 'employees'}})
+            case '/saleorders':{
+                yield put({type: 'ROUTE_SCREEN_BY_REDUX_SAGA', payload:{screen: 'saleorders'}})
                 //return (<Redirect to = '/employees'/>)
-                yield call(history.push,'/employees');
+                yield call(history.push,'/saleorders');
+                break;
+            }
+            case 'saleorders':{
+                yield put({type: 'ROUTE_SCREEN_BY_REDUX_SAGA', payload:{screen: 'saleorders'}})
+                //return (<Redirect to = '/employees'/>)
+                yield call(history.push,'/saleorders');
                 break;
             }
             case 'about':{

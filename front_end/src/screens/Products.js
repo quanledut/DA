@@ -109,7 +109,8 @@ export class Products extends Component {
     this.state = {
       productShow: null,
       pageOfProduct: 1,
-      name: ''
+      name: '',
+      sort_by: ''
     }
   }
 
@@ -122,16 +123,10 @@ export class Products extends Component {
       pageOfProduct: number
     });
     let data = {
-      department: this.props.department,
       name: this.state.name,
       page: number,
-      limit: numberOfProductPerPage
-    }
-    if(this.props.department.name === 'all' || !this.props.department.name){
-      delete data.department;
-    }
-    if(this.state.name === ''){
-      delete data.name
+      limit: numberOfProductPerPage,
+      sort_by: this.state.sort_by
     }
     this.props.getProduct(data);
   }
@@ -141,20 +136,15 @@ export class Products extends Component {
   }
 
   onSearch = (event) => {
-    this.setState({name: event.target.value, pageOfProduct: 1});
-    let data = {
-      department: this.props.department,
-      name: event.target.value,
-      page: 1,
-      limit: numberOfProductPerPage
-    }
-    if(this.props.department.name === 'all' || !this.props.department.name){
-      delete data.department;
-    }
-    if(event.target.value === ''){
-      delete data.name
-    }
-    this.props.getProduct(data);
+    this.setState({[event.target.name]: event.target.value, pageOfProduct: 1},() => {
+      let data = {
+        name: this.state.name,
+        page: 1,
+        limit: numberOfProductPerPage,
+        sort_by: this.state.sort_by
+      }
+      this.props.getProduct(data);
+    });
   }
 
   render() {
@@ -167,36 +157,19 @@ export class Products extends Component {
       spacing: value => value
     })
     return (
-      <div theme={theme} style = {{backgroundColor: '#d7ccc8'}}>
-        <Paper className={classes.departmentTab}>
-
-          {/*<Tabs
-            variant='fullWidth'
-            value={this.props.departments.map(dept => { return dept.name }).indexOf(this.props.department.name) >= 0 ?
-              this.props.departments.map(dept => { return dept.name }).indexOf(this.props.department.name) : 0}
-            onChange={this.onSelectDepartment}
-            textColor='primary'
-            style={{ height: "32px" }}>
-            >
-            {(this.props.departments).map((department, index) =>
-              (
-                <Tab key = {department.name} label={department.caption} className={classes.tab}
-                  style={{ height: 40 }}
-                />
-              )
-            )}
-              </Tabs>*/}
-
-          <div style={{ height: 30, display: 'flex', margin: 3 }}>
-            <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, paddingRight: '5px' }}>
+      <div style = {{backgroundColor: '#f5f5f5', margin: 5, border:'1px solid gray', borderRadius: 3, padding: 10}}>
+          <div style={{ height: 30, display: 'flex', margin: 3, marginTop: 5 , marginBottom: 10}}>
+            <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, marginRight: 10 }}>
               <SearchIcon style={{ fontSize: 25 }} color='primary' className={classes.searchIcon} />
               <Divider className={classes.divider} />
-              <InputBase className={classes.input} placeholder="Tìm kiếm tên sản phẩm, nhóm hàng" onChange={this.onSearch} />
+              <InputBase className={classes.input} placeholder="Tìm kiếm tên sản phẩm, nhóm hàng" onChange={this.onSearch} name = 'name' />
             </div>
             <TextField
               variant="outlined"
               select
               label='Sắp xếp theo'
+              onChange = {this.onSearch}
+              name = 'sort_by'
               InputLabelProps={{
                 shrink: true
               }}
@@ -218,11 +191,9 @@ export class Products extends Component {
           </div>
 
           {/* List Product */}
-          <div className={classes.productRoot} style = {{backgroundColor: '#d7ccc8'}}>
-            <GridList cellHeight={220} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>
-              <GridListTile key="Subheader" cols={numberOfProductPerLine} style={{ height: 'auto' }}>
-                <ListSubheader component="div">{`Sản phẩm: ${this.props.productCount}`}</ListSubheader>
-              </GridListTile>
+          <div style = {{dislay: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+            <div style = {{width: '100%',height: 30, backgroundColor: '#009688', fontWeight: 'bold', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> DANH SÁCH SẢN PHẨM {`(${this.props.productCount} sản phẩm)`}</div>
+            <GridList cellHeight={220} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
               {(products).map(product => (
                 <GridListTile key={product.name}>
                   <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} style = {{width:'100%', height:'auto'}} onClick={() => {this.handleClickToProduct(product._id)}} />
@@ -241,16 +212,20 @@ export class Products extends Component {
                 </GridListTile>
               ))}
             </GridList>
-            <Pagination
-              limit={numberOfProductPerPage}
-              offset={numberOfProductPerPage* this.state.pageOfProduct - 1}
-              total={this.props.productCount}
-              onClick={(e, offset, number) => this.changePageOfProduct(number)}
-              otherPageColor = 'inherit'
-            />
+            <div style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>
+              <div style = {{width: 150, fontStyle: 'italic', fontSize: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                Sản phẩm {(this.state.pageOfProduct - 1)*numberOfProductPerPage + 1} - {(this.state.pageOfProduct)*numberOfProductPerPage < this.props.productCount ? (this.state.pageOfProduct)*numberOfProductPerPage : this.props.productCount} của {this.props.productCount} </div>  
+              <div style = {{flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <Pagination
+                  limit={numberOfProductPerPage}
+                  offset={numberOfProductPerPage* this.state.pageOfProduct - 1}
+                  total={this.props.productCount}
+                  onClick={(e, offset, number) => this.changePageOfProduct(number)}
+                  otherPageColor = 'inherit'
+                />
+              </div>
+            </div>
           </div>
-
-        </Paper>
       </div>
     )
   }

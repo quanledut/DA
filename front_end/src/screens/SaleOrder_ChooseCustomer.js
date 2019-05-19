@@ -4,7 +4,9 @@ import { GreenButton } from '../components/Components';
 import NewCustomerDialog from '../components/NewCustomerDialog';
 import { connect } from 'react-redux';
 import SelectAutoComplete from '../components/SelectAutoComplete';
-import Stepper from '../components/Stepper'
+import MaterialStepper from '../components/MaterialStepper';
+import {StepperData} from '../data/Config';
+import {StyledButton} from '../components/Components'
 
 export class SaleOrder_ChooseCustomer extends Component {
   constructor(props) {
@@ -33,7 +35,10 @@ export class SaleOrder_ChooseCustomer extends Component {
         <div style={{ backgroundColor: '#00695c', textAlign: 'center', height: 30, color: 'white' }}>
           Thông tin khách hàng
         </div>
-
+        <MaterialStepper
+          data = {StepperData}
+          activeStep = {1}
+        />
         <div style={{ margin: 20, display: 'flex', height: 65, flexDirection: 'row', justifyContent: 'space-around' }}>
           <div style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <div style={{ fontSize: '0.8em', color: 'rgba(0, 0, 0, 0.54)' }}>Chọn khách hàng</div>
@@ -83,7 +88,7 @@ export class SaleOrder_ChooseCustomer extends Component {
               Thông tin đơn hàng
             </div>
             <hr style = {{height:5, margin: 0}}></hr>
-            <div>
+            <div style = {{flexGrow: 1}}>
               {this.props.SaleOrder.filter(item => item.selected).map(item => (
                 <div style = {{display:'flex', flexDirection: 'row'}}>
                   <div style = {{margin:3,width:50, height:50}}>
@@ -103,20 +108,50 @@ export class SaleOrder_ChooseCustomer extends Component {
                 </div>
               ))}
               </div>
+              <hr style = {{margin:5}}></hr>
+              <div style = {{display: 'flex', flexDirection: 'row', fontSize:'0.8rem', height: 30, paddingLeft: 5, paddingRight: 5}}>
+                  <Grid xs = {2} style = {{height: 25, fontWeight: 'bold'}}>Tổng cộng</Grid>
+                  <Grid xs = {5} style = {{height: 25}} >
+                  </Grid>
+                  <Grid style = {{height: 25, textAlign: 'right', color: 'red'}} xs = {5}>{this.props.MainSaleOrder.sub_total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
+              </div>
+              <div style = {{display: 'flex', flexDirection: 'row', fontSize:'0.8rem', height: 30, paddingLeft: 5, paddingRight: 5}}>
+                  <Grid xs = {2} style = {{height: 25, fontWeight: 'bold', display: 'flex', alignItems: 'center'}}>Chiết khấu</Grid>
+                  <Grid xs = {5} style = {{height: 25}} >
+                    <div style = {{border:'1px solid green', display:'flex', flexDirection: 'row', height: '100%', padding:1, borderRadius: 3}}>
+                      <input type = 'number' value = {this.props.MainSaleOrder.discount}
+                         onChange = {(event) => this.props.changeDiscount(event, this.state.subTotalAmount * event.target.value)}
+                         placeholder = '0.00' style = {{width:'100%', border:'0px', flexGrow: 1, paddingLeft: 10}}/>
+                      <div style = {{border:'0px', display: 'flex', justifyContent:'center', alignItems: 'center', paddingLeft: 3, paddingRight: 3}}>%</div>
+                    </div>  
+                  </Grid>
+                  <Grid item xs = {5} style = {{height: 25, textAlign: 'right', color: 'green', alignItems: 'center'}}>{'- '}{(this.props.MainSaleOrder.sub_total_amount * this.props.MainSaleOrder.discount / 100 || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
+              </div>
             </div>
         </div>
         
-        <div style = {{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'flex-end', right:5, border:'1px solid blue', width: '100%'}}>
-                <div style = {{width:150}}>ABC</div>
+        <div style = {{display: 'flex',flexDirection:'row', margin: 10}}>
+          <Grid xs = {7}>
+              
+          </Grid>
+          <Grid xs = {5} style = {{ padding: 5}}>
+                <div style = {{display: 'flex', flexDirection: 'row'}}>
+                  <div>Tổng thanh toán</div>
+                  <div style = {{flexGrow:1, textAlign: 'right', color:'red', fontWeight: 'bold'}}>
+                  {this.props.MainSaleOrder.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                  {' VNĐ'}</div>
+                </div>
+                <div>
+                  <StyledButton onClick = {this.props.customer.name ? () => this.props.goToPayment() : () => {alert('Vui lòng chon khách hàng')}}  style = {{width:'100%'}}> Thanh toán</StyledButton>
+                </div>
+          </Grid>
         </div>
-
         <NewCustomerDialog
           open={this.state.showAddCustomerDialog}
           createNewCustomer={this.props.handleCreateNewCustomer}
           closeDialog={() => this.setState({ showAddCustomerDialog: false })}
           token={this.props.token}
         />
-        <Stepper/>
       </div>
     )
   }
@@ -127,7 +162,8 @@ const mapState2Props = (state) => {
     token: state.LoginReducer.token,
     customers: state.CustomerReducer.customers,
     customer: state.CustomerReducer.customer,
-    SaleOrder: state.ProductReducer.SaleOrder
+    SaleOrder: state.ProductReducer.SaleOrder,
+    MainSaleOrder: state.ProductReducer.MainSaleOrder
   }
 }
 
@@ -141,6 +177,12 @@ const mapDispatch2Props = (dispatch) => {
     },
     changeCustomer: (customer) => {
       dispatch({ type: 'SELECT_CUSTOMER', payload: customer })
+    },
+    changeDiscount: (event) => {
+      dispatch({type: 'CHANGE_DISCOUNT', payload: event.target.value})
+    },
+    goToPayment: () => {
+      dispatch({type: 'SCREEN_ROUTER', payload: '/saleorder/payment'})
     }
   }
 }

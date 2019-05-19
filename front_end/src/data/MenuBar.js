@@ -36,7 +36,7 @@ export const Menu  = {
             icon: (<HowToReg/>)
         },
         {
-            name: 'orders',
+            name: 'saleorders',
             caption: 'Đơn hàng',
             icon: (<ShopTwo/>)
         },
@@ -63,7 +63,7 @@ export const Menu  = {
             icon: (<HowToReg/>)
         },
         {
-            name: 'orders',
+            name: 'saleorders',
             caption: 'Đơn hàng',
             icon: (<ShopTwo/>)
         },

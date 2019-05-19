@@ -115,7 +115,7 @@ export class NewProduct extends Component {
     data.append('files', this.state.subImage, this.state.subImage.name);
     this.state.images.map(image => {data.append('files',image,image.name)})
     data.append('department', this.state.department);
-    this.props.createNewProduct(data);
+    this.props.createNewProduct(data, this.props.token);
   }
 
   render() {
@@ -333,14 +333,15 @@ export class NewProduct extends Component {
 
 const mapState2Props = (state) => {
   return {
-    departments: state.ProductReducer.departments
+    departments: state.ProductReducer.departments,
+    token: state.LoginReducer.token
   }
 }
 
 const mapDispatch2Props = (dispatch) => {
   return {
-    createNewProduct: (data) => {
-      return dispatch({ type: 'REQUEST_CREATE_NEW_PRODUCT', payload: data })
+    createNewProduct: (data, token) => {
+      return dispatch({ type: 'REQUEST_CREATE_NEW_PRODUCT', payload: data, token: token })
     },
     routerScreen: (screenName) => {
       dispatch({ type: 'SCREEN_ROUTER', payload: screenName })

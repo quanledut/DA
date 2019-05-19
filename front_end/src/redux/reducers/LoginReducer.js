@@ -5,7 +5,8 @@ const initState = {
     email: null,
     role: null,
     avatar: null,
-    token: null
+    token: null,
+    user_id: null
 }
 
 export const LoginReducer = (state = initState, action) => {
@@ -20,7 +21,8 @@ export const LoginReducer = (state = initState, action) => {
                 ...state,
                 email: action.payload.email,
                 role: action.payload.role,
-                avatar: action.payload.avatar
+                avatar: action.payload.avatar,
+                user_id: action.payload.user_id
             }
         case 'LOGIN_SUCCESS':{
             return {...state, token: action.payload}
@@ -40,9 +42,6 @@ export const LoginReducer = (state = initState, action) => {
                 token: null,
                 avatar: null
             }
-        }
-        case 'LOGIN_SUCCESS':{
-            return {...state,token: action.payload}
         }
         default:
             return state

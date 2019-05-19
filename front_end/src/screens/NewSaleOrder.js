@@ -5,8 +5,8 @@ import { DeleteForever } from '@material-ui/icons';
 import YesNoDialog from '../components/YesNoDialog';
 import { StyledButton } from '../components/Components';
 import ReactToPrint from 'react-to-print';
-import Stepper from '../components/Stepper'
-import { withStyles } from '@material-ui/core/styles';
+import MaterialStepper from '../components/MaterialStepper'
+import {StepperData} from '../data/Config'
 
 export class NewSaleOrder extends Component {
   constructor(props) {
@@ -36,39 +36,42 @@ export class NewSaleOrder extends Component {
           Giỏ hàng
         </div>
         <div>
-          <Stepper/>
+          <MaterialStepper
+            data = {StepperData}
+            activeStep = {0}
+          />
         </div>
-        <div style = {{margin: 10}}>
-          <Grid container style = {{display: 'flex', flexDirection: 'row',fontSize:'0.8rem', fontWeight:'bold',marginLeft:10, }}>
-            <Grid item xs = {1}>Số TT</Grid>
-            <Grid item xs = {1}>Chọn</Grid>
-            <Grid item xs = {2}>Hình ảnh</Grid>
+        <div style = {{margin: 10, border: '1px solid green', borderRadius: 3}}>
+          <Grid container style = {{display: 'flex', flexDirection: 'row',fontSize:'0.8rem', fontWeight:'bold',margin:10, alignItems: 'center' }}>
+            <Grid item xs = {1} style = {{textAlign: 'center',display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Số TT</Grid>
+            <Grid item xs = {1} style = {{textAlign: 'center'}}>Chọn</Grid>
+            <Grid item xs = {2} style = {{textAlign: 'center'}}>Hình ảnh</Grid>
             <Grid item xs = {4}>Tên sản phẩm</Grid>
-            <Grid item xs = {1}>Số lượng</Grid>
-            <Grid item xs = {1}>Đơn giá</Grid>
-            <Grid item xs = {1}>Tổng tiền</Grid>
-            <Grid item xs = {1}>Hành động</Grid>
+            <Grid item xs = {1} style = {{textAlign: 'center'}}>Số lượng</Grid>
+            <Grid item xs = {1} style = {{textAlign: 'center'}}>Đơn giá</Grid>
+            <Grid item xs = {1} style = {{textAlign: 'center'}}>Tổng tiền</Grid>
+            <Grid item xs = {1} style = {{textAlign: 'center'}}>Hành động</Grid>
           </Grid>
-          <hr></hr>
+          <hr style = {{margin: 0}}></hr>
           <div style = {{display: 'flex', flexDirection:'column'}}>
             {this.props.SaleOrder.map((item, index) => (
               <div>
                 <Grid container xs = {12} style = {{display: 'flex', flexDirection: 'row',fontSize:'0.8rem',marginLeft:10, alignItems:'center'}}>
-                <Grid item xs = {1}>{index + 1}</Grid>
-                <Grid item xs = {1}><Checkbox checked={item.selected} color='secondary' onChange={(event) => { this.props.updateSaleOrderItem(this.props.SaleOrder.map(saleOrderItem => { if (saleOrderItem.product._id == item.product._id) saleOrderItem.selected = event.target.checked; return saleOrderItem; })) }} /></Grid>
-                <Grid item xs = {2}><img style={{ width: 100, height: 100 }} src={`data:image/png;base64,${item.product.subImage}`} /></Grid>
+                <Grid item xs = {1} style = {{textAlign: 'center'}}>{index + 1}</Grid>
+                <Grid item xs = {1} style = {{textAlign: 'center'}}><Checkbox checked={item.selected} color='secondary' onChange={(event) => { this.props.updateSaleOrderItem(this.props.SaleOrder.map(saleOrderItem => { if (saleOrderItem.product._id == item.product._id) saleOrderItem.selected = event.target.checked; return saleOrderItem; })) }} /></Grid>
+                <Grid item xs = {2} style = {{textAlign: 'center'}}><img style={{ width: 100, height: 100 }} src={`data:image/png;base64,${item.product.subImage}`} /></Grid>
                 <Grid item xs = {4}>{item.product.name}</Grid>
-                <Grid item xs = {1}>
+                <Grid item xs = {1} style = {{textAlign: 'center', paddingLeft: 20, paddingRight: 20}}>
                   <input 
                     type = 'number' 
                     value = {item.productQty} 
                     onChange={(event) => { this.props.updateSaleOrderItem(this.props.SaleOrder.map(saleOrderItem => { if (saleOrderItem.product._id == item.product._id) item.productQty = event.target.value; return saleOrderItem })) }}
-                    style = {{width:100}}
+                    style = {{border: '1px solid #e6e6e6', width: '100%', borderRadius: 2, paddingLeft: 10}}
                     />
                 </Grid>
-                <Grid item xs = {1}>{(parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
-                <Grid item xs = {1}>{(parseInt(item.productQty) * ((parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) ? parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) : 0))).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
-                <Grid item xs = {1}>
+                <Grid item xs = {1} style = {{textAlign: 'center'}}>{(parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
+                <Grid item xs = {1} style = {{textAlign: 'center'}}>{(parseInt(item.productQty) * ((parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) ? parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) : 0))).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
+                <Grid item xs = {1} style = {{textAlign: 'center'}}>
                   <IconButton 
                     onClick={() => {
                       this.setState({ _id: item.product._id }, () => {
@@ -79,15 +82,15 @@ export class NewSaleOrder extends Component {
                   </IconButton>
                 </Grid>
                 </Grid>
-                <hr></hr>
+                <hr style = {{margin: 2}}></hr>
               </div>
             ))}
           </div>
-          <Grid container xs = {12}>
+          <Grid container xs = {12} style = {{fontWeight: 'bold', margin:5}}>
             <Grid item xs = {4}></Grid>
             <Grid item xs = {4}>Tổng cộng</Grid>
             <Grid item xs = {2}>{this.props.SaleOrder.filter(item => item.selected).reduce((total,saleOrderItem) => {return total + parseInt(saleOrderItem.productQty)},0)}{' sản phẩm'}</Grid>
-            <Grid item xs = {2}>{(this.props.SaleOrder.filter(item => item.selected).reduce((total, saleOrderItem) => { return total + (parseInt(saleOrderItem.productQty) * ((parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) ? parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) : 0))) }, 0)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}{' VNĐ'}</Grid>
+            <Grid item xs = {2} style = {{color: 'red'}}>{(this.props.SaleOrder.filter(item => item.selected).reduce((total, saleOrderItem) => { return total + (parseInt(saleOrderItem.productQty) * ((parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) ? parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) : 0))) }, 0)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}{' VNĐ'}</Grid>
           </Grid>
         </div>
         
@@ -111,7 +114,8 @@ export class NewSaleOrder extends Component {
             <StyledButton onClick={() => this.setState({ showPrintDialog: true })}>In báo giá</StyledButton>
             {!this.props.role || this.props.role == '' ?
               <div />
-              : <StyledButton onClick = {this.props.chooseCustomer}>
+              : <StyledButton onClick = {this.props.SaleOrder.filter(item => item.selected).length > 0 ? () => this.props.chooseCustomer(this.props.SaleOrder.filter(item => item.selected).reduce((total, saleOrderItem) => { return total + (parseInt(saleOrderItem.productQty) * ((parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) ? parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) : 0))) }, 0)) 
+                  : () => {alert('Vui lòng chọn ít nhất 1 sản phẩm')}}>
                 Chọn khách hàng
               </StyledButton>}
           </div>
@@ -188,8 +192,8 @@ const mapDispatch2Props = (dispatch) => {
     updateSaleOrderItem: (SaleOrder) => {
       dispatch({ type: 'UPDATE_SALE_ORDER_ITEM', payload: SaleOrder })
     },
-    chooseCustomer: () => {
-      dispatch({type: 'SCREEN_ROUTER', payload: '/saleorder/customer'})
+    chooseCustomer: (amount) => {
+      dispatch({type: 'SCREEN_ROUTER', payload: '/saleorder/customer', amount})
     }
   }
 }

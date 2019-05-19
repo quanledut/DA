@@ -44,7 +44,7 @@ const PageReducer = (state = initialState, action) => {
             break;
         }
         case 'ROUTE_SCREEN_BY_REDUX_SAGA':{
-            return {...state, screen: action.payload.screen}
+            return {...state, screen: action.payload}
             break;
         }
         case 'HIDE_FORGOT_PASSWORD_FORM':{

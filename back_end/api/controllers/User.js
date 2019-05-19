@@ -26,7 +26,7 @@ const register = (req, res) => {
             res.status(404).send('Email is exist');
         }
         else {
-            user = new User({ email, role, avatar : filename, resetPasswordToken: '', resetPasswordExpires: Date.now()});
+            user = new User({ email, role, avatar : filename, resetPasswordToken: '', resetPasswordExpires: new Date()});
             user.generateHash(password);
             user.save((err, result) => {
                 if (err) {
@@ -48,7 +48,7 @@ const checkToken = (req, res) => {
                 gfs.files.findOne({filename:user.avatar}, (err, image) => {
                     var readstream = gfs.createReadStream({filename: image.filename})
                     //readstream.pipe(res);
-                    readstream.on('data', (chunk) => {res.status(200).send({ email: user.email, role: user.role, avatar: chunk.toString('base64')})})
+                    readstream.on('data', (chunk) => {res.status(200).send({ email: user.email, role: user.role, avatar: chunk.toString('base64'), user_id:user._id})})
                     return;
                 })
             })

@@ -7,8 +7,21 @@ const initialState = {
     product: {},
     department: {},
     productCount: 0,
-    saleOrderItemCount: 0,
-    SaleOrder: []
+    SaleOrder: [],
+    MainSaleOrder: {
+        payment_type: 'direct',
+        shipment_type: 'company_shipping',
+        discount: 0,
+        shipment_date: '',
+        receiver_name: '',
+        total_amount: 0,
+        shipment_address: '',
+        bank_name: '',
+        bank_number: '',
+        receiver_phone_number: '',
+        paid_amount: 0,
+        sub_total_amount: 0
+    }
 }
 
 export const ProductReducer = (state = initialState, action) => {
@@ -26,58 +39,90 @@ export const ProductReducer = (state = initialState, action) => {
             return {
                 ...state, department: state.departments.filter(dept => dept.name === action.payload)[0]
             }
+            break;
         }
         case 'LOAD_PRODUCT_SUCCESS':{
             return {
                 ...state, products: action.payload.products, productCount: action.payload.productCount
             }
+            break;
         }
         case 'LOAD_PRODUCT_DETAIL_SUCCESS':{
             return {
                 ...state, product: action.payload
             }
+            break;
         }
         case 'CHANGE_SALEORDER':{
             let SaleOrder = localStorage.getItem('SaleOrder');
             console.log(JSON.stringify(SaleOrder))
             if(SaleOrder) 
             return {
-                ...state, saleOrderItemCount: SaleOrder.length
+                ...state
             }
+            break;
         }
         case 'LOADED_SALE_ORDER':{
             console.log('Loaded saleOrder' + action.payload)
             if(action.payload != null){
                 return {
-                    ...state, SaleOrder: action.payload, saleOrderItemCount: action.payload.count
+                    ...state, SaleOrder: action.payload
                 }
             }
-            else return state
+            else return state;
+            break;
         }
         case 'ADD_PRODUCT_TO_ORDERS':{
             if(state.SaleOrder.length > 0){
                 let SaleOrderItem = state.SaleOrder.filter(item => item.product._id == action.payload.product._id);
                 if(SaleOrderItem.length > 0){
                     let NewSaleOrder = state.SaleOrder.map(item => { if(item.product._id == action.payload.product._id) item.productQty = parseInt(item.productQty) + parseInt(action.payload.productQty) ; return item})
-                    localStorage.setItem('SaleOrder',JSON.stringify(NewSaleOrder.map(item => {item.images = []; return item })));
+                    localStorage.setItem('SaleOrder',JSON.stringify(NewSaleOrder.map(item => {item.images = []; item.selected = false; return item })));
                     return {
-                        ...state, SaleOrder: NewSaleOrder, saleOrderItemCount: NewSaleOrder.length
+                        ...state, SaleOrder: NewSaleOrder
                     }
                 }
             }
             localStorage.setItem('SaleOrder',JSON.stringify([...state.SaleOrder,action.payload]));
-            return {...state, SaleOrder: [...state.SaleOrder,action.payload], saleOrderItemCount: state.saleOrderItemCount + 1}
+            return {...state, SaleOrder: [...state.SaleOrder,action.payload]};
+            break;
         }
         case 'RELOAD_SALE_ORDER_SUCCESS': {
             return {...state, SaleOrder: action.payload}
+            break;
         }
         case 'UPDATED_SALE_ORDER_ITEM_STORAGE':{
             return {...state, SaleOrder: action.payload}
+            break;
         }
+        case 'CHANGE_DISCOUNT':{
+            return {...state, MainSaleOrder: {...state.MainSaleOrder, discount: parseFloat(action.payload),
+                                                 total_amount: state.MainSaleOrder.sub_total_amount * (100 - action.payload) / 100}}
+            break;
+        }
+        case 'UPDATE_MAIN_SALE_ORDER':{
+            return {...state,
+                 MainSaleOrder: {...state.MainSaleOrder, shipment_type: action.payload.shipment_type,
+                                                         payment_type:action.payload.payment_type,
+                                                         shipment_date: action.payload.shipment_date,
+                                                         receiver_name: action.payload.receiver_name,
+                                                         shipment_address: action.payload.shipment_address,
+                                                         bank_name: action.payload.bank_name,
+                                                         bank_number: action.payload.bank_number,
+                                                         paid_amount: action.payload.paid_amount,
+                                                         receiver_phone_number: action.payload.receiver_phone_number
+                                }}
+            break;
+        }
+        case 'SET_MAIN_SALE_ORDER_AMOUNT': 
+            return {...state, MainSaleOrder: {...state.MainSaleOrder,total_amount: action.payload}}
+            break;
+        case 'SET_MAIN_SALE_ORDER_SUB_AMOUNT': 
+            return {...state, MainSaleOrder: {...state.MainSaleOrder,sub_total_amount: action.payload, total_amount: action.payload}};
+            break;
         default: {
             return state;
         }
     }
 }
-
 export default ProductReducer

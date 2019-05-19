@@ -1,7 +1,7 @@
 import { call, put, } from 'redux-saga/effects';
 import { checkToken } from '../../api/AccountApi';
 import { apiUrl } from '../../config'
-import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder} from '../../api/ProductApi'
+import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder, createNewSaleOrder} from '../../api/ProductApi'
 import { NotificationManager } from 'react-notifications';
 
 export function* LoadDepartment() {
@@ -16,7 +16,7 @@ export function* LoadDepartment() {
 
 export function* RequestNewProduct(action) {
     try {
-        let product = yield call(requestNewProduct, action.payload);
+        let product = yield call(requestNewProduct, action.token, action.payload );
         NotificationManager.success('Đã tạo sản phẩm', 'Success', 3000);
         //yield put({type: })
         yield put({ type: 'SCREEN_ROUTER', payload: '/' })
@@ -47,25 +47,6 @@ export function* ShowProductDetail(action){
     }
 }
 
-export function* CleanSaleOrder(){
-    console.log('CLEAN SALEORDER')
-    localStorage.removeItem('SaleOrder',() => console.log(localStorage.getItem('SaleOrder')))
-}
-
-export function* LoadSaleOrder() {
-    let SaleOrder = JSON.parse(localStorage.getItem('SaleOrder'));
-    if(SaleOrder != null)
-    {
-        yield put({type:'RELOAD_SALE_ORDER_SUCCESS',payload: SaleOrder})
-    }
-}
-
-export function* UpdateSaleOrderItem(action){
-    console.log('Update SaleOrder payload: '+ action.payload)
-    localStorage.setItem('SaleOrder',JSON.stringify(action.payload));
-    yield put({type: 'UPDATED_SALE_ORDER_ITEM_STORAGE', payload: action.payload});
-}
-
 export function* ChangeProductDetail(action){
     try {
         yield call(changeProductDetail,action.payload);
@@ -75,14 +56,4 @@ export function* ChangeProductDetail(action){
     catch(err){
         NotificationManager.error('Lỗi khi cập nhật thông tin sản phẩm', 'Error', 2000);
     }   
-}
-
-export function* ReloadSaleOrder(action){
-    try{
-        let SaleOrder = yield call(reloadSaleOrder, action.payload)
-        yield put({type: 'RELOAD_SALE_ORDER_SUCCESS',payload: SaleOrder})
-    }
-    catch(err){
-        yield put({type: 'RELOAD_SALE_ORDER_FAILED',payload: err})
-    }
 }

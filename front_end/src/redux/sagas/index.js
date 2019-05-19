@@ -6,9 +6,10 @@ import {
     } from './User';
 import {
     LoadDepartment, RequestNewProduct, LoadProduct, ChangeProductDetail,
-    ShowProductDetail,AddProductToOrder,CleanSaleOrder, LoadSaleOrder,
-    ReloadSaleOrder, UpdateSaleOrderItem
+    ShowProductDetail,AddProductToOrder
     } from './Product';
+import {CleanSaleOrder, LoadSaleOrderLocal, LoadSaleOrderDetail, GoToNextStateSaleOrder,
+        ReloadSaleOrder, UpdateSaleOrderItem, CreateNewSaleOrder, LoadSaleOrderList} from './SaleOrder'
 import {
     handleRouteScreen
     } from './RouteScreen';
@@ -29,7 +30,6 @@ function* rootSaga(){
         
         //product
         //yield fork(CleanSaleOrder),
-        yield fork(LoadSaleOrder),
         yield fork(LoadDepartment),
         yield fork(LoadProduct,{payload:{limit: numberOfProductPerPage, page:1}}),
         yield takeLatest('CHANGE_PRODUCT_DETAIL',ChangeProductDetail),
@@ -37,9 +37,15 @@ function* rootSaga(){
         yield takeLatest('REQUEST_CREATE_NEW_PRODUCT', RequestNewProduct),
         yield takeLatest('LOAD_ALL_PRODUCT', LoadProduct),
         yield takeLatest('HANDLE_SHOW_PRODUCT_DETAIL', ShowProductDetail),
+
+        //sale_order
+        yield fork(LoadSaleOrderLocal),
         yield takeLatest('RELOAD_SALE_ORDER', ReloadSaleOrder),
         yield takeLatest('UPDATE_SALE_ORDER_ITEM', UpdateSaleOrderItem),
-
+        yield takeLatest('CREATE_NEW_SALE_ORDER', CreateNewSaleOrder),
+        yield takeLatest('LOAD_SALE_ORDER_LIST', LoadSaleOrderList),
+        yield takeLatest('SHOW_SALE_ORDER_DETAIL', LoadSaleOrderDetail),
+        yield takeLatest('NEXT_STATE_SALE_ORDER', GoToNextStateSaleOrder),
         //customer
         yield takeLatest('CREATE_NEW_CUSTOMER', CreateNewCustomer),
         yield takeLatest('GET_ALL_CUSTOMERS', GetAllCustomers),

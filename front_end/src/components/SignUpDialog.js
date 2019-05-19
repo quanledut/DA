@@ -68,7 +68,7 @@ export class SignUpDialog extends Component {
           if (this.state.password.length < 8) {
             this.setState({ passwordErr: true })
           }
-          if (this.state.passwordConfirm != this.state.password) {
+          if (this.state.passwordConfirm !== this.state.password) {
             this.setState({ passwordNotMatch: true })
           }
           else this.setState({ passwordNotMatch: false })

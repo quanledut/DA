@@ -24,6 +24,7 @@ const styles = (theme) => ({
   appBar: {
     color: purple,
     width:'100%',
+    height: '6%'
   },
   grow: {
     flexGrow: 1,
@@ -50,7 +51,7 @@ const styles = (theme) => ({
     border: `2px solid ${theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[2000]}`
   },
   toolBar:{
-    height:'7%'
+    height:40
   }
 });
 

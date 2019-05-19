@@ -6,6 +6,7 @@ export function* CreateNewCustomer(action) {
         yield call(createNewCustomer,action.payload,action.token);
         yield NotificationManager.success('Đã thêm khách hàng','Success',2000);
         yield put({type: 'CREATE_NEW_CUSTOMER_SUCCESS'});
+        yield put({type: 'GET_ALL_CUSTOMERS',token:action.token})
     }
     catch(err){
         yield NotificationManager.error('Lỗi khi tạo khách hàng','Error',2000);

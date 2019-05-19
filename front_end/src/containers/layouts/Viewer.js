@@ -11,16 +11,18 @@ import ScreenRouter from '../../screens/router';
 
 const styles = (theme) => ({
 	root: {
-		display: 'flex'
+		display: 'flex', 
 	},
 	content: {
 		flexGrow: 1,
-		padding: 2
+		padding: 2,
+		height: 680,
+		overflowY: 'scroll'
 	},
 	drawer: {
 		flexShrink: 0,
 		width: theme.spacing.unit * 25,
-		height: '100%',
+		height: 700,
 		whiteSpace: 'nowrap',
 		position: 'relative',
 		display: 'flex'
