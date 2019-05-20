@@ -14,7 +14,7 @@ import {
     handleRouteScreen
     } from './RouteScreen';
 import {
-    CreateNewCustomer,GetAllCustomers
+    CreateNewCustomer,GetAllCustomers,GetCustomersList, GetCustomerDetail
     } from './Customer';
 
 
@@ -49,7 +49,8 @@ function* rootSaga(){
         //customer
         yield takeLatest('CREATE_NEW_CUSTOMER', CreateNewCustomer),
         yield takeLatest('GET_ALL_CUSTOMERS', GetAllCustomers),
-
+        yield takeLatest('LOAD_CUSTOMER_LIST', GetCustomersList),
+        yield takeLatest('GET_CUSTOMER_DETAIL', GetCustomerDetail),
         //page
         yield takeLatest('HANDLE_LOGOUT', handleLogout),
         yield takeLatest('SCREEN_ROUTER', handleRouteScreen),

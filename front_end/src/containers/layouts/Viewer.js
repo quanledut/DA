@@ -93,7 +93,6 @@ export class Viewer extends Component {
 						<ScreenRouter />
 					</main>
 				</div>
-
 			</MuiThemeProvider>
 		)
 	}

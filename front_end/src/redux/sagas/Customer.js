@@ -1,4 +1,4 @@
-import {createNewCustomer, getAllCustomer} from '../../api/CustomerApi';
+import {createNewCustomer, getAllCustomer, getCustomersList, getCustomerDetail} from '../../api/CustomerApi';
 import {call, put} from 'redux-saga/effects';
 import {NotificationManager} from 'react-notifications'
 export function* CreateNewCustomer(action) {
@@ -23,3 +23,25 @@ export function* GetAllCustomers(action) {
         yield put({type: 'CUSTOMERS_LOAD_FAILED', payload: err})
     }
 }
+
+export function* GetCustomersList(action) {
+    try{
+        let customers = yield call(getCustomersList, action.token,  action.payload);
+        yield put({type: 'CUSTOMERS_LIST_LOADED', payload: customers})
+    }
+    catch(err){
+        yield put({type: 'CUSTOMERS_LOAD_FAILED', payload: err})
+    }
+}
+
+export function* GetCustomerDetail(action) {
+    try{
+        let customer = yield call(getCustomerDetail, action.token,  action.payload);
+        yield put({type: 'CUSTOMERS_DETAIL_LOADED', payload: customer})
+        yield put({type: 'SCREEN_ROUTER', payload:`/customers/${action.payload}`})
+    }
+    catch(err){
+        yield put({type: 'CUSTOMERS_DETAIL_LOAD_FAILED', payload: err})
+    }
+}
+

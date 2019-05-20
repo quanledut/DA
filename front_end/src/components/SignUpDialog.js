@@ -94,7 +94,7 @@ export class SignUpDialog extends Component {
     data.append('email', this.state.email);
     data.append('password', this.state.password);
     data.append('role', this.state.role);
-    this.props.createNewEmployee(data);
+    this.props.createNewEmployee(this.props.token,data);
     this.setState({emailIsExist:'Email đã đăng ký tài khoản, vui lòng đăng nhập'});
   }
 
@@ -210,7 +210,8 @@ SignUpDialog.propTypes = {
 
 const mapState2Props = (state) => {
   return {
-    open: state.PageReducer.isShowSignUp
+    open: state.PageReducer.isShowSignUp,
+    token: state.LoginReducer.token
   }
 }
 
@@ -219,8 +220,8 @@ const mapDispatch2Props = (dispatch) => {
     closeSignUpDialog: () => {
       dispatch({type:'HIDE_SIGNUP_DIALOG'})
     },
-    createNewEmployee: (data) => {
-      dispatch({type: 'CREATE_NEW_EMPLOYEE', payload: data})
+    createNewEmployee: (token, data) => {
+      dispatch({type: 'CREATE_NEW_EMPLOYEE', payload: data, token: token})
     }
   }
 }

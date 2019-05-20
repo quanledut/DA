@@ -16,6 +16,8 @@ import SaleOrderInfo from './SaleOrderInfo';
 import SaleOrderSuccess from './SaleOrderSuccess';
 import SaleOrders from './SaleOrders';
 import SaleOrderDetail from './SaleOrderDetail';
+import Customers from './Customers';
+import CustomerDetail from './CustomerDetail';
 
 export class ScreenRouter extends Component {
     render() {
@@ -35,7 +37,8 @@ export class ScreenRouter extends Component {
                 <Route path = '/saleorder/success' component = {SaleOrderSuccess} />
                 <Route exact path='/saleorders/:id' component={SaleOrderDetail} />
                 <Route exact path = '/saleorders' component = {SaleOrders} />
-                
+                <Route exact path = '/customers' component = {Customers} />
+                <Route exact path = '/customers/:id' component = {CustomerDetail} />
             </Router>
         )
     }

@@ -36,6 +36,16 @@ export function* handleRouteScreen(action) {
                 yield call(history.push,action.payload);
                 break;
             }
+            case 'customers':{
+                //yield put({type: 'LOAD_CUSTOMER_LIST', token: action.token, payload:action.payload, })
+                yield call(history.push,'/customers');
+                break;
+            }
+            case '/customers':{
+                //yield put({type: 'LOAD_CUSTOMER_LIST', token: action.token, payload:action.payload, })
+                yield call(history.push,'/customers');
+                break;
+            }
             default:{
                 yield put({type: 'ROUTE_SCREEN_BY_REDUX_SAGA', payload:action.payload})
                 yield call(history.push,action.payload)

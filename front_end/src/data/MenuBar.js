@@ -12,12 +12,7 @@ export const Menu  = {
             name: 'sales',
             caption: 'Khuyến mãi',
             icon: (<Timeline/>)
-        },
-        {
-            name: 'sales',
-            caption: 'Khuyến mãi',
-            icon: null
-        }        
+        },    
     ],
     employee: [
         {
@@ -58,8 +53,8 @@ export const Menu  = {
             icon: (<Timeline/>)
         },
         {
-            name: 'employees',
-            caption: 'Nhân viên',
+            name: 'customers',
+            caption: 'Khách hàng',
             icon: (<HowToReg/>)
         },
         {
@@ -67,10 +62,5 @@ export const Menu  = {
             caption: 'Đơn hàng',
             icon: (<ShopTwo/>)
         },
-        {
-            name: 'sales',
-            caption: 'Khuyến mãi',
-            icon: null
-        }  
     ]
 }

@@ -32,7 +32,7 @@ export function* handleLogout(action) {
 
 export function* CreateNewEmployee(action) {
 	try {
-		const response = yield call(signUp(action.data))
+		const response = yield call(signUp(action.token,action.payload))
 		yield put({ type: 'EMPLOYEE_CREATED', payload: response })
 	}
 	catch (err) {

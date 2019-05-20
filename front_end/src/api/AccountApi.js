@@ -14,10 +14,10 @@ export const checkToken = (token) => {
     }) 
 }
 
-export const signUp = (data) => {
+export const signUp = (token,data) => {
     return new Promise((resolve, reject) => {
         axios.post(`${apiUrl}/register`,data, {headers:{
-            authorization: localStorage.getItem('tokenTempt')
+            authorization: token
         }})
             .then((res => {
                 if(res.status === 200) return resolve(res);
