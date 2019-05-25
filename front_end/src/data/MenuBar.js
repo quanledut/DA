@@ -1,66 +1,76 @@
 import React,{Component} from 'react';
-import {ShoppingCart, Timeline, HowToReg, ShopTwo} from '@material-ui/icons'
+import {ShoppingCart, Timeline, HowToReg, ShopTwo, PersonOutline, Group} from '@material-ui/icons'
 
 export const Menu  = {
     guess:[
         {
-            name: 'products',
+            name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>),
         },
         {
-            name: 'sales',
+            name: '/sales',
             caption: 'Khuyến mãi',
             icon: (<Timeline/>)
         },    
     ],
     employee: [
         {
-            name: 'products',
+            name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>)
         },
         {
-            name: 'sales',
+            name: '/sales',
             caption: 'Khuyến mãi',
             icon: (<Timeline/>)
         },
         {
-            name: 'employees',
+            name: '/employees',
             caption: 'Nhân viên',
             icon: (<HowToReg/>)
         },
         {
-            name: 'saleorders',
+            name: '/saleorders',
             caption: 'Đơn hàng',
             icon: (<ShopTwo/>)
         },
         {
-            name: 'sales',
-            caption: 'Khuyến mãi',
-            icon: null
+            name: '/users/detail',
+            caption: 'Thông tin cá nhân',
+            icon: (<PersonOutline/>)
         }  
     ],
     admin: [
         {
-            name: 'products',
+            name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>)
         },
         {
-            name: 'sales',
+            name: '/sales',
             caption: 'Khuyến mãi',
             icon: (<Timeline/>)
         },
         {
-            name: 'customers',
+            name: '/customers',
             caption: 'Khách hàng',
             icon: (<HowToReg/>)
         },
         {
-            name: 'saleorders',
+            name: '/saleorders',
             caption: 'Đơn hàng',
             icon: (<ShopTwo/>)
         },
+        {
+            name: '/employees',
+            caption: 'Nhân viên',
+            icon: (<Group/>)
+        },
+        {
+            name: '/users/detail',
+            caption: 'Thông tin cá nhân',
+            icon: (<PersonOutline/>)
+        } 
     ]
 }

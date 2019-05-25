@@ -6,7 +6,8 @@ const initState = {
     role: null,
     avatar: null,
     token: null,
-    user_id: null
+    user_id: null,
+    user_detail: {}
 }
 
 export const LoginReducer = (state = initState, action) => {
@@ -22,7 +23,8 @@ export const LoginReducer = (state = initState, action) => {
                 email: action.payload.email,
                 role: action.payload.role,
                 avatar: action.payload.avatar,
-                user_id: action.payload.user_id
+                user_id: action.payload.user_id,
+                user_detail: action.payload.user_detail_id
             }
         case 'LOGIN_SUCCESS':{
             return {...state, token: action.payload}

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
+const SaleOrder = mongoose.model('SaleOrder');
 const { getSubImage } = require('../../helpers/uploadImage');
 const { removeSignString } = require('../../helpers/removeSignText')
 
@@ -79,7 +80,12 @@ const getProductDetail = async (req, res) => {
             let product = await Product.findOne({ _id: id });
             product.subImage = await getSubImage(product.subImage);
             product.images = await Promise.all(product.images.map(async (image) => { return await getSubImage(image)}));
-            res.status(200).send(product);
+            let saleOrders = await SaleOrder.find({'items.product_id':id}).populate('customer_id');
+            saleOrders = await Promise.all(saleOrders.map(async (saleOrder) => { 
+                saleOrder.customer_id.avatar = await getSubImage(saleOrder.customer_id.avatar);
+                return saleOrder;
+            }));
+            res.status(200).send({product,saleOrder:[...saleOrders]});
         }
         else {
             res.status(400).send('id required')

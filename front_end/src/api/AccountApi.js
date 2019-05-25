@@ -61,3 +61,40 @@ export const requestSetNewPassword = (email, newPassword, token) => {
         )
     })
 }
+
+export const updateUserDetail = (token, data) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`${apiUrl}/users/detail`,data, {headers:{Authorization: `Bearer ${token}`}})
+        .then(response => {
+            if(response.status == 201) 
+            {
+                console.log(response.status)
+                return resolve('Success');
+            }
+            else 
+            {
+                console.log('That bai')
+                return reject('Thất bại')
+            }
+        })
+        .catch(err => 
+            {
+                console.log('Catch')
+                return reject(err)
+            }
+        )
+    })
+}
+
+export const updateUserAvatar = (token, data) => {
+    return new Promise((resolve, reject) => {
+        axios.post(`${apiUrl}/users/avatar`,data, {headers:{Authorization: `Bearer ${token}`}})
+        .then(response => {
+            if(response.status === 200) resolve(response.data);
+            else reject('Thất bại')
+        })
+        .catch(err => 
+            {reject(err);}
+        )
+    })
+}

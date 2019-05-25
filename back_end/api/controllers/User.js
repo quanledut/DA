@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const UserDetail = mongoose.model('UserDetail');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
 const multer = require('multer');
@@ -44,11 +45,11 @@ const checkToken = (req, res) => {
     let { token } = req.body;
     jwt.verify(token, config.secretKey, (err, decoded) => {
         if (decoded) {
-            User.findOne({email:decoded.email}).then(user => {
+            User.findOne({email:decoded.email}).populate('user_detail_id').then(user => {
                 gfs.files.findOne({filename:user.avatar}, (err, image) => {
                     var readstream = gfs.createReadStream({filename: image.filename})
                     //readstream.pipe(res);
-                    readstream.on('data', (chunk) => {res.status(200).send({ email: user.email, role: user.role, avatar: chunk.toString('base64'), user_id:user._id})})
+                    readstream.on('data', (chunk) => {res.status(200).send({user_detail_id:user.user_detail_id, email: user.email, role: user.role, avatar: chunk.toString('base64'), user_id:user._id})})
                     return;
                 })
             })
@@ -149,6 +150,60 @@ const setNewPassword = (req, res) => {
     })
 } 
 
+const updateUserDetail = async (req, res) => {
+    try{
+        const {email,name, phone_number, gender, address,birthday} = req.body;
+        let user = await User.findOne({email});
+        if(user ==  null) {
+            res.status(404).send('Account not found');
+        }
+        else {
+            let userDetail = await UserDetail.findOne({_id: user.user_detail_id})
+            if(userDetail == null) {
+                newUserDetail = new UserDetail();
+                newUserDetail.name = name;
+                newUserDetail.phone_number = phone_number;
+                newUserDetail.gender = gender;
+                newUserDetail.address = address;
+                newUserDetail.birthday = birthday;
+                let savedUserDetail = await newUserDetail.save();
+                user.user_detail_id = savedUserDetail._id;
+                await user.save();
+                await res.status(201).send('Created')
+            }
+            else {
+                userDetail.name = name || userDetail.name;
+                userDetail.address = address || userDetail.address;
+                userDetail.phone_number = phone_number || userDetail.phone_number;
+                userDetail.birthday = birthday || userDetail.birthday;
+                userDetail.gender = gender || userDetail.gender;
+                await userDetail.save();
+                await res.status(201).send('Updated')
+            }
+        }
+    }
+    catch(err){
+        res.status(400).send('Can not update')
+    }
+} 
+
+const updateUserAvatar = (req, res) => {
+    User.findOne({email:req.body.email}).then(user => {
+        if(user != null) {
+           user.avatar = req.file.filename;
+           user.save().then(result => {
+               res.status(200).send('Updated');
+           })
+           .catch(err => {
+               res.status(400).send(err)
+           })
+        }
+    })
+    .catch(error => {
+        res.status(400).send('Cannot find email');
+    })
+}
+
 module.exports = {
     find,
     register,
@@ -156,5 +211,7 @@ module.exports = {
     checkToken,
     forgotPassword,
     checkResetToken,
-    setNewPassword
+    setNewPassword,
+    updateUserDetail,
+    updateUserAvatar
 }

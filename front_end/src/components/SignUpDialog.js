@@ -132,7 +132,7 @@ export class SignUpDialog extends Component {
                   id='input-image'
                 />
                 <label htmlFor='input-image' display='flex' style={{ alignItems: 'center', justifyContent: 'center', width: 200, paddingLeft: 20, marginTop: 50 }}>
-                  <img style={{ alignItems: 'center', width: '100%' }} src={this.state.filePath || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfR8X74rkrhWpxqkeNUjMR71RTB2tLljU_-TlBXdPJ9qhJzcLWPA'} alt='default avatar' />
+                  <img style={{ alignItems: 'center', width: '100%' }} src={this.state.filePath || 'https://cdn3.iconfinder.com/data/icons/user-with-laptop/100/user-laptop-512.png'} alt='default avatar' />
                 </label>
               </div>
               <div style={{ flex: 6, margin: 10, height: 250 }}>

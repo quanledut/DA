@@ -59,8 +59,7 @@ export class Viewer extends Component {
 			typography: { useNextVariants: true },
 		});
 		return (
-			<MuiThemeProvider theme={theme}>
-				<div className = {classes.root}>
+			<div style = {{height:'92%', overflow: 'hidden', display:'flex', flexDirection: 'row'}}>
 					<Drawer
 						classes={{
 							paper: classes.drawer
@@ -89,11 +88,10 @@ export class Viewer extends Component {
 							))}
 						</List>
 					</Drawer>
-					<main className={classes.content}>
+					<div style = {{flexGrow: 1, overflow: 'scroll', height: '100%'}}>
 						<ScreenRouter />
-					</main>
-				</div>
-			</MuiThemeProvider>
+					</div>
+			</div>
 		)
 	}
 }

@@ -1,26 +1,21 @@
 const mongoose = require('mongoose');
 var Schema  = mongoose.Schema;
 
-const userDetailSchema = Schema({
-    user_id: {type: mongoose.SchemaTypes.ObjectId, ref: 'User'},
-    fullName: {
+const userDetailSchema = mongoose.Schema({
+    name: {
         type: String,
-        required: true,
         trim: true
     },
     address: {
         type: String,
-        required: true,
         trim: true
     },
-    phone: {
+    phone_number: {
         type: String,
-        required: true,
         trim: true
     },
     gender: {
         type: String,
-        required: true,
         trim: true
     },
     birthday: {

@@ -2,7 +2,6 @@ import { Route, Router } from 'react-router-dom';
 import Products from '../screens/Products';
 import ProductDetail from '../screens/ProductDetail';
 import { About } from '../screens/About';
-import { Employees } from '../screens/Employees';
 import { withRouter } from 'react-router-dom';
 import history from '../history';
 import ForgotPassword from './ForgotPassword';
@@ -18,6 +17,8 @@ import SaleOrders from './SaleOrders';
 import SaleOrderDetail from './SaleOrderDetail';
 import Customers from './Customers';
 import CustomerDetail from './CustomerDetail';
+import SelfInfo from './SelfInfo';
+import Employees from './Employees';
 
 export class ScreenRouter extends Component {
     render() {
@@ -26,7 +27,6 @@ export class ScreenRouter extends Component {
                 <Route exact path='/' component={Products} />
                 <Route exact path='/products/:id?' component={ProductDetail} />
                 <Route exact path='/about' component={About} />
-                <Route exact path='/employees' component={Employees} />
                 <Route path = '/reset/:token?' component = {ForgotPassword}/>
                 <Route path='/product/new' component={NewProduct} />
                 <Route path = '/cards' component = {NewSaleOrder} />
@@ -39,6 +39,8 @@ export class ScreenRouter extends Component {
                 <Route exact path = '/saleorders' component = {SaleOrders} />
                 <Route exact path = '/customers' component = {Customers} />
                 <Route exact path = '/customers/:id' component = {CustomerDetail} />
+                <Route exact path = '/users/detail' component = {SelfInfo} />
+                <Route exact path = '/employees' component = {Employees} />
             </Router>
         )
     }

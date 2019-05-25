@@ -12,6 +12,7 @@ import Pagination from 'material-ui-flat-pagination';
 import {numberOfProductPerPage, numberOfProductPerLine} from '../config';
 import {PropTypes} from 'prop-types';
 import Rating from '../components/RatingStart'
+import main_wood from '../data/main_bg.jpeg'
 
 
 const sortBy = [
@@ -157,7 +158,7 @@ export class Products extends Component {
       spacing: value => value
     })
     return (
-      <div style = {{backgroundColor: '#f5f5f5', margin: 5, border:'1px solid gray', borderRadius: 3, padding: 10}}>
+      <div style = {{backgroundColor: '#f5f5f5', margin: 5, border:'1px solid gray', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
           <div style={{ height: 30, display: 'flex', margin: 3, marginTop: 5 , marginBottom: 10}}>
             <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, marginRight: 10 }}>
               <SearchIcon style={{ fontSize: 25 }} color='primary' className={classes.searchIcon} />

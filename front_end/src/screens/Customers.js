@@ -55,7 +55,7 @@ export class SaleOrderInfo extends Component {
                               <div style = {{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
                                 <img src = {`data:image/png;base64,${customer.avatar}`} style = {{width: 100, height: 100}}/>
                                 <div style = {{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', marginLeft: 15}}>
-                                    <a href = 'javascript:;' onClick = {() => {this.showCustomerDetail(token, customer._id)}} style = {{fontWeight: 'bold'}}> {customer.name}</a>
+                                    <a href = 'javascript:;' onClick = {() => {this.props.showCustomer(token, customer._id)}} style = {{fontWeight: 'bold'}}> {customer.name}</a>
                                     <div>{customer.phone_number}</div>
                                     <div>{customer.address}</div>
                                 </div>

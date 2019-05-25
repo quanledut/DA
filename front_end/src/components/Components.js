@@ -1,5 +1,5 @@
 import { withStyles } from '@material-ui/core/styles';
-import { Button, Typography } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core';
 
 export const StyledButton = withStyles({
     root: {

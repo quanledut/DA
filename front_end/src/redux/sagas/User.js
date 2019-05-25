@@ -1,5 +1,5 @@
 import { call, put, } from 'redux-saga/effects';
-import { checkToken, signUp , requestForgotPassword, requestSetNewPassword, login} from '../../api/AccountApi';
+import { checkToken, signUp , requestForgotPassword, requestSetNewPassword, login, updateUserDetail, updateUserAvatar} from '../../api/AccountApi';
 import {NotificationManager} from 'react-notifications'
 
 export function* LoadUser() {
@@ -64,16 +64,36 @@ export function* LoadUserFromToken(action){
 		const userInfo = yield call(checkToken, action.payload);
 		yield put({
 			type: 'TOKEN_CHECKED',
-			payload: {
-				email: userInfo.email,
-				role: userInfo.role,
-				avatar: userInfo.avatar,
-				user_id: userInfo.user_id
-			}
+			payload: userInfo
 		})
 	}
 	catch (err) {
 		localStorage.removeItem('token');
 		yield put({ type: 'TOKEN_NOT_CHECKED' })
+	}
+}
+
+export function* UpdateUserDetail(action){
+	try{
+		console.log('Update detail')
+		yield call(updateUserDetail(action.token, action.payload));
+		NotificationManager.success('SUccess', 'Success', 2000)
+		yield put({type: 'LOGIN_SUCCESS', payload: action.token});
+		yield put({type: 'UPDATE_USER_DETAIL_SUCCESSED'})
+	}
+	catch(err){
+		yield put({type: 'UPDATE_USER_DETAIL_FAILED', payload: err})
+		yield put({type: 'LOGIN_SUCCESS', payload: action.token});
+	}
+}
+
+export function* UpdateUserAvatar(action){
+	try{
+		const UserDetail = yield call(updateUserAvatar(action.token, action.payload));
+		yield put({type: 'UPDATE_USER_AVATAR_SUCCESSED', payload: UserDetail})
+		yield put({type: 'LOGIN_SUCCESS', payload: action.token})
+	}
+	catch(err){
+		yield put({type: 'UPDATE_USER_AVATAR_FAILED'})
 	}
 }

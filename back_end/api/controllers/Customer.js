@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const Customer = mongoose.model('Customer')
+const Customer = mongoose.model('Customer');
+const SaleOrder = mongoose.model('SaleOrder')
 const {getSubImage} = require('../helpers/uploadImage');
 const {removeSignString} = require('../helpers/removeSignText')
 
@@ -62,7 +63,13 @@ const getCustomerDetail = async (req, res) => {
         }
         else{
             customer.avatar = await getSubImage(customer.avatar);
-            res.status(200).send(customer);
+            let saleOrders = await SaleOrder.find({customer_id: customer._id});
+            let sale_orders = saleOrders != null && saleOrders.length > 0 ? saleOrders.map(item =>
+                {
+                       return {no: item.no, total_amount: item.total_amount, createdAt: item.createdAt, _id: item._id}
+               })
+               : []
+            res.status(200).send({...customer._doc,sale_orders:[...sale_orders]});
         }   
     }
     catch (err) {

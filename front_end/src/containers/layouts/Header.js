@@ -15,6 +15,10 @@ import ForgotPasswordDialog from '../../components/ForgotPasswordDialog';
 import {NotificationContainer} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import {Roles} from '../../data/Role'
+import menu_icon from '../../data/menu_icon.png' 
+import logo from '../../data/logo.png'
+import wood_background from '../../data/wood.png' 
+import {GreenButton} from '../../components/Components'
 
 const styles = (theme) => ({
   root: {
@@ -70,7 +74,7 @@ class Header extends React.Component {
 
   profilePressHandle = () => {
     this.handleAccountClose();
-    this.props.showSignUpDialog();
+    this.props.showUserDetail();
   }
 
   logoutPressHandle = () => {
@@ -101,7 +105,7 @@ class Header extends React.Component {
     const renderAccountMenu = (this.props.role ?
       (<Menu
         anchorEl={this.state.accountAnchorEl}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         getContentAnchorEl={null}
         open={Boolean(this.state.accountAnchorEl)}
         onClose={this.handleAccountClose}
@@ -139,16 +143,45 @@ class Header extends React.Component {
     );
 
     return (
-        <MuiThemeProvider theme={theme}>
-          <div><NotificationContainer/></div>
-          <AppBar className={classes.appBar} position='static'>
+        <div style = {{position: 'relative', display: 'flex', flexDirection:'row', width:'100%', justifyContent: 'center', alignItems: 'center', height:'8%', borderBottom: '1px solid gray', 
+        backgroundImage:`url(${wood_background})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
+          <div onClick={this.props.toggleMenuDisplay} style = {{margin: 10, height:'100%', display:'flex',justifyContent: 'center', alignItems: 'center'}}>
+              <img src = {menu_icon} style = {{height: '70%', }}/>
+          </div>
+          <div style = {{flexGrow: 1, display: 'flex', flexDirection: 'row', justifyContent: 'center', height:'100%'}}>
+            <img src= {logo} style = {{height:'100%'}}/>
+          </div>
+          <IconButton onClick = {() => {
+            this.props.reloadSaleOrder(this.props.SaleOrder);
+            this.props.showCards(this.props.SaleOrder);
+          }}>
+            <Badge badgeContent={this.props.SaleOrder.length} color='secondary' classes={{ badge: classes.badge }}>
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+          {this.props.email ? 
+          <div onClick={this.handleUserOpen} style = {{height:'100%', display:'flex', flexDirection: 'row',justifyContent: 'center', alignItems: 'center', marginLeft:10}}>
+            <div style = {{height:50, width: 50, borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              <img src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} style = {{height: '100%'}}/> 
+            </div>
+            <div style = {{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start',height: '100%', marginRight:15, marginLeft: 5}}>
+                <div style = {{fontWeight: 'bold', fontSize: '0.9rem'}}>{!this.props.email ? 'Trần Đinh Anh'.toUpperCase() : this.props.email}</div>
+                <div style = {{ fontSize: '0.8rem'}}>{Roles.filter(role => role.name === this.props.role)[0] != null ? Roles.filter(role => role.name === this.props.role)[0].caption : 'Khách hàng'}</div>
+            </div>
+          </div>
+          :
+          <GreenButton onClick = {this.props.showLoginForm} style = {{marginRight: 15}}>Đăng nhập</GreenButton>
+          }
+          
+          
+          {/*<AppBar className={classes.appBar} position='static'>
             <Toolbar className = {classes.toolBar}>
               <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.toggleMenuDisplay}>
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" color="default" className={classes.grow}>
-                Vinmus Community
-                </Typography>
+              <div style = {{display: 'flex', flexGrow: 1, color: 'white', fontWeight: 'bold', fontSize: '2.0rem'}}>
+                Nội thất Vinmus
+                </div>
               <div className={classes.isDesktopMenu}>
                 <IconButton onClick = {() => {
                   this.props.reloadSaleOrder(this.props.SaleOrder);
@@ -180,7 +213,7 @@ class Header extends React.Component {
               </div>
             </Toolbar>
           </AppBar>
-          {renderAccountMenu}
+              */}
           <LoginDialog
             open={this.props.loginFormState}
             hideLoginForm={this.props.hideLoginForm}
@@ -194,8 +227,10 @@ class Header extends React.Component {
             open={this.props.isShowSignUp}
             closeDialogFormHandle={this.props.hideSignUpDialog}
           />
+          <div><NotificationContainer/></div>
           <ForgotPasswordDialog/>
-        </MuiThemeProvider>
+          {renderAccountMenu}
+        </div>
     );
   }
 }
@@ -222,7 +257,8 @@ const mapDispatch2Props = (dispatch) => {
     handleLogout: () => {return dispatch({type: 'HANDLE_LOGOUT'})},
     showCards: () => {return dispatch({type:'SCREEN_ROUTER',payload:  '/cards'})},
     reloadSaleOrder: (SaleOrder) => {return dispatch({type: 'RELOAD_SALE_ORDER', payload: SaleOrder})},
-    requestLogin: (data) => {return dispatch({type: 'REQUEST_LOGIN', payload:data})}
+    requestLogin: (data) => {return dispatch({type: 'REQUEST_LOGIN', payload:data})},
+    showUserDetail: () => {return dispatch({type:'SCREEN_ROUTER',payload:'/users/detail'})}
   }
 }
 

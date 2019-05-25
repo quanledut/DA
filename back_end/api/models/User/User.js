@@ -3,6 +3,10 @@ const crypto = require('crypto');
 const config = require('../../../config');
 
 const UserSchema = mongoose.Schema({
+        user_detail_id:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'UserDetail'
+        },
         email: {
             type: String,
             required: true,

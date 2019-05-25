@@ -9,30 +9,6 @@ import { CarouselPage } from '../components/Carousel'
 import ResponsiveDialog from '../components/YesNoDialog'
 //import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask, MDBContainer } from "mdbreact";
 
-const styles = (theme) => ({
-	image: {
-
-	},
-	productName: {
-		textColor: '#424242',
-		colors: '#424242'
-	},
-	paper: {
-		position: 'relative', width: '100%', mar: '0.2%', paddingLeft: '0.2%'
-	},
-	button: {
-		height: 20
-	}
-})
-
-const theme = createMuiTheme({
-	palette: {
-		inherit: {
-			main: '#424242'
-		}
-	}
-})
-
 export class ProductDetail extends Component {
 	constructor(props) {
 		super(props);
@@ -72,19 +48,18 @@ export class ProductDetail extends Component {
 	}
 
 	render() {
-		const { classes, product, role } = this.props;
+		const { product, role } = this.props;
 		const { description, name, length, width, height, saleprice } = this.state;
 		return (
-			(this.props.product == null || this.props.product.name == null) ? <div><CircularProgress/></div> :
-			<MuiThemeProvider theme={theme}>
-				<Paper className={classes.paper}>
+			<div style = {{padding: 10, border:'1px solid green', padding:10, margin:5}}>
+				<div>
 					<Grid container>
 						<Grid item xs={5}>
-							<div>
+							<div style = {{margin: 15}}>
 								<div style={{ display: 'flex', justifyContent: 'center', height: 400, overflowX: 'hidden', alignItems: 'center', align: 'center' }}>
 									<img src={`data:image/png; base64,${this.state.mainImage}`} style={{ height: 400 }} />
 								</div>
-								<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+								<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingTop:20 }}>
 									{this.props.product.images.map((image, index) => (
 										<div key={image} style={{ width: 100, backgroundColor: '#fafafa' }}>
 											<img src={`data:image/png; base64,${image}`} style={{ width: '100%' }} onClick={() => { this.setState({ openFullImageDialog: true, activeImage: index + 1 }) }} />
@@ -92,18 +67,19 @@ export class ProductDetail extends Component {
 								</div>
 							</div>
 						</Grid>
-						<Grid item container xs={7} direction='column'>
+						<Grid item container xs={7} direction='column' style = {{padding:15}}>
 							{!this.state.isEdit ?
 								<div style={{ paddingLeft: 30 }}>
-									<div style={{ display: 'flex', flexDirection: 'row' }}>
-										<h1 style={{ color: '#616161', flexGrow: 1 }}>{product.name}</h1>
+									<div style={{ display: 'flex', flexDirection: 'row' , alignItems: 'center'}}>
+										<div style={{ color: '#616161', flexGrow: 1 , fontWeight:'bold', fontSize:'1.5rem'}}>{product.name}</div>
 										{(this.props.role === 'admin' || this.props.role === 'manager') ?
-											<IconButton onClick={() => { this.setState({ isEdit: true }) }}>
-												<p style={{ fontSize: '0.6em' }}>
-													<EditIcon style={{ height: 15 }} />{' Cập nhật thông tin sản phẩm'}
-												</p>
-											</IconButton>
-											: (<ul></ul>)}
+											<div>
+												<div style={{ fontSize: '0.8rem' , fontStyle: 'italic', display: 'flex', alignItems: 'center'}}>
+													<EditIcon style={{ height: 15 }} />
+													<a href = 'javascript:;' onClick={() => { this.setState({ isEdit: true }) }}>Cập nhật thông tin sản phẩm</a>
+												</div>
+											</div>
+											: (<div></div>)}
 									</div>
 									<div style={{ lineHeight: '100%' }}>
 										<h3>{description}</h3>
@@ -235,10 +211,17 @@ export class ProductDetail extends Component {
 							<CarouselPage images={product.images} active={this.state.activeImage} />
 						</Dialog>
 					</Grid>
-				</Paper>
-				<Paper>
+				</div>
+				<div>
 					<div>Khách hàng đã mua sản phẩm</div>
-				</Paper>
+					<div style = {{display: 'flex', flexDirection: 'row'}}>
+						{this.props.saleOrders.map(saleOrder => (
+							<div>
+								<img src={`data:image/png;base64,${saleOrder.customer_id.avatar}`} style = {{width:200, height: 200}}/>
+							</div>
+						))}
+					</div>
+				</div>
 				<ResponsiveDialog
 					fullScreen={true}
 					open={this.state.showChangeDialog}
@@ -276,7 +259,7 @@ export class ProductDetail extends Component {
 					noLabel='Không'
 					yesLabel='Xác nhận xóa'
 				/>
-			</MuiThemeProvider>
+			</div>
 		)
 	}
 }
@@ -293,8 +276,9 @@ const CarouselPageDialog = (props) => {
 }
 const mapState2Props = (state) => {
 	return {
-		product: state.ProductReducer.product,
-		role: state.LoginReducer.role
+		product: state.ProductReducer.product.product,
+		role: state.LoginReducer.role,
+		saleOrders: state.ProductReducer.product.saleOrder
 	}
 }
 
@@ -315,4 +299,4 @@ const mapDispatch2Props = (dispatch) => {
 	}
 }
 
-export default connect(mapState2Props, mapDispatch2Props)(withRouter(withStyles(styles)(ProductDetail)))
+export default connect(mapState2Props, mapDispatch2Props)(ProductDetail)

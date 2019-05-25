@@ -23,28 +23,37 @@ export class CustomerDetail extends Component {
                     <Grid item xs = {9}>{customer.name}</Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
-                    <Grid item xs = {3}>Số điện thoại</Grid>
+                    <Grid item xs = {3}>Số điện thoại:</Grid>
                     <Grid item xs = {9}>{customer.phone_number}</Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
-                    <Grid item xs = {3}>Ngày sinh</Grid>
+                    <Grid item xs = {3}>Ngày sinh:</Grid>
                     <Grid item xs = {9}>{customer.birthday}</Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
-                    <Grid item xs = {3}>Địa chỉ email</Grid>
+                    <Grid item xs = {3}>Địa chỉ email:</Grid>
                     <Grid item xs = {9}>{customer.email}</Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
-                    <Grid item xs = {3}>Giới tính</Grid>
+                    <Grid item xs = {3}>Giới tính:</Grid>
                     <Grid item xs = {9}>{customer.gender == 'male' ? 'Nam' : customer.gender == 'female' ? 'Nữ' : 'Không xác định'}</Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {3}>Địa chỉ</Grid>
+                    <Grid item xs = {3}>Địa chỉ:</Grid>
                     <Grid item xs = {9}>{customer.address}</Grid>
                 </Grid>
             </Grid>
         </div>
-        <div style = {{fontWeight: 'bold', fontSize: '1.2rem'}}>ĐƠN HÀNG ĐÃ THỰC HIỆN</div>
+        <div style = {{fontWeight: 'bold', fontSize: '1.2rem', marginTop: 15}}>ĐƠN HÀNG ĐÃ THỰC HIỆN ({this.props.customer.sale_orders.length})</div>
+        <div style = {{ marginTop: 15}}>
+            {this.props.customer.sale_orders.map(item => (
+                <div style = {{display: 'flex', flexDirection: 'column', justifyContent: 'center', border:'1px solid green', borderRadius:3, padding: 10, fontSize:'0.8rem'}}>
+                    <a href = 'javascript:;' style = {{fontWeight: 'bold', fontSize: '0.8rem',color:'blue'}} onClick = {() => {this.props.showSaleOrderInfo(this.props.token, item._id)}}>{item.no}</a>
+                    <div>Ngày mua: {item.createdAt.replace('T',' ')}</div>
+                    <div>Tổng hóa đơn: {item.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} VNĐ</div>
+                </div>
+            ))}
+        </div>
       </div>
     )
   }
@@ -62,7 +71,10 @@ const mapDispatch2Props = (dispatch) => {
     return {
         getCustomerDetail: (token, id) => {
             dispatch({type: 'GET_CUSTOMER_DETAIL', token: token, payload: id})
-        }
+        },
+        showSaleOrderInfo: (token, id) => {
+            dispatch({ type: 'SHOW_SALE_ORDER_DETAIL', payload: id, token: token})
+        },
     }
 }
 

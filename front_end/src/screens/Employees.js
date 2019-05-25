@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import {withRouter} from 'react-router-dom'
 
 export class Employees extends Component {
   render() {
@@ -11,4 +10,4 @@ export class Employees extends Component {
   }
 }
 
-export default withRouter(Employees)
+export default Employees

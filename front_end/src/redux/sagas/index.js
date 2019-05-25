@@ -2,7 +2,7 @@ import {numberOfProductPerPage} from '../../config'
 import {fork,takeLatest,takeEvery, all, put} from 'redux-saga/effects';
 import { 
     LoadUser, handleLogout, CreateNewEmployee, LoadUserFromToken,
-    RequestForgotPassword, RequestSetNewPassword, RequestLogin
+    RequestForgotPassword, RequestSetNewPassword, RequestLogin, UpdateUserDetail, UpdateUserAvatar
     } from './User';
 import {
     LoadDepartment, RequestNewProduct, LoadProduct, ChangeProductDetail,
@@ -27,7 +27,9 @@ function* rootSaga(){
         yield takeLatest('SEND_REQUEST_FORGOT_PASSWORD', RequestForgotPassword ),
         yield takeLatest('REQUEST_SET_NEW_PASSWORD', RequestSetNewPassword ),
         yield takeLatest('LOGIN_SUCCESS', LoadUserFromToken),
-        
+        yield takeLatest('UPDATE_USER_DETAIL', UpdateUserDetail),
+        yield takeLatest('UPDATE_USER_AVATAR', UpdateUserAvatar),
+
         //product
         //yield fork(CleanSaleOrder),
         yield fork(LoadDepartment),

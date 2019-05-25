@@ -175,7 +175,7 @@ export class SaleOrderDetail extends Component {
             <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30, display: this.props.SaleOrder.status == 'Confirmed' || this.props.SaleOrder.status == 'Done' ? 'flex' : 'none'}}> <StyledButton onClick = {() => {this.setState({openPrintDialog: true})}} fullWidth> In đơn hàng </StyledButton> </Grid>
             <Grid item xs = {2}/>
             <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30, display: this.props.role == 'admin' || this.props.role == 'manager' ? 'flex' : 'none'}}>
-                <StyledButton fullWidth onClick = {() => this.props.goToNextState(this.props.token, this.props.SaleOrder._id)}>
+                <StyledButton fullWidth onClick = {() => this.props.goToNextState(this.props.token, this.props.SaleOrder._id)} style = {{display: this.props.SaleOrder.status == 'Done' ? 'none' : 'flex'}}>
                     {this.props.SaleOrder.status == 'New' ? 'Xác nhận' : 'Hoàn tất'}
                 </StyledButton>
             </Grid>

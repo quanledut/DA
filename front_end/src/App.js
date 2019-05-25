@@ -11,9 +11,9 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<div style = {{width: '100%', height: '100%'}}>
-					<Header />
-					<Viewer />
+				<div style = {{width: '100vw', height: '100vh', overflow: 'hidden'}}>
+					<Header/>
+					<Viewer/>
 				</div>
 			</Provider>
 		);
