@@ -158,7 +158,7 @@ export class Products extends Component {
       spacing: value => value
     })
     return (
-      <div style = {{backgroundColor: '#f5f5f5', margin: 5, border:'1px solid gray', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
+      <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
           <div style={{ height: 30, display: 'flex', margin: 3, marginTop: 5 , marginBottom: 10}}>
             <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, marginRight: 10 }}>
               <SearchIcon style={{ fontSize: 25 }} color='primary' className={classes.searchIcon} />
@@ -193,8 +193,10 @@ export class Products extends Component {
 
           {/* List Product */}
           <div style = {{dislay: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-            <div style = {{width: '100%',height: 30, backgroundColor: '#009688', fontWeight: 'bold', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> DANH SÁCH SẢN PHẨM {`(${this.props.productCount} sản phẩm)`}</div>
-            <GridList cellHeight={220} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
+            <div style = {{width: '100%',height: 30, backgroundColor: '#009688', fontWeight: 'bold', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              DANH SÁCH SẢN PHẨM {`(${this.props.productCount} sản phẩm)`}
+            </div>
+            <GridList cellHeight={((window.innerHeight*0.92 - 70)*0.29)} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
               {(products).map(product => (
                 <GridListTile key={product.name}>
                   <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} style = {{width:'100%', height:'auto'}} onClick={() => {this.handleClickToProduct(product._id)}} />
@@ -255,7 +257,10 @@ const mapDispatch2Props = (dispatch) => {
     },
     showProductDetail: (id) => {
       dispatch({type: 'HANDLE_SHOW_PRODUCT_DETAIL', payload: id})
-    }
+    },
+    // showProductDetail: (id) => {
+    //   dispatch({type: 'SCREEN_ROUTER', payload: `/products/${id}`})
+    // }
   }
 }
 

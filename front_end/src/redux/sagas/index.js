@@ -2,7 +2,8 @@ import {numberOfProductPerPage} from '../../config'
 import {fork,takeLatest,takeEvery, all, put} from 'redux-saga/effects';
 import { 
     LoadUser, handleLogout, CreateNewEmployee, LoadUserFromToken,
-    RequestForgotPassword, RequestSetNewPassword, RequestLogin, UpdateUserDetail, UpdateUserAvatar
+    RequestForgotPassword, RequestSetNewPassword, RequestLogin, UpdateUserDetail, UpdateUserAvatar,
+    LoadEmployeeList, ShowEmployeeDetail
     } from './User';
 import {
     LoadDepartment, RequestNewProduct, LoadProduct, ChangeProductDetail,
@@ -16,7 +17,9 @@ import {
 import {
     CreateNewCustomer,GetAllCustomers,GetCustomersList, GetCustomerDetail
     } from './Customer';
-
+import {
+    LoadSaleReport, LoadTopEmployee
+    } from './Report';
 
 function* rootSaga(){
     yield all ([
@@ -30,6 +33,10 @@ function* rootSaga(){
         yield takeLatest('UPDATE_USER_DETAIL', UpdateUserDetail),
         yield takeLatest('UPDATE_USER_AVATAR', UpdateUserAvatar),
 
+        //employee
+        yield takeLatest('LOAD_EMPLOYEE_LIST',LoadEmployeeList),
+        yield takeLatest('SHOW_EMPLOYEE_DETAIL',ShowEmployeeDetail),
+        
         //product
         //yield fork(CleanSaleOrder),
         yield fork(LoadDepartment),
@@ -53,9 +60,14 @@ function* rootSaga(){
         yield takeLatest('GET_ALL_CUSTOMERS', GetAllCustomers),
         yield takeLatest('LOAD_CUSTOMER_LIST', GetCustomersList),
         yield takeLatest('GET_CUSTOMER_DETAIL', GetCustomerDetail),
+
         //page
         yield takeLatest('HANDLE_LOGOUT', handleLogout),
         yield takeLatest('SCREEN_ROUTER', handleRouteScreen),
+
+        //report
+        yield takeLatest('GET_SALE_REPORT',LoadSaleReport),
+        yield takeLatest('GET_TOP_EMPLOYEE',LoadTopEmployee),
     ])
 }
 

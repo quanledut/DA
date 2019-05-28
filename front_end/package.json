@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
     "bootstrap": "^4.3.1",
+    "chart.js": "^2.8.0",
     "classnames": "^2.2.6",
     "history": "^4.9.0",
     "material-auto-rotating-carousel": "^3.0.1",
@@ -21,6 +22,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-alice-carousel": "^1.13.11",
+    "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
     "react-image-magnify": "^2.7.4",
     "react-notifications": "^1.4.3",
@@ -35,6 +37,7 @@
     "react-to-print": "^2.1.2",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
+    "s": "^0.1.1",
     "styled-components": "^4.2.0"
   },
   "scripts": {

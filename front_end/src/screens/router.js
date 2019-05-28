@@ -19,6 +19,9 @@ import Customers from './Customers';
 import CustomerDetail from './CustomerDetail';
 import SelfInfo from './SelfInfo';
 import Employees from './Employees';
+import EmployeeDetail from './EmployeeDetail';
+import {BarChart} from '../components/Chart'
+import Report from './Report'
 
 export class ScreenRouter extends Component {
     render() {
@@ -41,6 +44,9 @@ export class ScreenRouter extends Component {
                 <Route exact path = '/customers/:id' component = {CustomerDetail} />
                 <Route exact path = '/users/detail' component = {SelfInfo} />
                 <Route exact path = '/employees' component = {Employees} />
+                <Route exact path = '/employees/:id' component = {EmployeeDetail} />
+                <Route exact path = '/chart' component = {BarChart} />
+                <Route exact path = '/report' component = {Report} />
             </Router>
         )
     }

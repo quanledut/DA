@@ -21,7 +21,7 @@ export class SelfInfo extends Component {
 
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
-        const {name, address, phone_number, birthday, gender} = nextProps.user_detail
+        const {name, address, phone_number, birthday, gender} = nextProps.user_detail || {}
         this.setState({
             name: name,
             address: address,
@@ -33,7 +33,7 @@ export class SelfInfo extends Component {
     }
 
     componentDidMount(){
-        const {name, address, phone_number, birthday, gender} = this.props.user_detail
+        const {name, address, phone_number, birthday, gender} = this.props.user_detail || {}
         this.setState({
             name: name,
             address: address,
@@ -67,7 +67,7 @@ export class SelfInfo extends Component {
             <div style = {{display: 'flex', flexDirection: 'row'}}>
                 <div style = {{display: 'flex', border:'1px solid green',flexDirection: 'column', justifyContent: 'flex-start', flex: 3, borderRadius: 3}}>
                     <div style = {{height: 30, textAlign: 'left', paddingLeft: 15,display: 'flex', alignItems:'center', backgroundColor: '#009688', fontWeight: 'bold', color: 'white'}}>
-                        Hình đại diện
+                        ẢNH ĐẠI DIỆN
                     </div> 
                     <div>
                         <input type = 'file' accept = '*.jpg/*.png' id = 'avatar' style = {{display: 'none'}} onChange = {this.changeAvatar}/>

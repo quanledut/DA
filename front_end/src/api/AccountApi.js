@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {apiUrl} from '../config'
+import {apiUrl} from '../config';
+import {BackgroundColor} from '../data/Config'
 
 export const checkToken = (token) => {
     return new Promise((resolve, reject) => {
@@ -20,7 +21,7 @@ export const signUp = (token,data) => {
             authorization: token
         }})
             .then((res => {
-                if(res.status === 200) return resolve(res);
+                if(res.status === 201) return resolve(res);
                 return reject(res);
             }))
             .catch(err => {return reject(err);})
@@ -73,7 +74,6 @@ export const updateUserDetail = (token, data) => {
             }
             else 
             {
-                console.log('That bai')
                 return reject('Thất bại')
             }
         })
@@ -96,5 +96,43 @@ export const updateUserAvatar = (token, data) => {
         .catch(err => 
             {reject(err);}
         )
+    })
+}
+
+export const loadEmployeeList = (token, data) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/users`,{headers: {Authorization: `Bearer ${token}`}, params: data})
+        .then(res => {
+            console.log('Response status: '+(res.status === 200))
+            if(res.status === 200) {
+                console.log(res.data)
+                return resolve(res.data);
+            }
+            else {
+                return reject(res.data)
+            }
+        })
+        .catch(err => {
+            return reject(err)
+        })
+    })
+}
+
+export const loadEmployeeDetail = (token, data) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/employees`,{headers: {Authorization: `Bearer ${token}`}, params: {id:data}})
+        .then(res => {
+            console.log('Response status: '+(res.status === 200))
+            if(res.status === 200) {
+                console.log(res.data)
+                return resolve(res.data);
+            }
+            else {
+                return reject(res.data)
+            }
+        })
+        .catch(err => {
+            return reject(err)
+        })
     })
 }

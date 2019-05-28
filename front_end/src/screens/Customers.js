@@ -7,7 +7,8 @@ import Pagination from 'material-ui-flat-pagination';
 import {numberOfCustomerPerPage} from '../config';
 import employee from '../data/employee.png'
 import customer_avatar from '../data/customer_avatar.png';
-import {GreenButton, BlueButton, GrayButton} from '../components/Components'
+import {GreenButton, BlueButton, GrayButton} from '../components/Components';
+import NewCustomerDialog from '../components/NewCustomerDialog'
 
 export class SaleOrderInfo extends Component {
     constructor(props){
@@ -15,7 +16,7 @@ export class SaleOrderInfo extends Component {
         this.state = {
             search_text: '',
             page: 1,
-            showAddCustomerDialog: false
+            openNewCustomerDialog: false
         }
     }
 
@@ -31,24 +32,25 @@ export class SaleOrderInfo extends Component {
 
     changePageOfCustomer = (number) => {
         this.setState({page: number}, () => {
-            this.props.loadCustomerList(this.props.token , { search_text: this.state.search_text, page: this.stage.page, limit: numberOfCustomerPerPage })
+            this.props.loadCustomerList(this.props.token , { search_text: this.state.search_text, page: this.state.page, limit: numberOfCustomerPerPage })
         })
     }
 
     render() {
         const {token, role} = this.props;
         return (
-            <div style={{ margin: 2, border: '1px solid #9e9d24', borderRadius: 3, height: '100%', overflow: 'scroll' }}>
-                <div style={{ backgroundColor: '#00695c', textAlign: 'center', height: 30, color: 'white', width : '100%' }}>
+            <div style = {{height:window.innerHeight * 0.92}}>
+            <div style={{ margin: 2, border: '1px solid #9e9d24', borderRadius: 3, display: 'flex', flexDirection: 'column'}}>
+                <div style={{ backgroundColor: '#00695c', textAlign: 'center', height: 30, color: 'white', width : '100%' , flex:1}}>
                     DANH SÁCH KHÁCH HÀNG
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'row' , width: '100%',padding: 20}}>
+                <div style={{ display: 'flex', flexDirection: 'row' , width: '100%',padding: 10, flex:2}}>
                     <div style = {{flexGrow: 1, paddingRight:20}}>
                         <input type='text' onChange={this.onChangeText} style = {{width: '100%', paddingLeft: 10}} name = 'search_text' placeholder = 'Tìm theo tên khách hàng, số điện thoại, email'/>
                     </div>
-                    {role && role != null ?  <GreenButton>Khách hàng mới</GreenButton> :<div/>}
+                    {role && role != null ?  <GreenButton onClick = {() => {this.setState({openNewCustomerDialog:true})}} >Khách hàng mới</GreenButton> :<div/>}
                 </div>
-                <div>
+                <div style = {{display:'flex', flexDirection: 'column', flex:5}}>
                     <div>
 						{this.props.customer_list.map(customer => (
                             <Grid item style = {{display: 'flex', flexDirection: 'row', border: '1px solid green', borderRadius: 3, padding:5, margin:10}}>   
@@ -80,6 +82,13 @@ export class SaleOrderInfo extends Component {
 
 
             </div>
+            <NewCustomerDialog
+                open = {this.state.openNewCustomerDialog}
+                createNewCustomer = {this.props.createNewCustomer}
+                closeDialog = {() => {this.setState({openNewCustomerDialog: false})}}
+                token = {this.props.token}
+            />
+        </div>
     )}
 }
 
@@ -105,7 +114,10 @@ const mapDispatch2Props = (dispatch) => {
         },
         showUser: (token, id) => {
             dispatch({ type: 'SHOW_USER_INFO', payload: id, token: token})
-        }
+        },
+        createNewCustomer: (data, token) => {
+            dispatch({ type: 'CREATE_NEW_CUSTOMER', payload: data, token: token })
+        },
     }
 }
 

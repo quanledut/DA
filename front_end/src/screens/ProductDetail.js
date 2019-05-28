@@ -7,6 +7,8 @@ import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/
 import { StyledButton, TitleTypography, CaptionTypoGraphy } from '../components/Components'
 import { CarouselPage } from '../components/Carousel'
 import ResponsiveDialog from '../components/YesNoDialog'
+import { white } from 'material-ui/styles/colors';
+import sold_out from '../data/sold_out.png'
 //import { MDBCarousel, MDBCarouselCaption, MDBCarouselInner, MDBCarouselItem, MDBView, MDBMask, MDBContainer } from "mdbreact";
 
 export class ProductDetail extends Component {
@@ -14,13 +16,13 @@ export class ProductDetail extends Component {
 		super(props);
 		this.state = {
 			open: true,
-			mainImage: this.props.product.subImage || '', 
+			mainImage: this.props.product ? this.props.product.subImage : '', 
 			isEdit: false,
-			description: this.props.product.description || '',
-			name: this.props.product.name || '',
-			length: this.props.product.length || 0,
-			width: this.props.product.width || 0,
-			height: this.props.product.height || 0,
+			description: this.props.product ? this.props.product.description : '',
+			name: this.props.product ? this.props.product.name : '',
+			length: this.props.product ? this.props.product.length : 0,
+			width: this.props.product ? this.props.product.width : 0,
+			height: this.props.product ? this.props.product.height : 0,
 			saleprice: this.props.product ? (parseFloat(this.props.product.saleprice[this.props.product.saleprice.length - 1].value) ? parseFloat(this.props.product.saleprice[this.props.product.saleprice.length - 1].value) : 0) : 0 ,
 			openFullImageDialog: false,
 			buyQty: 1,
@@ -31,10 +33,26 @@ export class ProductDetail extends Component {
 	}
 
 	onChangeText = (event) => {
-		this.setState({
-			[event.target.name]: event.target.value
-		})
+		if(event.target.name == 'buyQty'){
+			if(parseInt(event.target.value)){
+				this.setState({buyQty: parseInt(event.target.value)})
+			} 
+		}
+		else{
+			this.setState({
+				[event.target.name]: event.target.value
+			})
+		}
 	}
+
+	increaseBuyQty = () => {
+		this.setState({buyQty: this.state.buyQty + 1})
+	}
+
+	decreaseBuyQty = () => {
+		this.setState({buyQty: this.state.buyQty - 1 > 0 ? this.state.buyQty - 1 : 1})
+	}
+
 
 	hideYesNoDialog = () => {
 		this.setState({
@@ -43,14 +61,28 @@ export class ProductDetail extends Component {
 		})
 	}
 
-	componentDidMount() {
-		//this.props.getProduct(window.location.href.split('.')[2])
+	componentWillReceiveProps(nextProps){
+		this.setState({
+			mainImage: nextProps.product && nextProps.product.subImage ? nextProps.product.subImage : this.state.mainImage, 
+			description: nextProps.product && nextProps.product.description ? nextProps.product.description : this.state.description,
+			name: nextProps.product && nextProps.product.name ? nextProps.product.name : this.state.name,
+			length: nextProps.product && nextProps.product.length ? nextProps.product.length : this.state.length,
+			width: nextProps.product && nextProps.product.width ? nextProps.product.width : this.state.width,
+			height: nextProps.product && nextProps.product.height ? nextProps.product.height : this.state.height,
+			saleprice: !nextProps.product || !nextProps.product.saleprice ? this.state.saleprice : nextProps.product.saleprice[nextProps.product.saleprice.length - 1].value ? parseFloat(nextProps.product.saleprice[nextProps.product.saleprice.length - 1].value) : 0
+		})
+	}
+
+	componentWillMount() {
+		console.log('Current ID:' + window.location.href.split('/')[4])
+		this.props.loadProduct(window.location.href.split('/')[4])
 	}
 
 	render() {
 		const { product, role } = this.props;
 		const { description, name, length, width, height, saleprice } = this.state;
 		return (
+			<div>{!this.props.product ? <div></div> : 
 			<div style = {{padding: 10, border:'1px solid green', padding:10, margin:5}}>
 				<div>
 					<Grid container>
@@ -81,27 +113,50 @@ export class ProductDetail extends Component {
 											</div>
 											: (<div></div>)}
 									</div>
-									<div style={{ lineHeight: '100%' }}>
-										<h3>{description}</h3>
-										<p>{'Mã : '}{product.no}</p>
-										<p>{'Kích thước: '}{(length || 'X') + 'mm x ' + (width || 'X') + 'mm x ' + (height || 'X') + ' mm'}</p>
+									<div style={{ lineHeight: 1.5 }}>
+										<div>{'Mã : '}{product.no}</div>
+										<div>{'Kích thước: '}{(length || 'X') + ' x ' + (width || 'X') + ' x ' + (height || 'X') + ' mm'}</div>
+										<hr style = {{margin:5}}/>
+										<div style = {{fontSize:'0.8rem', wordWrap: 'break-word'}}>
+											{description.split('-').filter(item => item != '').map(item => (<div>- {item}</div>))}
+										</div>
+										<hr style = {{margin:5}}/>
 									</div>
-									{product.importqty > 0 ? (<h4 style={{ color: 'green' }}>Số lượng còn lại: {product.importqty}</h4>) : (<p3 style={{ color: 'red' }}>Hết hàng</p3>)}
-									<h1 style={{ color: '#dd2c00' }}>{saleprice > 0 ? saleprice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' VNĐ' : 'Liên hệ'}</h1>
+									<div style = {{display:'flex'}}>
+										<div style = {{fontStyle:'italic', fontSize: '1rem', marginRight:10, display: 'flex', alignItems: 'flex-end', marginBottom: 2}}>Giá:</div>
+										<div style={{ color: '#dd2c00', fontWeight: 'bold', fontSize: '1.2rem', display: 'flex', alignItems: 'flex-end' }}>
+											{saleprice > 0 ? saleprice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' VNĐ' : 'Liên hệ'}
+										</div>
+									</div>
+									{this.props.product.saleprice.length >= 2 && this.props.product.saleprice[this.props.product.saleprice.length - 1].value < this.props.product.saleprice[0].value ? 
+										<div style = {{display: 'flex', fontSize:'0.8rem'}}>
+											<div style = {{textDecoration: 'line-through'}}>{parseFloat(this.props.product.saleprice[0].value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} vnđ</div>
+											<div style = {{color: 'green', marginLeft:30}}>- {Math.round((parseFloat(this.props.product.saleprice[0].value)-parseFloat(this.props.product.saleprice[this.props.product.saleprice.length - 1].value))/parseFloat(this.props.product.saleprice[0].value)*100)}%</div>
+										</div>
+										: <div></div>
+									}
 									<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
-										<TextField
-											label='Số lượng'
-											value={this.state.buyQty}
-											style={{ width: '100' }}
-											margin='normal'
-											type='number'
-											name='buyQty'
-											onChange={this.onChangeText}
-										/>
-										<StyledButton style={{ bottom: 7, marginLeft: 20 }}
-											onClick={() => this.props.addProductToOrders(product, this.state.buyQty)}
-										> Thêm vào giỏ hàng</StyledButton>
+										<div style = {{display: 'flex', alignItems: 'center'}}>
+											<div style = {{marginRight:30, color: '#6c757d', fontSize: '0.8rem', display: 'flex', alignItems: 'center'}}>Số lượng:</div>
+											<div style = {{width:120, display: 'flex', justifyContent: 'center'}}>
+												<div onClick = {this.decreaseBuyQty} style = {{width:30, height:30,color:'#6c757d', border:'1px solid rgba(0,0,0,.4)', borderRight: '0px', borderTopLeftRadius:5, borderBottomLeftRadius: 5, display:'flex', alignItems:'center', justifyContent: 'center',fontWeight:'bold', fontSize:'1.5rem'}}>
+													-
+												</div>
+												<input name='buyQty' onChange={this.onChangeText} value = {this.state.buyQty} style = {{width:40,height:30, border:'1px solid rgba(0,0,0,.4)', textAlign: 'center', fontSize:'0.8rem', fontWeight:'bold'}}></input>
+												<div onClick = {this.increaseBuyQty} style = {{width:30, height:30,color:'#6c757d', border:'1px solid rgba(0,0,0,.4)', borderLeft: '0px', borderTopRightRadius:5, borderBottomRightRadius: 5, display:'flex', alignItems:'center', justifyContent: 'center',fontWeight:'bold', fontSize:'1.5rem'}}>
+													+
+												</div>
+												{}
+											</div>
+											{product.importqty > 0 ? 
+												(<div style={{ color: 'green', fontSize:'0.8rem', display: 'flex', alignItems: 'center' }}>(Số lượng còn lại: {product.importqty})</div>) :
+												(<img src = {sold_out} style = {{height:50, paddingLeft:20}}/>)
+											}
+										</div>
 									</div>
+									<StyledButton disabled = {product.importqty <= 0} style={{width:'80%', margin:30, color: 'white', fontWeight: 'bold'}} onClick={() => this.props.addProductToOrders(product, this.state.buyQty)}>
+										{product.importqty <= 0 ? 'SOLD OUT !!!' : 'THÊM VÀO GIỎ HÀNG'}
+									</StyledButton>
 								</div>
 								:
 								<div style={{ paddingLeft: 30, lineHeight: 1.6, marginTop: 20 }}>
@@ -213,11 +268,12 @@ export class ProductDetail extends Component {
 					</Grid>
 				</div>
 				<div>
-					<div>Khách hàng đã mua sản phẩm</div>
-					<div style = {{display: 'flex', flexDirection: 'row'}}>
+					<div style = {{fontWeight:'bold', fontSize: '0.8rem'}}>KHÁCH HÀNG ĐÃ MUA</div>
+					<div style = {{display: 'flex', flexDirection: 'row',  marginTop: 10, width: '100%'}}>
 						{this.props.saleOrders.map(saleOrder => (
-							<div>
-								<img src={`data:image/png;base64,${saleOrder.customer_id.avatar}`} style = {{width:200, height: 200}}/>
+							<div style = {{display: 'flex', flexDirection: 'column', alignItems: 'center',border: '1px solid green', borderRadius: 3,marginRight:15}}>
+								<img src={`data:image/png;base64,${saleOrder.customer_id.avatar}`} style = {{width:150, height: 150, margin: 10}}/>
+								<a href = 'javascript:;' onClick = {() => {this.props.showCustomer(this.props.token,saleOrder.customer_id._id)}}>{saleOrder.customer_id.name}</a>
 							</div>
 						))}
 					</div>
@@ -227,7 +283,7 @@ export class ProductDetail extends Component {
 					open={this.state.showChangeDialog}
 					handleClickNo={this.hideYesNoDialog}
 					handleClickYes={() => {
-						this.props.ChangeProductDetail({
+						this.props.ChangeProductDetail(this.props.token,{
 							_id: product._id,
 							name: this.state.name,
 							description: this.state.description,
@@ -260,6 +316,7 @@ export class ProductDetail extends Component {
 					yesLabel='Xác nhận xóa'
 				/>
 			</div>
+		}</div>
 		)
 	}
 }
@@ -278,7 +335,8 @@ const mapState2Props = (state) => {
 	return {
 		product: state.ProductReducer.product.product,
 		role: state.LoginReducer.role,
-		saleOrders: state.ProductReducer.product.saleOrder
+		saleOrders: state.ProductReducer.product.saleOrder,
+		token: state.LoginReducer.token
 	}
 }
 
@@ -290,11 +348,17 @@ const mapDispatch2Props = (dispatch) => {
 		addProductToOrders: (product, productQty) => {
 			dispatch({ type: 'ADD_PRODUCT_TO_ORDERS', payload: { product, productQty } })
 		},
-		ChangeProductDetail: (product) => {
-			dispatch({ type: 'CHANGE_PRODUCT_DETAIL', payload: product })
+		ChangeProductDetail: (token,product) => {
+			dispatch({ type: 'CHANGE_PRODUCT_DETAIL', token: token,payload: product })
 		},
-		DeleteProduct: (data) => {
-			dispatch({ type: 'DELETE_PRODUCT', payload: data._id })
+		DeleteProduct: (token,data) => {
+			dispatch({ type: 'DELETE_PRODUCT', token,payload: data._id })
+		},
+		showCustomer:(token, id) => {
+			dispatch({type:'GET_CUSTOMER_DETAIL',payload:id, token: token})
+		}, 
+		loadProduct:(id) => {
+			dispatch({type: 'HANDLE_SHOW_PRODUCT_DETAIL', payload:id})
 		}
 	}
 }

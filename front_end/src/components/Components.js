@@ -63,10 +63,10 @@ export const BlueButton = withStyles({
 
 export const GrayButton = withStyles({
     root: {
-        background:'#1976d2',
+        background:'gray',
         borderRadius: 3,
         border: 0,
-        color: '#90a4ae',
+        color: 'white',
         height: 30,
         padding: '0 30px',
         boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
@@ -75,6 +75,22 @@ export const GrayButton = withStyles({
         textTransform: 'capitalize',
     },
 })(Button)
+
+export const RedButton = withStyles({
+    root: {
+        background:'red',
+        borderRadius: 3,
+        border: 0,
+        color: 'white',
+        height: 30,
+        padding: '0 30px',
+        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    },
+    label: {
+        textTransform: 'capitalize',
+    },
+})(Button)
+
 
 
 export const TitleTypography = withStyles({

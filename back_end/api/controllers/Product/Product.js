@@ -99,14 +99,14 @@ const getProductDetail = async (req, res) => {
 const changeProductDetail = async (req,res) => {
     try{
         const {_id,name,description,width, height,length,saleprice} = req.body;
-        let product = await Product.findOne({_id: req.body._id});
+        let product = await Product.findOne({_id});
         if(product != null){
             product.name = name || product.name;
             product.description = description || product.description;
             product.width = width  || product.width;
             product.height = height   || product.height;
             product.length = length  || product.length;
-            product.saleprice = saleprice  || product.saleprice;
+            product.saleprice = product.saleprice != saleprice ? [...product.saleprice, {time:new Date(),value:saleprice}] : product.saleprice;
             await product.save();
             res.status(200).send('Updated')
         }

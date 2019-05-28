@@ -132,7 +132,7 @@ export class SaleOrderDetail extends Component {
                         <img style={{ width: 50, height: 50 }} src={`data:image/png;base64,${item.product_id.subImage}`} />
                     </Grid>
                     <Grid item xs = {4} style = {{textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
-                        {item.product_id.name}
+                        <a href = 'javascript:;'  onClick = {() => this.props.showProduct(item.product_id._id)}>{item.product_id.name}</a>
                     </Grid>
                     <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
                         {(parseFloat(item.sale_price)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
@@ -368,6 +368,9 @@ const mapDispatch2Props = (dispatch) => {
         console.log('WHY ?????????')
         return dispatch({type:'NEXT_STATE_SALE_ORDER', token: token, payload: id})
     },
+    showProduct: (id) => {
+        return dispatch({type:'HANDLE_SHOW_PRODUCT_DETAIL', payload: id})
+    }
   }
 }
 

@@ -91,7 +91,7 @@ export class LoginDialog extends Component {
                             <input type="checkbox" name="remember" value={'remember'} onClick = {this.onCheckRemember} style = {{paddingRight: 20}}/>{` Nhớ đăng nhập`} <br/>
                         </Grid>
                         <Grid item xs = {6} style={{ paddingTop: 20 ,display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
-                            <a onClick = {this.props.showForgotPassForm} href = '#'> Quên mật khẩu</a>
+                            <a onClick = {this.props.showForgotPassForm} href = 'javascript:;'> Quên mật khẩu</a>
                         </Grid>
                         <Grid item xs={12} style={{ paddingTop: 20 , display: 'flex', justifyContent: 'center'}}>
                             <StyledButton onClick={this.requestLogin}>Đăng nhập</StyledButton>
@@ -111,6 +111,7 @@ const mapState2Props = (state) => {
 
 const mapDispatch2Props = (dispatch) => {
     return {
+        showForgotPassForm:() => dispatch({type:'SHOW_FORGOT_PASSWORD_FORM'})
     }
 }
 

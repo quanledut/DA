@@ -1,7 +1,7 @@
 export const Roles = [
     {
-        name: 'employee',
-        caption:'Nhân viên quản lý'    
+        name: '',
+        caption:'Tất cả'  
     },
     {
         name: 'seller',
@@ -13,6 +13,6 @@ export const Roles = [
     },
     {
         name: 'admin',
-        caption:'Quản lý'  
+        caption:'Giám đốc'  
     }
 ]

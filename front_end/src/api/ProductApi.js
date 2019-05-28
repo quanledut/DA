@@ -66,9 +66,9 @@ export const getProductDetail = (id) => {
   
 }
 
-export const changeProductDetail = (product) => {
+export const changeProductDetail = (token, product) => {
     return new Promise((resolve, reject) => {
-        axios.put(`${apiUrl}/products/${product._id}`,product).then(res => {
+        axios.put(`${apiUrl}/products/${product._id}`,product, {headers:{Authorization:`Bearer ${token}`}}).then(res => {
             if(res.status == 200) resolve('Updated');
             else reject('Not Updated')
         }).catch(err => reject(err))

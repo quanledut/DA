@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {ShoppingCart, Timeline, HowToReg, ShopTwo, PersonOutline, Group} from '@material-ui/icons'
+import {ShoppingCart, Timeline, HowToReg, ShopTwo, PersonOutline, Group, ListAlt} from '@material-ui/icons'
 
 export const Menu  = {
     guess:[
@@ -7,37 +7,27 @@ export const Menu  = {
             name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>),
-        },
-        {
-            name: '/sales',
-            caption: 'Khuyến mãi',
-            icon: (<Timeline/>)
-        },    
+        } 
     ],
-    employee: [
+    seller: [
         {
             name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>)
         },
         {
-            name: '/sales',
-            caption: 'Khuyến mãi',
-            icon: (<Timeline/>)
-        },
-        {
-            name: '/employees',
-            caption: 'Nhân viên',
+            name: '/customers',
+            caption: 'Khách hàng',
             icon: (<HowToReg/>)
         },
         {
             name: '/saleorders',
             caption: 'Đơn hàng',
-            icon: (<ShopTwo/>)
+            icon: (<ListAlt/>)
         },
         {
             name: '/users/detail',
-            caption: 'Thông tin cá nhân',
+            caption: 'Cá nhân',
             icon: (<PersonOutline/>)
         }  
     ],
@@ -48,8 +38,8 @@ export const Menu  = {
             icon: (<ShoppingCart/>)
         },
         {
-            name: '/sales',
-            caption: 'Khuyến mãi',
+            name: '/report',
+            caption: 'Thống kê',
             icon: (<Timeline/>)
         },
         {
@@ -60,7 +50,7 @@ export const Menu  = {
         {
             name: '/saleorders',
             caption: 'Đơn hàng',
-            icon: (<ShopTwo/>)
+            icon: (<ListAlt/>)
         },
         {
             name: '/employees',
@@ -69,7 +59,34 @@ export const Menu  = {
         },
         {
             name: '/users/detail',
-            caption: 'Thông tin cá nhân',
+            caption: 'Cá nhân',
+            icon: (<PersonOutline/>)
+        } 
+    ],
+    manager: [
+        {
+            name: '/',
+            caption: 'Sản phẩm',
+            icon: (<ShoppingCart/>)
+        },
+        {
+            name: '/customers',
+            caption: 'Khách hàng',
+            icon: (<HowToReg/>)
+        },
+        {
+            name: '/saleorders',
+            caption: 'Đơn hàng',
+            icon: (<ListAlt/>)
+        },
+        {
+            name: '/employees',
+            caption: 'Nhân viên',
+            icon: (<Group/>)
+        },
+        {
+            name: '/users/detail',
+            caption: 'Cá nhân',
             icon: (<PersonOutline/>)
         } 
     ]

@@ -21,14 +21,14 @@ const styles = (theme) => ({
 	},
 	drawer: {
 		flexShrink: 0,
-		width: theme.spacing.unit * 25,
-		height: 700,
+		width: theme.spacing.unit * 22,
+		height: '100%',
 		whiteSpace: 'nowrap',
 		position: 'relative',
 		display: 'flex'
 	},
 	drawerOpen: {
-		width: theme.spacing.unit * 25,
+		width: theme.spacing.unit * 22,
 		transition: theme.transitions.create('width', {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.enteringScreen,
@@ -59,7 +59,7 @@ export class Viewer extends Component {
 			typography: { useNextVariants: true },
 		});
 		return (
-			<div style = {{height:'92%', overflow: 'hidden', display:'flex', flexDirection: 'row'}}>
+			<div style = {{height: window.innerHeight, overflow: 'hidden', display:'flex', flexDirection: 'row'}}>
 					<Drawer
 						classes={{
 							paper: classes.drawer
@@ -79,7 +79,12 @@ export class Viewer extends Component {
 								data.icon?
 								<ListItem selected={this.props.screen === data.name} button key={data.name} onClick={() => this.props.router(data.name)}>
 									<ListItemIcon>{data.icon}</ListItemIcon>
-									<ListItemText primary={data.caption} />
+									{/*<ListItemText primary={data.caption} />*/}
+									<ListItemText>
+										<div style = {{fontWeight: 'bold', color:'#999999'}}>
+											{data.caption}
+										</div>
+									</ListItemText>
 								</ListItem>
 								:
 								<ListItem disabled>
@@ -88,7 +93,7 @@ export class Viewer extends Component {
 							))}
 						</List>
 					</Drawer>
-					<div style = {{flexGrow: 1, overflow: 'scroll', height: '100%'}}>
+					<div style = {{flexGrow: 1, overflow: 'scroll', height: window.innerHeight*0.92}}>
 						<ScreenRouter />
 					</div>
 			</div>

@@ -1,12 +1,14 @@
 import {createNewCustomer, getAllCustomer, getCustomersList, getCustomerDetail} from '../../api/CustomerApi';
 import {call, put} from 'redux-saga/effects';
-import {NotificationManager} from 'react-notifications'
+import {NotificationManager} from 'react-notifications';
+import {numberOfCustomerPerPage} from '../../config'
 export function* CreateNewCustomer(action) {
     try{
         yield call(createNewCustomer,action.payload,action.token);
         yield NotificationManager.success('Đã thêm khách hàng','Success',2000);
         yield put({type: 'CREATE_NEW_CUSTOMER_SUCCESS'});
-        yield put({type: 'GET_ALL_CUSTOMERS',token:action.token})
+        yield put({type: 'GET_ALL_CUSTOMERS',token:action.token});
+        yield put({type: 'LOAD_CUSTOMER_LIST', payload: {page: 1, limit: numberOfCustomerPerPage, search_text: ''}, token: action.token});
     }
     catch(err){
         yield NotificationManager.error('Lỗi khi tạo khách hàng','Error',2000);

@@ -55,6 +55,10 @@ const PageReducer = (state = initialState, action) => {
             return {...state, isShowForgotPasswordForm: true}
             break;
         }
+        case 'EMPLOYEE_CREATED':{
+            return {...state, isShowSignUp: false}
+            break;
+        }
         default:
         return state;
     }

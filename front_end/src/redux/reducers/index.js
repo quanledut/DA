@@ -4,7 +4,9 @@ import PageReducer from './PageReducer';
 import ProductReducer from './ProductReducer';
 import CustomerReducer from './CustomerReducer';
 import SaleOrderReducer from './SaleOrderReducer'
-import UserReducer from './UserReducer'
+import UserReducer from './UserReducer';
+import EmployeeReducer from './EmployeeReducer';
+import ReportReducer from './ReportReducer'
 
 export default combineReducers({
     LoginReducer,
@@ -12,5 +14,7 @@ export default combineReducers({
     ProductReducer,
     CustomerReducer,
     SaleOrderReducer,
-    UserReducer
+    UserReducer,
+    EmployeeReducer,
+    ReportReducer
 });

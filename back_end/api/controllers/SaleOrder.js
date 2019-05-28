@@ -5,11 +5,12 @@ const {getSubImage} = require('../helpers/uploadImage');
 const {removeSignString} = require('../helpers/removeSignText');
 const {getProductDetail} = require('./Product/Product');
 const {checkInventoryQty, divideInventoryStock} = require('../helpers/Product');
-
+const UserDetail = mongoose.model('UserDetail')
 const find = async (req, res) => {
     try {
         const {page,limit,search_text,status} = req.query;
-        let saleOrders = await SaleOrder.find(status && status != 'all' ? {status} : {}).populate('customer_id').populate('seller_id');
+        let saleOrders = await SaleOrder.find(status && status != 'all' ? {status} : {}).sort({createdAt:-1}).populate('customer_id').populate('seller_id').populate('seller_id.user_detail_id');
+        saleOrders = await UserDetail.populate(saleOrders,'seller_id.user_detail_id');
         console.log(saleOrders.length)
         if(!saleOrders && saleOrders.length == 0){
             res.status(200).send({sale_order_count: 0,sale_orders: []
@@ -124,5 +125,5 @@ module.exports = {
     find,
     requestNewSaleOrder,
     getSaleOrderById,
-    nextStatusSaleOrder
+    nextStatusSaleOrder,
 }

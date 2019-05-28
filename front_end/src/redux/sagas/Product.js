@@ -49,7 +49,7 @@ export function* ShowProductDetail(action){
 
 export function* ChangeProductDetail(action){
     try {
-        yield call(changeProductDetail,action.payload);
+        yield call(changeProductDetail,action.token, action.payload);
         NotificationManager.success('Đã cập nhật thông tin sản phẩm', 'Success', 2000);
         yield put({type: 'HANDLE_SHOW_PRODUCT_DETAIL',payload: action.payload._id})
     }   

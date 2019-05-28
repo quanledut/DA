@@ -32,14 +32,15 @@ export class SaleOrderInfo extends Component {
     }
 
     changePageOfSaleOrder = (number) => {
+        console.log('Change Page')
         this.setState({page: number}, () => {
-            this.props.loadSaleOrderList(this.props.token , { status: this.state.status, search_text: this.state.search_text, page: this.stage.page, limit: numberOfSaleOrderPerPage })
+            this.props.loadSaleOrderList(this.props.token , { status: this.state.status, search_text: this.state.search_text, page: this.state.page, limit: numberOfSaleOrderPerPage })
         })
     }
 
     render() {
         return (
-            <div style={{ margin: 2, border: '1px solid #9e9d24', borderRadius: 3, height: '100%', overflow: 'scroll' }}>
+            <div style={{ margin: 2, border: '1px solid #9e9d24', borderRadius: 3, height: '100%' }}>
                 <div style={{ backgroundColor: '#00695c', textAlign: 'center', height: 30, color: 'white', width : '100%' }}>
                     DANH SÁCH ĐƠN HÀNG
                 </div>
@@ -62,7 +63,8 @@ export class SaleOrderInfo extends Component {
                                 <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {customer_avatar} alt = '' style = {{width:45, marginRight:10}}/> 
                                     <a href = 'javascript:;' onClick = {() => {this.props.showCustomer(this.props.token, saleOrder.customer_id._id)}}>{saleOrder.customer_id.name}</a> 
                                 </Grid>
-                                <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {employee} alt = '' style = {{width:45, marginRight:10}}/> <a href = 'javascript:;' >{saleOrder.seller_id.email}</a> </Grid>
+                                <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {employee} alt = '' style = {{width:45, marginRight:10}}/> <a href = 'javascript:;' >
+                                    {saleOrder.seller_id.user_detail_id && saleOrder.seller_id.user_detail_id.name ? saleOrder.seller_id.user_detail_id.name : saleOrder.seller_id.email}</a> </Grid>
                                 <Grid item xs = {2} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}> {{
                                     'New':
                                         <GreenButton>Chưa duyệt</GreenButton>,
@@ -81,8 +83,8 @@ export class SaleOrderInfo extends Component {
                         <div style = {{flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <Pagination   
                                 limit={numberOfSaleOrderPerPage}
-                                offset={numberOfSaleOrderPerPage * this.state.pageOfSaleOrder - 1}
-                                total={this.props.saleOrderCount}
+                                offset={numberOfSaleOrderPerPage * this.state.page - 1}
+                                total={this.props.SaleOrderCount}
                                 onClick={(e, offset, number) => this.changePageOfSaleOrder(number)}
                                 otherPageColor='inherit'
                             />  

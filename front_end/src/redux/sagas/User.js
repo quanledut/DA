@@ -1,6 +1,9 @@
 import { call, put, } from 'redux-saga/effects';
-import { checkToken, signUp , requestForgotPassword, requestSetNewPassword, login, updateUserDetail, updateUserAvatar} from '../../api/AccountApi';
-import {NotificationManager} from 'react-notifications'
+import { checkToken, signUp , requestForgotPassword, requestSetNewPassword, login, updateUserDetail, 
+	updateUserAvatar, loadEmployeeList, loadEmployeeDetail
+	} from '../../api/AccountApi';
+import {NotificationManager} from 'react-notifications';
+import {numberOfEmployeePerPage} from '../../config'
 
 export function* LoadUser() {
 		let token = yield localStorage.getItem('token');
@@ -32,8 +35,9 @@ export function* handleLogout(action) {
 
 export function* CreateNewEmployee(action) {
 	try {
-		const response = yield call(signUp(action.token,action.payload))
+		const response = yield call(signUp,action.token,action.payload)
 		yield put({ type: 'EMPLOYEE_CREATED', payload: response })
+		yield put({ type: 'LOAD_EMPLOYEE_LIST',token:action.token, payload: {page:1, limit:numberOfEmployeePerPage, role:'',search_text:''} })
 	}
 	catch (err) {
 		yield put({ type: 'EMPLOYEE_NOT_CREATE', payload: err })
@@ -76,20 +80,20 @@ export function* LoadUserFromToken(action){
 export function* UpdateUserDetail(action){
 	try{
 		console.log('Update detail')
-		yield call(updateUserDetail(action.token, action.payload));
+		yield call(updateUserDetail,action.token, action.payload);
 		NotificationManager.success('SUccess', 'Success', 2000)
 		yield put({type: 'LOGIN_SUCCESS', payload: action.token});
 		yield put({type: 'UPDATE_USER_DETAIL_SUCCESSED'})
 	}
 	catch(err){
 		yield put({type: 'UPDATE_USER_DETAIL_FAILED', payload: err})
-		yield put({type: 'LOGIN_SUCCESS', payload: action.token});
+		//yield put({type: 'LOGIN_SUCCESS', payload: action.token});
 	}
 }
 
 export function* UpdateUserAvatar(action){
 	try{
-		const UserDetail = yield call(updateUserAvatar(action.token, action.payload));
+		let UserDetail = yield call(updateUserAvatar,action.token, action.payload);
 		yield put({type: 'UPDATE_USER_AVATAR_SUCCESSED', payload: UserDetail})
 		yield put({type: 'LOGIN_SUCCESS', payload: action.token})
 	}
@@ -97,3 +101,28 @@ export function* UpdateUserAvatar(action){
 		yield put({type: 'UPDATE_USER_AVATAR_FAILED'})
 	}
 }
+
+export function* LoadEmployeeList(action){
+	try{
+		let employees = yield call(loadEmployeeList,action.token, action.payload);
+		yield put({type: 'LOAD_EMPLOYEE_LIST_SUCCESS', payload: employees})
+		//yield put({type: 'LOGIN_SUCCESS', payload: action.token})
+	}
+	catch(err){
+		yield put({type: 'LOAD_EMPLOYEE_LIST_FAILED'})
+	}
+}
+
+export function* ShowEmployeeDetail(action){
+	try{
+		let employee = yield call(loadEmployeeDetail,action.token, action.payload);
+		yield put({type: 'LOAD_EMPLOYEE_DETAIL_SUCESS', payload: employee})
+		yield put({type: 'SCREEN_ROUTER', payload: `/employees/${action.payload}`})
+	}
+	catch(err){
+		yield put({type: 'LOAD_EMPLOYEE_DETAIL_FAILED'})
+	}
+}
+
+
+
