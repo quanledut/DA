@@ -8,6 +8,7 @@ import { withStyles, Paper } from '@material-ui/core';
 import classNames from 'classnames'
 import { Menu } from '../../data/MenuBar'
 import ScreenRouter from '../../screens/router';
+import {baseUrl} from '../../config'
 
 const styles = (theme) => ({
 	root: {
@@ -77,15 +78,18 @@ export class Viewer extends Component {
 						<List>
 							{(Menu[this.props.role || 'guess']).map((data, index) => (
 								data.icon?
-								<ListItem selected={this.props.screen === data.name} button key={data.name} onClick={() => this.props.router(data.name)}>
-									<ListItemIcon>{data.icon}</ListItemIcon>
-									{/*<ListItemText primary={data.caption} />*/}
-									<ListItemText>
-										<div style = {{fontWeight: 'bold', color:'#999999'}}>
-											{data.caption}
-										</div>
-									</ListItemText>
-								</ListItem>
+								<div>
+									<ListItem selected={(window.location.href == `${baseUrl}/` && data.name == '/') || (data.name != '/' && window.location.href.indexOf(data.name) >= 0)} button key={data.name} onClick={() => this.props.router(data.name, this.props.token)}>
+										<ListItemIcon>{data.icon}</ListItemIcon>
+										{/*<ListItemText primary={data.caption} />*/}
+										<ListItemText>
+											<div style = {{fontWeight: 'bold', color:'#999999'}}>
+												{data.caption}
+											</div>
+										</ListItemText>
+									</ListItem>
+									<hr style = {{margin:0, color:'green'}}/>
+								</div>
 								:
 								<ListItem disabled>
 									<div style = {{height: '100%'}}></div>
@@ -109,13 +113,14 @@ const mapState2Props = (state) => {
 	return {
 		open: state.PageReducer.isShowFullMenu,
 		role: state.LoginReducer.role,
-		screen: state.PageReducer.screen
+		screen: state.PageReducer.screen,
+		token: state.LoginReducer.token
 	}
 }
 const mapDispatch2Props = (dispatch) => {
 	return {
-		router: (screenName) => {
-			dispatch({ type: 'SCREEN_ROUTER', payload: screenName })
+		router: (screenName, token) => {
+			dispatch({ type: 'SCREEN_ROUTER', payload: screenName , token})
 		}
 	}
 }

@@ -46,19 +46,15 @@ export class Report extends Component {
         }
     }
 
+    componentDidMount(){
+        console.log('Report did mount')
+    }
 
     componentWillMount(){
+        console.log('Report will mount')
         this.props.getSaleReport(this.props.token)
         this.props.getTopEmployee(this.props.token)
     }
-
-    // componentWillReceiveProps(nextProps){
-    //     console.log('NextProps: '+ nextProps)
-    //     if(nextProps.token){
-    //         this.props.getSaleReport(nextProps.token)
-    //         this.props.getTopEmployee(nextProps.token)
-    //     }
-    // }
 
     render() {
         return (
@@ -70,7 +66,7 @@ export class Report extends Component {
                         </div>
                         <div style = {{display:'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                             <img src = {chart_icon} style = {{width:50, height:50, marginLeft:15}}/>
-                            <div style = {{marginRight:20}}>20 sản phẩm</div>
+                            <div style = {{marginRight:20}}>{this.props.productCount} sản phẩm</div>
                         </div>
                     </Grid>
                     <Grid item xs = {4} style = {{backgroundColor:'white',  margin:15, borderRadius: 5, paddingTop: 5}}>
@@ -79,7 +75,7 @@ export class Report extends Component {
                         </div>
                         <div style = {{display:'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                             <img src = {chart_icon} style = {{width:50, height:50, marginLeft:15}}/>
-                            <div style = {{marginRight:20}}>20 khách hàng</div>
+                            <div style = {{marginRight:20}}>{this.props.customerCount} khách hàng</div>
                         </div>
                     </Grid>
                     <Grid item xs = {4} style = {{backgroundColor:'white',  margin:15, borderRadius: 5, paddingTop: 5}}>
@@ -88,7 +84,7 @@ export class Report extends Component {
                         </div>
                         <div style = {{display:'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                             <img src = {chart_icon} style = {{width:50, height:50, marginLeft:15}}/>
-                            <div style = {{marginRight:20}}>20 nhân viên</div>
+                            <div style = {{marginRight:20}}>{this.props.employeeCount} nhân viên</div>
                         </div>
                     </Grid>
                 </div>
@@ -99,12 +95,12 @@ export class Report extends Component {
                             {this.props.top_5_employee.map((employee,index) => (
                                 <div>
                                     <div style = {{display: 'flex', flexDirection: 'row'}}>
-                                        <div style = {{flex:1, display: 'flex', justifyContent: 'flex-start', alignItems:'center',color:'green', fontWeight:'bold'}}>
+                                        <div style = {{flex:1, display: 'flex', justifyContent: 'flex-start', alignItems:'center',color:'green', fontWeight:'bold', marginLeft:15}}>
                                             #{index + 1}
                                         </div> 
                                         <a onClick = {() => {this.props.showUserDetail(this.props.token,employee.user_id[0]._id)}} href = 'javascript:;' style = {{flex:4, fontWeight: 'bold', display: 'flex', justifyContent: 'flex-start', alignItems:'center'}}>{employee.user_detail_id[0] ? employee.user_detail_id[0].name : employee.user_id[0].email}</a>
-                                        <div style = {{flex:2,  display: 'flex', justifyContent: 'center', alignItems:'center', fontWeight:'bold', color:employee.user_id[0].role == 'admin' ? 'red' : employee.user_id[0].role == 'manager' ? 'blue' : 'green'}}>{employee.user_id[0].role == 'admin' ? 'Vip' : employee.user_id[0].role == 'manager' ? 'Quản lý' : 'Nhân viên bán hàng'}</div>
-                                        <div style = {{flex:2, fontWeight: 'bold', display: 'flex', justifyContent: 'flex-end', alignItems:'center', color:'green'}}>{employee.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} VNĐ</div>
+                                        <div style = {{flex:2,  display: 'flex', justifyContent: 'center', alignItems:'center', fontWeight:'bold', color:employee.user_id[0].role == 'admin' ? 'red' : employee.user_id[0].role == 'manager' ? 'blue' : 'green'}}>{employee.user_id[0].role == 'admin' ? 'Quản lý cấp cao' : employee.user_id[0].role == 'manager' ? 'Quản lý' : 'Nhân viên bán hàng'}</div>
+                                        <div style = {{flex:2, fontWeight: 'bold', display: 'flex', justifyContent: 'flex-end', alignItems:'center', color:'green', marginRight:15}}>{employee.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} VNĐ</div>
                                     </div>
                                     {index == this.props.top_5_employee.length ? <div/> : <hr style = {{margin:5}}/>}
                                 </div>
@@ -135,7 +131,10 @@ const mapState2Props = (state) => {
     return {
         top_5_employee: state.ReportReducer.top_5_employee,
         sale_report: state.ReportReducer.sale_report,
-        token: state.LoginReducer.token
+        token: state.LoginReducer.token,
+        productCount: state.ReportReducer.productCount,
+        employeeCount: state.ReportReducer.employeeCount,
+        customerCount: state.ReportReducer.customerCount
     }
 }
 

@@ -40,7 +40,8 @@ function* rootSaga(){
         //product
         //yield fork(CleanSaleOrder),
         yield fork(LoadDepartment),
-        yield fork(LoadProduct,{payload:{limit: numberOfProductPerPage, page:1}}),
+        //yield fork(LoadProduct,{payload:{limit: numberOfProductPerPage, page:1}}),
+        yield takeLatest('LOAD_PRODUCT_LIST',LoadProduct),
         yield takeLatest('CHANGE_PRODUCT_DETAIL',ChangeProductDetail),
         yield takeLatest('GET_PRODUCT', LoadProduct),
         yield takeLatest('REQUEST_CREATE_NEW_PRODUCT', RequestNewProduct),
@@ -53,7 +54,7 @@ function* rootSaga(){
         yield takeLatest('UPDATE_SALE_ORDER_ITEM', UpdateSaleOrderItem),
         yield takeLatest('CREATE_NEW_SALE_ORDER', CreateNewSaleOrder),
         yield takeLatest('LOAD_SALE_ORDER_LIST', LoadSaleOrderList),
-        yield takeLatest('SHOW_SALE_ORDER_DETAIL', LoadSaleOrderDetail),
+        yield takeLatest('LOAD_SALE_ORDER_DETAIL', LoadSaleOrderDetail),
         yield takeLatest('NEXT_STATE_SALE_ORDER', GoToNextStateSaleOrder),
         //customer
         yield takeLatest('CREATE_NEW_CUSTOMER', CreateNewCustomer),

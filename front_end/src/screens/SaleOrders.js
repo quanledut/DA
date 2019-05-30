@@ -21,7 +21,6 @@ export class SaleOrderInfo extends Component {
     }
 
     componentDidMount() {
-        console.log('Sale Order Screen Did Mount')
         this.props.loadSaleOrderList(this.props.token, {page: 1, limit: numberOfSaleOrderPerPage, search_text: '', status: 'all'});
     }
 
@@ -32,7 +31,6 @@ export class SaleOrderInfo extends Component {
     }
 
     changePageOfSaleOrder = (number) => {
-        console.log('Change Page')
         this.setState({page: number}, () => {
             this.props.loadSaleOrderList(this.props.token , { status: this.state.status, search_text: this.state.search_text, page: this.state.page, limit: numberOfSaleOrderPerPage })
         })
@@ -110,7 +108,7 @@ const mapDispatch2Props = (dispatch) => {
             dispatch({ type: 'LOAD_SALE_ORDER_LIST', payload: data, token: token})
         },
         showSaleOrderInfo: (token, id) => {
-            dispatch({ type: 'SHOW_SALE_ORDER_DETAIL', payload: id, token: token})
+            dispatch({ type: 'LOAD_SALE_ORDER_DETAIL', payload: id, token: token})
         },
         showCustomer: (token, id) => {
             dispatch({ type: 'GET_CUSTOMER_DETAIL', payload: id, token: token})

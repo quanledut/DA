@@ -44,7 +44,6 @@ export class EmployeeDetail extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps)
         const {name, address, phone_number, birthday, gender} = nextProps.user_detail || {}
         this.setState({
             name: name,
@@ -123,7 +122,7 @@ export class EmployeeDetail extends Component {
                         <div style = {{flex: 1, marginLeft: 40}}>
                             <div style = {{display: 'flex', flexDirection: 'column'}}>
                                 <div style = {{fontStyle: 'italic', fontSize: '0.8rem', }}>Chức vụ:</div>
-                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.role == 'admin' ? 'Vip' : this.props.user.role == 'manager' ? 'Quản lý' : 'Nhân viên'}</div>
+                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.role == 'admin' ? 'Quản lý cấp cao' : this.props.user.role == 'manager' ? 'Quản lý' : 'Nhân viên'}</div>
                             </div>
                             <div style = {{display: 'flex', flexDirection: 'column', marginTop: 10}}>
                                 <div style = {{fontStyle: 'italic', fontSize: '0.8rem', }}>Giới tính:</div>
@@ -177,7 +176,7 @@ const mapState2Props = (state) => {
 const mapDispatch2Props = (dispatch) => {
     return{
         showSaleOrder: (token, id) => {
-            dispatch({type:'SHOW_SALE_ORDER_DETAIL', token, payload:id})
+            dispatch({type:'LOAD_SALE_ORDER_DETAIL', token, payload:id})
         }
     }
 }

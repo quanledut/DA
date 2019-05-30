@@ -24,6 +24,7 @@
     "react-alice-carousel": "^1.13.11",
     "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.6",
+    "react-google-maps": "^9.4.5",
     "react-image-magnify": "^2.7.4",
     "react-notifications": "^1.4.3",
     "react-redux": "^7.0.1",

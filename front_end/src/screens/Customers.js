@@ -107,7 +107,7 @@ const mapDispatch2Props = (dispatch) => {
             dispatch({ type: 'LOAD_CUSTOMER_LIST', payload: data, token: token})
         },
         showSaleOrderInfo: (token, id) => {
-            dispatch({ type: 'SHOW_SALE_ORDER_DETAIL', payload: id, token: token})
+            dispatch({ type: 'LOAD_SALE_ORDER_DETAIL', payload: id, token: token})
         },
         showCustomer: (token, id) => {
             dispatch({ type: 'GET_CUSTOMER_DETAIL', payload: id, token: token})

@@ -69,7 +69,6 @@ export const updateUserDetail = (token, data) => {
         .then(response => {
             if(response.status == 201) 
             {
-                console.log(response.status)
                 return resolve('Success');
             }
             else 
@@ -79,7 +78,6 @@ export const updateUserDetail = (token, data) => {
         })
         .catch(err => 
             {
-                console.log('Catch')
                 return reject(err)
             }
         )
@@ -103,9 +101,7 @@ export const loadEmployeeList = (token, data) => {
     return new Promise((resolve, reject) => {
         axios.get(`${apiUrl}/users`,{headers: {Authorization: `Bearer ${token}`}, params: data})
         .then(res => {
-            console.log('Response status: '+(res.status === 200))
             if(res.status === 200) {
-                console.log(res.data)
                 return resolve(res.data);
             }
             else {
@@ -122,9 +118,7 @@ export const loadEmployeeDetail = (token, data) => {
     return new Promise((resolve, reject) => {
         axios.get(`${apiUrl}/employees`,{headers: {Authorization: `Bearer ${token}`}, params: {id:data}})
         .then(res => {
-            console.log('Response status: '+(res.status === 200))
             if(res.status === 200) {
-                console.log(res.data)
                 return resolve(res.data);
             }
             else {

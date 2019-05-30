@@ -13,6 +13,7 @@ import {numberOfProductPerPage, numberOfProductPerLine} from '../config';
 import {PropTypes} from 'prop-types';
 import Rating from '../components/RatingStart'
 import main_wood from '../data/main_bg.jpeg'
+import Loading from '../components/Loading'
 
 
 const sortBy = [
@@ -115,6 +116,10 @@ export class Products extends Component {
     }
   }
 
+  componentDidMount(){
+    this.props.loadProductList({limit: numberOfProductPerPage, page:1})
+  }
+
   handleClickToProduct = (id) => {
     this.props.showProductDetail(id);
   }
@@ -161,9 +166,9 @@ export class Products extends Component {
       <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
           <div style={{ height: 30, display: 'flex', margin: 3, marginTop: 5 , marginBottom: 10}}>
             <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, marginRight: 10 }}>
-              <SearchIcon style={{ fontSize: 25 }} color='primary' className={classes.searchIcon} />
+              <SearchIcon style={{ fontSize: 25 }} className={classes.searchIcon} />
               <Divider className={classes.divider} />
-              <InputBase className={classes.input} placeholder="Tìm kiếm tên sản phẩm, nhóm hàng" onChange={this.onSearch} name = 'name' />
+              <InputBase className={classes.input} placeholder="Tìm kiếm tên sản phẩm" onChange={this.onSearch} name = 'name' />
             </div>
             <TextField
               variant="outlined"
@@ -192,6 +197,9 @@ export class Products extends Component {
           </div>
 
           {/* List Product */}
+          {!products || !productCount ? 
+          <Loading title = 'Đang tải danh sách sản phẩm'/>
+          :
           <div style = {{dislay: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
             <div style = {{width: '100%',height: 30, backgroundColor: '#009688', fontWeight: 'bold', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
               DANH SÁCH SẢN PHẨM {`(${this.props.productCount} sản phẩm)`}
@@ -229,6 +237,7 @@ export class Products extends Component {
               </div>
             </div>
           </div>
+        }
       </div>
     )
   }
@@ -258,6 +267,9 @@ const mapDispatch2Props = (dispatch) => {
     showProductDetail: (id) => {
       dispatch({type: 'HANDLE_SHOW_PRODUCT_DETAIL', payload: id})
     },
+    loadProductList: (payload) => {
+      dispatch({type:'LOAD_PRODUCT_LIST', payload})
+    }
     // showProductDetail: (id) => {
     //   dispatch({type: 'SCREEN_ROUTER', payload: `/products/${id}`})
     // }

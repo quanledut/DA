@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import {ShoppingCart, Timeline, HowToReg, ShopTwo, PersonOutline, Group, ListAlt} from '@material-ui/icons'
+import sales from '../data/ToolbarIcons/sales.png'
 
 export const Menu  = {
     guess:[
@@ -7,7 +8,14 @@ export const Menu  = {
             name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>),
-        } 
+        }, 
+        {
+            name: '/sales',
+            caption: 'Khuyến mãi',
+            icon: ( <div>
+                        <img style = {{width:24, height:24}} src = {sales}></img>
+                    </div>)
+        },
     ],
     seller: [
         {
@@ -36,6 +44,13 @@ export const Menu  = {
             name: '/',
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>)
+        },
+        {
+            name: '/sales',
+            caption: 'Khuyến mãi',
+            icon: ( <div>
+                        <img style = {{width:24, height:24}} src = {sales}></img>
+                    </div>)
         },
         {
             name: '/report',

@@ -55,7 +55,6 @@ export const ProductReducer = (state = initialState, action) => {
         }
         case 'CHANGE_SALEORDER':{
             let SaleOrder = localStorage.getItem('SaleOrder');
-            console.log(JSON.stringify(SaleOrder))
             if(SaleOrder) 
             return {
                 ...state
@@ -63,7 +62,6 @@ export const ProductReducer = (state = initialState, action) => {
             break;
         }
         case 'LOADED_SALE_ORDER':{
-            console.log('Loaded saleOrder' + action.payload)
             if(action.payload != null){
                 return {
                     ...state, SaleOrder: action.payload

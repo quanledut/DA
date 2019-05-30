@@ -103,3 +103,8 @@ export const Ranks = [
     rank_top_4,
     rank_top_5
 ]
+
+export const Location = {
+    latitude:16.073742,
+    longitude:  108.150028
+}

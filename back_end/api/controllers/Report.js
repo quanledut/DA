@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const SaleOrder = mongoose.model('SaleOrder');
 const User = mongoose.model('User');
-const UserDetail = mongoose.model('UserDetail')
+const UserDetail = mongoose.model('UserDetail');
+const Product = mongoose.model('Product');
+const Customer = mongoose.model('Customer')
 
 const getTopSaleEmployee = (req, res) => {
     SaleOrder.aggregate([
@@ -48,29 +50,34 @@ const getTopSaleEmployee = (req, res) => {
     })
 }
     
-const getSaleReport = (req, res) => {
-    SaleOrder.aggregate([
-        {
-            $match:{
-                createdAt:{$gte:new Date(`${(new Date()).getFullYear()} 01 01`)}
+const getSaleReport = async (req, res) => {
+    try{
+        let docs = await SaleOrder.aggregate([
+            {
+                $match:{
+                    createdAt:{$gte:new Date(`${(new Date()).getFullYear()} 01 01`)}
+                }
+            },
+            {
+                $group:{
+                    _id:{$month: '$createdAt'},
+                    total_amount: {$sum:'$total_amount'}
+                }
+            },
+            {
+                $sort:{
+                    _id: 1
+                }
             }
-        },
-        {
-            $group:{
-                _id:{$month: '$createdAt'},
-                total_amount: {$sum:'$total_amount'}
-            }
-        },
-        {
-            $sort:{
-                _id: 1
-            }
-        }
-    ]).then(docs => {
-        res.status(200).send(docs)
-    }).catch(err => {
+        ])
+        let productCount = await Product.count({status: {$nin:['deleted']}});
+        let employeeCount = await User.count({status:{$nin:['deleted']}});
+        let customerCount = await Customer.count({status:{$nin:['deleted']}});
+        await res.status(200).send({docs, productCount, employeeCount, customerCount})
+    }
+    catch(err){
         res.status(403).send(err)
-    })
+    }
 }
 
 module.exports = {

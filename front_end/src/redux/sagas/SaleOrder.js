@@ -6,7 +6,6 @@ import {  loadSaleOrderList,reloadSaleOrder, createNewSaleOrder, loadSaleOrderDe
 import { NotificationManager } from 'react-notifications';
 
 export function* CleanSaleOrder(){
-    console.log('CLEAN SALEORDER')
     localStorage.removeItem('SaleOrder',() => console.log(localStorage.getItem('SaleOrder')))
 }
 
@@ -19,7 +18,6 @@ export function* LoadSaleOrderLocal() {
 }
 
 export function* UpdateSaleOrderItem(action){
-    console.log('Update SaleOrder payload: '+ action.payload)
     localStorage.setItem('SaleOrder',JSON.stringify(action.payload));
     yield put({type: 'UPDATED_SALE_ORDER_ITEM_STORAGE', payload: action.payload});
 }
@@ -72,7 +70,7 @@ export function* GoToNextStateSaleOrder(action){
     try{
         let data = yield call(nextStateSaleOrder,action.token, action.payload);
         yield put({type:'SALE_ORDER_NEXT_STATE_SUCCESS', payload: data});
-        yield put({type:'SHOW_SALE_ORDER_DETAIL', payload: action.payload, token: action.token});
+        yield put({type:'LOAD_SALE_ORDER_DETAIL', payload: action.payload, token: action.token});
         yield put({type: 'SCREEN_ROUTER', payload:`/saleorders/${action.payload}`})
     }
     catch(err){

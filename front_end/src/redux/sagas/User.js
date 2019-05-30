@@ -3,11 +3,12 @@ import { checkToken, signUp , requestForgotPassword, requestSetNewPassword, logi
 	updateUserAvatar, loadEmployeeList, loadEmployeeDetail
 	} from '../../api/AccountApi';
 import {NotificationManager} from 'react-notifications';
-import {numberOfEmployeePerPage} from '../../config'
+import {numberOfEmployeePerPage, baseUrl} from '../../config'
 
 export function* LoadUser() {
 		let token = yield localStorage.getItem('token');
 		if(token) yield put({type: 'LOGIN_SUCCESS',payload: token})
+		else yield put({type: 'GUESS'})
 };
 
 export function* RequestLogin(action){
@@ -70,6 +71,10 @@ export function* LoadUserFromToken(action){
 			type: 'TOKEN_CHECKED',
 			payload: userInfo
 		})
+		yield put({
+			type: 'SCREEN_ROUTER',
+			payload: window.location.href.split(baseUrl)[1]
+		})
 	}
 	catch (err) {
 		localStorage.removeItem('token');
@@ -79,9 +84,8 @@ export function* LoadUserFromToken(action){
 
 export function* UpdateUserDetail(action){
 	try{
-		console.log('Update detail')
 		yield call(updateUserDetail,action.token, action.payload);
-		NotificationManager.success('SUccess', 'Success', 2000)
+		NotificationManager.success('Success', 'Success', 2000)
 		yield put({type: 'LOGIN_SUCCESS', payload: action.token});
 		yield put({type: 'UPDATE_USER_DETAIL_SUCCESSED'})
 	}

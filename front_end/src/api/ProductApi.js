@@ -18,7 +18,6 @@ export const loadDepartment = () => {
 
 export const requestNewProduct = (token, data) => {
     return new Promise((resolve, reject) =>{
-        console.log(localStorage.getItem('tokenTempt'));
         axios.post(`${apiUrl}/products/new`,data,{headers:{'Authorization': `Bearer ${token}`}})
         .then(product => {
             if(product === null) reject('Cannot create product');

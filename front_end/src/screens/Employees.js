@@ -80,7 +80,7 @@ export class Employees extends Component {
                                     'manager':
                                         <BlueButton disabled style = {{width:220, color: 'white'}}>Quản lý</BlueButton>,
                                     'admin': 
-                                        <RedButton disabled style = {{width:220, color: 'white'}}>Giám đốc</RedButton>
+                                        <RedButton disabled style = {{width:220, color: 'white'}}>Quản lý cấp cao</RedButton>
                                     }[employee.role]}
                                 </Grid>
                                 <Grid item xs = {1} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', color:'red'}}>{employee.user_detail_id && employee.user_detail_id.birthday ? employee.user_detail_id.birthday.split('-')[0] : 'YYYY'} </Grid>
@@ -88,12 +88,12 @@ export class Employees extends Component {
 						))}
                     </div>
                     <div style = {{display: 'flex', flexDirection:'row', paddingRight:150}}>
-                        <div style = {{width: 150, fontStyle: 'italic', fontSize: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>Nhân viên {(this.state.page - 1)*numberOfEmployeePerPage + 1} - {(this.state.page)*numberOfEmployeePerPage < this.props.SaleOrderCount ? (this.state.page)*numberOfEmployeePerPage : this.props.SaleOrderCount} của {this.props.employee_count} </div>  
+                        <div style = {{width: 150, fontStyle: 'italic', fontSize: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>Nhân viên {(this.state.page - 1)*numberOfEmployeePerPage + 1} - {(this.state.page)*numberOfEmployeePerPage < this.props.employee_count ? (this.state.page)*numberOfEmployeePerPage : this.props.employee_count} của {this.props.employee_count} </div>  
                         <div style = {{flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <Pagination   
                                 limit={numberOfEmployeePerPage}
-                                offset={numberOfEmployeePerPage * this.state.pageOfSaleOrder - 1}
-                                total={this.props.saleOrderCount}
+                                offset={numberOfEmployeePerPage * this.state.page - 1}
+                                total={this.props.employee_count}
                                 onClick={(e, offset, number) => this.changePageOfEmployee(number)}
                                 otherPageColor='inherit'
                             />  

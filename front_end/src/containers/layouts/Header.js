@@ -73,7 +73,7 @@ class Header extends React.Component {
 
   profilePressHandle = () => {
     this.handleAccountClose();
-    this.props.showUserDetail();
+    this.props.showUserDetail(this.props.token);
   }
 
   logoutPressHandle = () => {
@@ -84,10 +84,6 @@ class Header extends React.Component {
 
   handleAccountClose = () => {
     this.setState({ accountAnchorEl: null })
-  }
-
-  componentWillReceiveProps(nextProps){
-    console.log('NextProps: ' +JSON.stringify(nextProps));
   }
 
   render() {
@@ -109,18 +105,18 @@ class Header extends React.Component {
         open={Boolean(this.state.accountAnchorEl)}
         onClose={this.handleAccountClose}
       >
-        <MenuItem onClick={this.profilePressHandle}>
+        <MenuItem onClick={this.profilePressHandle} style = {{display: 'flex', flexDirection: 'row', alignItems:'center', justifyContent: 'flex-start'}}>
           <IconButton color="inherit">
             <Person />
           </IconButton>
-          <p>Thông tin cá nhân</p>
+          <div style = {{marginLeft:5}}>Thông tin cá nhân</div>
         </MenuItem>
         <Divider />
         <MenuItem onClick={this.logoutPressHandle}>
           <IconButton color="inherit">
             <BubbleChart />
           </IconButton>
-          <p>Đăng xuất</p>
+          <div style = {{marginLeft:5}}>Đăng xuất</div>
         </MenuItem>
       </Menu>)
       :
@@ -155,7 +151,7 @@ class Header extends React.Component {
           </div>
           <IconButton onClick = {() => {
             this.props.reloadSaleOrder(this.props.SaleOrder);
-            this.props.showCards(this.props.SaleOrder);
+            this.props.showCards(this.props.token);
           }}>
             <Badge badgeContent={this.props.SaleOrder.length} color='secondary' classes={{ badge: classes.badge }}>
               <ShoppingCartIcon />
@@ -252,10 +248,10 @@ const mapDispatch2Props = (dispatch) => {
     hideLoginForm: () => {dispatch({type: 'HIDE_LOGIN_FORM'})},
     toggleMenuDisplay: () => { return dispatch({ type: 'TOGGLE_MENU_DISPLAY' }) },
     handleLogout: () => {return dispatch({type: 'HANDLE_LOGOUT'})},
-    showCards: () => {return dispatch({type:'SCREEN_ROUTER',payload:  '/cards'})},
+    showCards: (token) => {return dispatch({type:'SCREEN_ROUTER',payload:  '/cards', token})},
     reloadSaleOrder: (SaleOrder) => {return dispatch({type: 'RELOAD_SALE_ORDER', payload: SaleOrder})},
     requestLogin: (data) => {return dispatch({type: 'REQUEST_LOGIN', payload:data})},
-    showUserDetail: () => {return dispatch({type:'SCREEN_ROUTER',payload:'/users/detail'})}
+    showUserDetail: (token) => {return dispatch({type:'SCREEN_ROUTER',payload:'/users/detail', token})}
   }
 }
 

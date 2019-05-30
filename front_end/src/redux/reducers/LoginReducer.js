@@ -29,6 +29,9 @@ export const LoginReducer = (state = initState, action) => {
         case 'LOGIN_SUCCESS':{
             return {...state, token: action.payload}
         }
+        case 'GUESS':{
+            return {...state,role:'guess'}
+        }
         case 'SET_CURRENT_USER':{
             return {
                 ...state,

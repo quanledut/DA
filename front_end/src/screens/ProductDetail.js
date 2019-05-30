@@ -74,7 +74,6 @@ export class ProductDetail extends Component {
 	}
 
 	componentWillMount() {
-		console.log('Current ID:' + window.location.href.split('/')[4])
 		this.props.loadProduct(window.location.href.split('/')[4])
 	}
 

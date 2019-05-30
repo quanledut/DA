@@ -27,7 +27,6 @@ export class Payment extends Component {
   }
 
   onChangeText = (event) => {
-    console.log('Name:' + event.target.name + 'Value: ' + event.target.value)
     if(event.target.name == 'payment_type'){
       if(event.target.value == 'direct' || event.target.value == 'bank'){
         this.setState({paid_amount: this.props.MainSaleOrder.total_amount, 

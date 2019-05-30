@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {Grid} from '@material-ui/core'
-
+import {Grid} from '@material-ui/core';
+import Loading from '../components/Loading'
+ 
 export class CustomerDetail extends Component {
     componentWillMount(){
-        console.log('Location: '+ window.location.href.split('/')[4]);
         this.props.getCustomerDetail(this.props.token, window.location.href.split('/')[4]);
     }
   render() {
-      const {customer} = this.props;
+    const {customer} = this.props;
     return (
       <div style = {{display: 'flex', flexDirection : 'column', padding:20, margin: 5, border: '1px solid green', borderRadius:5}}>
         <div style = {{fontWeight: 'bold', fontSize: '2rem'}}>CHI TIẾT KHÁCH HÀNG</div>
     {/* <div style = {{ fontSize: '2rem'}}>Thông tin khách hàng</div> */}
-        <div style = {{display:'flex', flexDirection: 'row', border: '1px solid gray', borderRadius: 3}}>
-            <Grid container xs = {4} style = {{display: 'flex', flexDirection: 'column'}}>
+        {!customer ? <Loading title = 'Đang lấy thông tin khách hàng'/> :
+            <div style = {{display:'flex', flexDirection: 'row', border: '1px solid gray', borderRadius: 3}}>
+            <Grid container xs = {5} style = {{display: 'flex', flexDirection: 'column'}}>
             <img src={`data:image/png;base64,${customer.avatar}`}  style = {{width:350, height: 350}}/>
             </Grid>
-            <Grid container xs = {8} style = {{display: 'flex', flexDirection: 'column', marginTop: 15, fontSize: '0.8rem'}}>
+            <Grid container xs = {7} style = {{display: 'flex', flexDirection: 'column', marginTop: 15, fontSize: '0.8rem'}}>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30 }}>
                     <Grid item xs = {3}>Họ tên:</Grid>
                     <Grid item xs = {9}>{customer.name}</Grid>
@@ -44,16 +45,21 @@ export class CustomerDetail extends Component {
                 </Grid>
             </Grid>
         </div>
-        <div style = {{fontWeight: 'bold', fontSize: '1.2rem', marginTop: 15}}>ĐƠN HÀNG ĐÃ THỰC HIỆN ({this.props.customer.sale_orders.length})</div>
-        <div style = {{ marginTop: 15}}>
-            {this.props.customer.sale_orders.map(item => (
-                <div style = {{display: 'flex', flexDirection: 'column', justifyContent: 'center', border:'1px solid green', borderRadius:3, padding: 10, fontSize:'0.8rem'}}>
-                    <a href = 'javascript:;' style = {{fontWeight: 'bold', fontSize: '0.8rem',color:'blue'}} onClick = {() => {this.props.showSaleOrderInfo(this.props.token, item._id)}}>{item.no}</a>
-                    <div>Ngày mua: {item.createdAt.replace('T',' ')}</div>
-                    <div>Tổng hóa đơn: {item.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} VNĐ</div>
-                </div>
-            ))}
-        </div>
+    }
+    
+        <div style = {{fontWeight: 'bold', fontSize: '1.2rem', marginTop: 15}}>ĐƠN HÀNG ĐÃ THỰC HIỆN ({this.props.customer && customer.sale_orders ? this.props.customer.sale_orders.length : '0'})</div>
+            {!customer || !customer.sale_orders ? <div/> :
+            <div style = {{ marginTop: 15}}>
+            
+                {this.props.customer.sale_orders.map(item => (
+                    <div style = {{display: 'flex', flexDirection: 'column', justifyContent: 'center', border:'1px solid green', borderRadius:3, padding: 10, fontSize:'0.8rem'}}>
+                        <a href = 'javascript:;' style = {{fontWeight: 'bold', fontSize: '0.8rem',color:'blue'}} onClick = {() => {this.props.showSaleOrderInfo(this.props.token, item._id)}}>{item.no}</a>
+                        <div>Ngày mua: {item.createdAt.replace('T',' ')}</div>
+                        <div>Tổng hóa đơn: {item.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} VNĐ</div>
+                    </div>
+                ))}
+            </div> 
+        }
       </div>
     )
   }
@@ -73,7 +79,7 @@ const mapDispatch2Props = (dispatch) => {
             dispatch({type: 'GET_CUSTOMER_DETAIL', token: token, payload: id})
         },
         showSaleOrderInfo: (token, id) => {
-            dispatch({ type: 'SHOW_SALE_ORDER_DETAIL', payload: id, token: token})
+            dispatch({ type: 'LOAD_SALE_ORDER_DETAIL', payload: id, token: token})
         },
     }
 }

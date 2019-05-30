@@ -5,6 +5,7 @@ import { ShipmentType, PaymentType, SaleOrderStatus} from '../data/Config';
 import {StyledButton} from '../components/Components';
 import {Dialog} from '@material-ui/core';
 import ReactToPrint from 'react-to-print';
+import Loading from '../components/Loading'
 
 export class SaleOrderDetail extends Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export class SaleOrderDetail extends Component {
 
   componentDidMount() {
       const currentUrl = window.location.href;
-      console.log(currentUrl);
+      this.props.loadSaleOrderDetail(this.props.token, currentUrl.split('saleorders/')[1])
   }
 
   render() {
@@ -25,98 +26,100 @@ export class SaleOrderDetail extends Component {
           Thông tin đơn hàng
         </div>
         <div style = {{marginLeft: 20, fontWeight: 'bold', color: '#212121'}}>Thông tin chung</div>
-        <div style = {{margin: 20, marginTop: 5, border: '1px solid green', borderRadius: 3, display: 'flex', flexDirection: 'row', fontSize: '14px'}}>
-            <Grid item xs = {6} style = {{padding: 10, display: 'flex', flexDirection: 'column', lineHeight: 2}}>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Tên khách hàng:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.customer_id.name}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Số điện thoại:
-                    </Grid>
-                    <Grid item xs = {8}>
-                    {SaleOrder.customer_id.phone_number}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Địa chỉ email:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.customer_id.email}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Giới tính:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.customer_id.gender == 'male' ? 'Nam' : SaleOrder.customer_id.gender == 'female' ? 'Nữ' : 'Không xác định'}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Địa chỉ:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.customer_id.address}
-                    </Grid>
-                </div>               
-            </Grid>
+            {!SaleOrder || !SaleOrder.customer_id ? <Loading title = 'Đang cập nhật thông tin đơn hàng'/> :
+            <div style = {{margin: 20, marginTop: 5, border: '1px solid green', borderRadius: 3, display: 'flex', flexDirection: 'row', fontSize: '14px'}}>
+                <Grid item xs = {6} style = {{padding: 10, display: 'flex', flexDirection: 'column', lineHeight: 2}}>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Tên khách hàng:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.customer_id.name}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Số điện thoại:
+                        </Grid>
+                        <Grid item xs = {8}>
+                        {SaleOrder.customer_id.phone_number}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Địa chỉ email:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.customer_id.email}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Giới tính:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.customer_id.gender == 'male' ? 'Nam' : SaleOrder.customer_id.gender == 'female' ? 'Nữ' : 'Không xác định'}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Địa chỉ:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.customer_id.address}
+                        </Grid>
+                    </div>               
+                </Grid>
 
-            <Grid item xs = {6} style = {{paddingLeft: 10, paddingBottom: 10, display: 'flex', flexDirection: 'column', lineHeight: 2, borderLeft: '1px solid green'}}>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4} style = {{ marginTop: 10}}>
-                        Hình thức giao hàng:
-                    </Grid>
-                    <Grid item xs = {6} style = {{ marginTop: 10}}>
-                        {ShipmentType.filter(type => type.value == SaleOrder.shipment_type)[0].caption}
-                    </Grid>
-                    <Grid item xs = {2} style = {{height:30, backgroundColor:  this.props.SaleOrder.status == 'New' ? 'green' : this.props.SaleOrder.Status == 'Confirmed' ? 'blue' : 'gray', borderBottomLeftRadius: 8, textAlign: 'center', color: 'white', fontWeight:'bold'}}>
-                        {SaleOrderStatus.filter(p => p.value == this.props.SaleOrder.status)[0].caption}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Hình thức thanh toán:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {PaymentType.filter(type => type.value == SaleOrder.payment_type)[0].caption}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Người nhận:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.receiver_name}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Số điện thoại người nhận:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.receiver_phone_number}
-                    </Grid>
-                </div>
-                <div style = {{display: 'flex', flexDirection: 'row'}}>
-                    <Grid item xs = {4}>
-                        Địa chỉ nhận hàng:
-                    </Grid>
-                    <Grid item xs = {8}>
-                        {SaleOrder.shipment_address}
-                    </Grid>
-                </div>
-                
-            </Grid>
-        </div>
+                <Grid item xs = {6} style = {{paddingLeft: 10, paddingBottom: 10, display: 'flex', flexDirection: 'column', lineHeight: 2, borderLeft: '1px solid green'}}>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4} style = {{ marginTop: 10}}>
+                            Hình thức giao hàng:
+                        </Grid>
+                        <Grid item xs = {6} style = {{ marginTop: 10}}>
+                            {ShipmentType.filter(type => type.value == SaleOrder.shipment_type)[0].caption}
+                        </Grid>
+                        <Grid item xs = {2} style = {{height:30, backgroundColor:  this.props.SaleOrder.status == 'New' ? 'green' : this.props.SaleOrder.Status == 'Confirmed' ? 'blue' : 'gray', borderBottomLeftRadius: 8, textAlign: 'center', color: 'white', fontWeight:'bold'}}>
+                            {SaleOrderStatus.filter(p => p.value == this.props.SaleOrder.status)[0].caption}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Hình thức thanh toán:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {PaymentType.filter(type => type.value == SaleOrder.payment_type)[0].caption}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Người nhận:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.receiver_name}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Số điện thoại người nhận:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.receiver_phone_number}
+                        </Grid>
+                    </div>
+                    <div style = {{display: 'flex', flexDirection: 'row'}}>
+                        <Grid item xs = {4}>
+                            Địa chỉ nhận hàng:
+                        </Grid>
+                        <Grid item xs = {8}>
+                            {SaleOrder.shipment_address}
+                        </Grid>
+                    </div>
+                </Grid>
+            </div>}
         <div style = {{marginLeft: 20, fontWeight: 'bold', color: '#212121'}}>Danh sách sản phẩm</div>
+        {!SaleOrder || !SaleOrder.customer_id ? <div/> : 
+        <div>
         <div style = {{margin:20, marginTop: 5, border:'1px solid green', borderRadius: 3,  paddingLeft:10, paddingRight:10, fontSize:'0.8rem'}}>
             <div style = {{display: 'flex', flexDirection: 'row'}}>
                 <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575'}}>Hình ảnh</Grid>
@@ -346,6 +349,7 @@ export class SaleOrderDetail extends Component {
                 </div>           
             </div>
         </Dialog>
+        </div>}
       </div>
     )
   }
@@ -365,7 +369,6 @@ const mapDispatch2Props = (dispatch) => {
         return dispatch({type:'LOAD_SALE_ORDER_DETAIL', token: token, payload: id})
     },
     goToNextState: (token, id) => {
-        console.log('WHY ?????????')
         return dispatch({type:'NEXT_STATE_SALE_ORDER', token: token, payload: id})
     },
     showProduct: (id) => {

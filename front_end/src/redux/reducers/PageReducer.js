@@ -12,7 +12,6 @@ const initialState = {
 const PageReducer = (state = initialState, action) => {
     console.log('Action: '+ action.type);
     console.log('Data: '+ JSON.stringify(action.payload));
-    console.log();
     switch (action.type)
     {
         case 'TOGGLE_MENU_DISPLAY': {

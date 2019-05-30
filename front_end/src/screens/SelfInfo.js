@@ -20,7 +20,6 @@ export class SelfInfo extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps)
         const {name, address, phone_number, birthday, gender} = nextProps.user_detail || {}
         this.setState({
             name: name,
