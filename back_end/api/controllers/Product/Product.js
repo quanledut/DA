@@ -80,12 +80,7 @@ const getProductDetail = async (req, res) => {
             let product = await Product.findOne({ _id: id });
             product.subImage = await getSubImage(product.subImage);
             product.images = await Promise.all(product.images.map(async (image) => { return await getSubImage(image)}));
-            let saleOrders = await SaleOrder.find({'items.product_id':id}).populate('customer_id');
-            saleOrders = await Promise.all(saleOrders.map(async (saleOrder) => { 
-                saleOrder.customer_id.avatar = await getSubImage(saleOrder.customer_id.avatar);
-                return saleOrder;
-            }));
-            res.status(200).send({product,saleOrder:[...saleOrders]});
+            res.status(200).send(product);
         }
         else {
             res.status(400).send('id required')
@@ -95,6 +90,87 @@ const getProductDetail = async (req, res) => {
         res.status(404).send(err);
     }
 }
+
+const getCustomerBuyedProduct = async (req,res) => {
+    try {
+        const { id } = req.params;
+        let saleOrders = await SaleOrder.find({'items.product_id':id}).populate('customer_id');
+        saleOrders = await Promise.all(saleOrders.map(async (saleOrder) => { 
+            saleOrder.customer_id.avatar = await getSubImage(saleOrder.customer_id.avatar);
+            return saleOrder;
+        }));
+        return res.status(200).send(saleOrders)
+    }
+    catch (err) {
+        res.status(404).send(err);
+    }
+}
+
+const getTopProductBuyWith = async (req,res) => {
+    try {
+        let {id} = req.params;
+        let saleOrderSameProducts = await SaleOrder.aggregate([
+            {
+                $unwind:'$items'
+            },
+            {
+                $match:{
+                    'items.product_id':mongoose.Types.ObjectId(id)
+                }
+            },
+            {
+                $project:{
+                    _id:1
+                }
+            },
+            {
+                $group:{
+                    _id:'$_id'
+                }
+            }
+        ])
+        let products = await SaleOrder.aggregate([
+            {
+                $match:{
+                    _id:{
+                        $in: saleOrderSameProducts.map(item => {return item._id})
+                    }
+                }
+            },
+            {
+                $unwind:'$items'
+            },
+            {
+                $project:{
+                    'items.product_id':1
+                }
+            },
+            {
+                $match:{
+                    'items.product_id':{$ne:mongoose.Types.ObjectId(id)}    
+                }
+            },
+            {
+                $group:{
+                    _id:'$items.product_id',
+                    count:{$sum:1}
+                }
+            },{
+                $sort: {count:-1}
+            }
+        ])
+        let resultProduct = await Product.populate(products,'_id')
+        resultProduct = await Promise.all(resultProduct.map(async item => {
+            item._id.subImage = await getSubImage(item._id.subImage);
+            return item;
+        }))
+        res.status(200).send(resultProduct)
+    }
+    catch (err) {
+        res.status(404).send(err);
+    }
+}
+
 
 const changeProductDetail = async (req,res) => {
     try{
@@ -149,5 +225,7 @@ module.exports = {
     getProductDetail,
     changeProductDetail,
     deleteProduct,
-    getProductMainInfo
+    getProductMainInfo,
+    getCustomerBuyedProduct,
+    getTopProductBuyWith
 }

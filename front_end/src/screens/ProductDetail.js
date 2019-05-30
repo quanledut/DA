@@ -16,14 +16,14 @@ export class ProductDetail extends Component {
 		super(props);
 		this.state = {
 			open: true,
-			mainImage: this.props.product ? this.props.product.subImage : '', 
+			mainImage: '',
 			isEdit: false,
-			description: this.props.product ? this.props.product.description : '',
-			name: this.props.product ? this.props.product.name : '',
-			length: this.props.product ? this.props.product.length : 0,
-			width: this.props.product ? this.props.product.width : 0,
-			height: this.props.product ? this.props.product.height : 0,
-			saleprice: this.props.product ? (parseFloat(this.props.product.saleprice[this.props.product.saleprice.length - 1].value) ? parseFloat(this.props.product.saleprice[this.props.product.saleprice.length - 1].value) : 0) : 0 ,
+			description: '',
+			name: '',
+			length:  0,
+			width: 0,
+			height: 0,
+			saleprice: 0,
 			openFullImageDialog: false,
 			buyQty: 1,
 			activeImage: 1,
@@ -62,27 +62,28 @@ export class ProductDetail extends Component {
 	}
 
 	componentWillReceiveProps(nextProps){
-		this.setState({
-			mainImage: nextProps.product && nextProps.product.subImage ? nextProps.product.subImage : this.state.mainImage, 
-			description: nextProps.product && nextProps.product.description ? nextProps.product.description : this.state.description,
-			name: nextProps.product && nextProps.product.name ? nextProps.product.name : this.state.name,
-			length: nextProps.product && nextProps.product.length ? nextProps.product.length : this.state.length,
-			width: nextProps.product && nextProps.product.width ? nextProps.product.width : this.state.width,
-			height: nextProps.product && nextProps.product.height ? nextProps.product.height : this.state.height,
-			saleprice: !nextProps.product || !nextProps.product.saleprice ? this.state.saleprice : nextProps.product.saleprice[nextProps.product.saleprice.length - 1].value ? parseFloat(nextProps.product.saleprice[nextProps.product.saleprice.length - 1].value) : 0
-		})
+		if(nextProps.product && nextProps.product.subImage != this.state.mainImage) this.setState({mainImage:nextProps.product.subImage});
+		if(nextProps.product && nextProps.product.description != this.state.description) this.setState({description:nextProps.product.description});
+		if(nextProps.product && nextProps.product.name != this.state.name) this.setState({name:nextProps.product.name});
+		if(nextProps.product && nextProps.product.length != this.state.length) this.setState({length:nextProps.product.length});
+		if(nextProps.product && nextProps.product.width != this.state.width) this.setState({width:nextProps.product.width});
+		if(nextProps.product && nextProps.product.height != this.state.height) this.setState({height:nextProps.product.height});
+		if(nextProps.product && parseFloat(nextProps.product.saleprice[nextProps.product.saleprice.length-1].value) != this.state.saleprice) this.setState({saleprice:parseFloat(nextProps.product.saleprice[nextProps.product.saleprice.length-1].value)});
 	}
+
+	compo
 
 	componentWillMount() {
 		this.props.loadProduct(window.location.href.split('/')[4])
 	}
 
 	render() {
-		const { product, role } = this.props;
+		const { product, role, customer_buyed, product_buy_with } = this.props;
 		const { description, name, length, width, height, saleprice } = this.state;
 		return (
-			<div>{!this.props.product ? <div></div> : 
 			<div style = {{padding: 10, border:'1px solid green', padding:10, margin:5}}>
+
+				{!product ? <div></div> : 
 				<div>
 					<Grid container>
 						<Grid item xs={5}>
@@ -91,7 +92,7 @@ export class ProductDetail extends Component {
 									<img src={`data:image/png; base64,${this.state.mainImage}`} style={{ height: 400 }} />
 								</div>
 								<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingTop:20 }}>
-									{this.props.product.images.map((image, index) => (
+									{product.images.map((image, index) => (
 										<div key={image} style={{ width: 100, backgroundColor: '#fafafa' }}>
 											<img src={`data:image/png; base64,${image}`} style={{ width: '100%' }} onClick={() => { this.setState({ openFullImageDialog: true, activeImage: index + 1 }) }} />
 										</div>))}
@@ -265,11 +266,51 @@ export class ProductDetail extends Component {
 							<CarouselPage images={product.images} active={this.state.activeImage} />
 						</Dialog>
 					</Grid>
+					<ResponsiveDialog
+						fullScreen={true}
+						open={this.state.showChangeDialog}
+						handleClickNo={this.hideYesNoDialog}
+						handleClickYes={() => {
+							this.props.ChangeProductDetail(this.props.token,{
+								_id: product._id,
+								name: this.state.name,
+								description: this.state.description,
+								width: this.state.width,
+								height: this.state.height,
+								length: this.state.length,
+								saleprice: this.state.saleprice
+							})
+							this.hideYesNoDialog();
+							}
+						}
+						title='Xác nhận thay đổi'
+						content='Bạn có muốn thay đôỉ thông tin sản phẩm?'
+						noLabel='Không'
+						yesLabel='Thay đổi'
+					/>
+					<ResponsiveDialog
+						fullScreen={true}
+						open={this.state.showDeleteDialog}
+						handleClickNo={this.hideYesNoDialog}
+						handleClickYes={() => {
+							this.props.DeleteProduct({
+								_id: product._id
+							})
+							this.hideYesNoDialog();
+						}}
+						title='Xác nhận xóa'
+						content='Bạn có muốn xóa sản phẩm này khỏi danh sách sản phẩm kinh doanh?'
+						noLabel='Không'
+						yesLabel='Xác nhận xóa'
+					/>
 				</div>
+				}
+
+				{!customer_buyed || role == 'guess' || role == null ? <div></div> :
 				<div>
 					<div style = {{fontWeight:'bold', fontSize: '0.8rem'}}>KHÁCH HÀNG ĐÃ MUA</div>
 					<div style = {{display: 'flex', flexDirection: 'row',  marginTop: 10, width: '100%'}}>
-						{this.props.saleOrders.map(saleOrder => (
+						{customer_buyed.map(saleOrder => (
 							<div style = {{display: 'flex', flexDirection: 'column', alignItems: 'center',border: '1px solid green', borderRadius: 3,marginRight:15}}>
 								<img src={`data:image/png;base64,${saleOrder.customer_id.avatar}`} style = {{width:150, height: 150, margin: 10}}/>
 								<a href = 'javascript:;' onClick = {() => {this.props.showCustomer(this.props.token,saleOrder.customer_id._id)}}>{saleOrder.customer_id.name}</a>
@@ -277,45 +318,23 @@ export class ProductDetail extends Component {
 						))}
 					</div>
 				</div>
-				<ResponsiveDialog
-					fullScreen={true}
-					open={this.state.showChangeDialog}
-					handleClickNo={this.hideYesNoDialog}
-					handleClickYes={() => {
-						this.props.ChangeProductDetail(this.props.token,{
-							_id: product._id,
-							name: this.state.name,
-							description: this.state.description,
-							width: this.state.width,
-							height: this.state.height,
-							length: this.state.length,
-							saleprice: this.state.saleprice
-						})
-						this.hideYesNoDialog();
-					}
-					}
-					title='Xác nhận thay đổi'
-					content='Bạn có muốn thay đôỉ thông tin sản phẩm?'
-					noLabel='Không'
-					yesLabel='Thay đổi'
-				/>
-				<ResponsiveDialog
-					fullScreen={true}
-					open={this.state.showDeleteDialog}
-					handleClickNo={this.hideYesNoDialog}
-					handleClickYes={() => {
-						this.props.DeleteProduct({
-							_id: product._id
-						})
-						this.hideYesNoDialog();
-					}}
-					title='Xác nhận xóa'
-					content='Bạn có muốn xóa sản phẩm này khỏi danh sách sản phẩm kinh doanh?'
-					noLabel='Không'
-					yesLabel='Xác nhận xóa'
-				/>
+				}
+
+				{!product_buy_with ? <div></div>:
+				<div>
+					<div style = {{fontWeight:'bold', fontSize: '0.8rem'}}>KHÁCH HÀNG KHÁC CŨNG MUA: </div>
+					<div style = {{display: 'flex', flexDirection: 'row',  marginTop: 10, width: '100%'}}>
+						{product_buy_with.map(product => 
+							<div style = {{display: 'flex', flexDirection: 'column', alignItems: 'center',border: '1px solid green', borderRadius: 3,marginRight:15}}>
+								<img src={`data:image/png;base64,${product._id.subImage}`} style = {{width:150, height: 150, margin: 10}}/>
+								<a href = 'javascript:;' onClick = {() => {this.props.loadProduct(product._id._id)}}>{product._id.name}</a>
+							</div>
+						)}
+					</div>
+				</div>
+				}
+
 			</div>
-		}</div>
 		)
 	}
 }
@@ -334,8 +353,9 @@ const mapState2Props = (state) => {
 	return {
 		product: state.ProductReducer.product.product,
 		role: state.LoginReducer.role,
-		saleOrders: state.ProductReducer.product.saleOrder,
-		token: state.LoginReducer.token
+		customer_buyed: state.ProductReducer.product.customer_buyed,
+		token: state.LoginReducer.token,
+		product_buy_with: state.ProductReducer.product.top_product_buy_with
 	}
 }
 

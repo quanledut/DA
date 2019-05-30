@@ -163,7 +163,8 @@ export class Products extends Component {
       spacing: value => value
     })
     return (
-      <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
+      // <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
+      <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundColor:'white'}}>
           <div style={{ height: 30, display: 'flex', margin: 3, marginTop: 5 , marginBottom: 10}}>
             <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, marginRight: 10 }}>
               <SearchIcon style={{ fontSize: 25 }} className={classes.searchIcon} />
@@ -206,7 +207,7 @@ export class Products extends Component {
             </div>
             <GridList cellHeight={((window.innerHeight*0.92 - 70)*0.29)} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
               {(products).map(product => (
-                <GridListTile key={product.name}>
+                <GridListTile key={product.name} style = {{borderRadius: 4}}>
                   <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} style = {{width:'100%', height:'auto'}} onClick={() => {this.handleClickToProduct(product._id)}} />
                   <GridListTileBar
                     title={product.name}
@@ -265,14 +266,11 @@ const mapDispatch2Props = (dispatch) => {
       dispatch({ type: 'GET_PRODUCT', payload: data })
     },
     showProductDetail: (id) => {
-      dispatch({type: 'HANDLE_SHOW_PRODUCT_DETAIL', payload: id})
+      dispatch({type: 'SCREEN_ROUTER', payload: `/products/${id}`})
     },
     loadProductList: (payload) => {
       dispatch({type:'LOAD_PRODUCT_LIST', payload})
     }
-    // showProductDetail: (id) => {
-    //   dispatch({type: 'SCREEN_ROUTER', payload: `/products/${id}`})
-    // }
   }
 }
 

@@ -62,8 +62,32 @@ export const getProductDetail = (id) => {
         })
         .catch(err => {reject(err)})
     })
-  
 }
+
+export const loadTopProductBuyWith = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/products/${id}/top_product_buy_with`).then(res => {
+            if(res.status === 200 && res.data){
+                resolve(res.data);
+            }
+            reject(res.data)
+        })
+        .catch(err => {reject(err)})
+    })
+}
+
+export const loadCustomerBuyedProduct = (id) => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/products/${id}/customer_buyed`).then(res => {
+            if(res.status === 200 && res.data){
+                resolve(res.data);
+            }
+            reject(res.data)
+        })
+        .catch(err => {reject(err)})
+    })
+}
+
 
 export const changeProductDetail = (token, product) => {
     return new Promise((resolve, reject) => {

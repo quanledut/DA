@@ -1,4 +1,4 @@
-import { Route, Router } from 'react-router-dom';
+import { Route, Router, Redirect, Switch } from 'react-router-dom';
 import Products from '../screens/Products';
 import ProductDetail from '../screens/ProductDetail';
 import { About } from '../screens/About';
@@ -41,74 +41,87 @@ export class ScreenRouter extends Component {
                 {
                    'admin': 
                         <Router history = {history} style = {{width:'100%', height:'100%'}}>
-                            <Route exact path='/' component={Products} />
-                            <Route exact path='/products/:id?' component={ProductDetail} />
-                            <Route exact path='/about' component={About} />
-                            <Route exact path = '/reset/:token' component = {ForgotPassword}/>
-                            <Route exact path='/product/new' component={NewProduct} />
-                            <Route exact path = '/cards' component = {NewSaleOrder} />
-                            <Route exact path = '/pdf' component = {InvoicePdf} />
-                            <Route exact path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
-                            <Route exact path = '/saleorder/payment' component = {Payment} />
-                            <Route exact path = '/saleorder/info' component = {SaleOrderInfo} />
-                            <Route exact path = '/saleorder/success' component = {SaleOrderSuccess} />
-                            <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
-                            <Route exact path = '/saleorders' component = {SaleOrders} />
-                            <Route exact path = '/customers' component = {Customers} />
-                            <Route exact path = '/customers/:id' component = {CustomerDetail} />
-                            <Route exact path = '/users/detail' component = {SelfInfo} />
-                            <Route exact path = '/employees' component = {Employees} />
-                            <Route exact path = '/employees/:id' component = {EmployeeDetail} />
-                            <Route exact path = '/chart' component = {BarChart} />
-                            <Route exact path = '/report' component = {Report} />
-                            <Route exact path = '/map' component = {GoogleMap} />
-                            <Route exact path = '/loading' component = {Loading} />
+                            <Switch>
+                                <Route exact path='/' component={Products} />
+                                <Route exact path='/products/:id?' component={ProductDetail} />
+                                <Route exact path='/about' component={About} />
+                                <Route exact path = '/reset/:token' component = {ForgotPassword}/>
+                                <Route exact path='/product/new' component={NewProduct} />
+                                <Route exact path = '/cards' component = {NewSaleOrder} />
+                                <Route exact path = '/pdf' component = {InvoicePdf} />
+                                <Route exact path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
+                                <Route exact path = '/saleorder/payment' component = {Payment} />
+                                <Route exact path = '/saleorder/info' component = {SaleOrderInfo} />
+                                <Route exact path = '/saleorder/success' component = {SaleOrderSuccess} />
+                                <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
+                                <Route exact path = '/saleorders' component = {SaleOrders} />
+                                <Route exact path = '/customers' component = {Customers} />
+                                <Route exact path = '/customers/:id' component = {CustomerDetail} />
+                                <Route exact path = '/users/detail' component = {SelfInfo} />
+                                <Route exact path = '/employees' component = {Employees} />
+                                <Route exact path = '/employees/:id' component = {EmployeeDetail} />
+                                <Route exact path = '/chart' component = {BarChart} />
+                                <Route exact path = '/report' component = {Report} />
+                                <Route exact path = '/map' component = {GoogleMap} />
+                                <Route exact path = '/loading' component = {Loading} />
+                                <Route component={Page404} />
+                            </Switch>
                         </Router>,
                     'manager': 
                         <Router history = {history} style = {{width:'100%', height:'100%'}}>
-                            <Route exact path='/' component={Products} />
-                            <Route exact path='/products/:id?' component={ProductDetail} />
-                            <Route exact path='/about' component={About} />
-                            <Route exact path = '/reset/:token' component = {ForgotPassword}/>
-                            <Route exact path='/product/new' component={NewProduct} />
-                            <Route exact path = '/cards' component = {NewSaleOrder} />
-                            <Route exact path = '/pdf' component = {InvoicePdf} />
-                            <Route exact path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
-                            <Route exact path = '/saleorder/payment' component = {Payment} />
-                            <Route exact path = '/saleorder/info' component = {SaleOrderInfo} />
-                            <Route exact path = '/saleorder/success' component = {SaleOrderSuccess} />
-                            <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
-                            <Route exact path = '/saleorders' component = {SaleOrders} />
-                            <Route exact path = '/customers' component = {Customers} />
-                            <Route exact path = '/customers/:id' component = {CustomerDetail} />
-                            <Route exact path = '/users/detail' component = {SelfInfo} />
-                            <Route exact path = '/employees' component = {Employees} />
-                            <Route exact path = '/employees/:id' component = {EmployeeDetail} />
-                            <Route exact path = '/map' component = {GoogleMap} />
-                            <Route exact path = '/loading' component = {Loading} />
+                            <Switch>
+                                <Route exact path='/' component={Products} />
+                                <Route exact path='/products/:id?' component={ProductDetail} />
+                                <Route exact path='/about' component={About} />
+                                <Route exact path = '/reset/:token' component = {ForgotPassword}/>
+                                <Route exact path='/product/new' component={NewProduct} />
+                                <Route exact path = '/cards' component = {NewSaleOrder} />
+                                <Route exact path = '/pdf' component = {InvoicePdf} />
+                                <Route exact path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
+                                <Route exact path = '/saleorder/payment' component = {Payment} />
+                                <Route exact path = '/saleorder/info' component = {SaleOrderInfo} />
+                                <Route exact path = '/saleorder/success' component = {SaleOrderSuccess} />
+                                <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
+                                <Route exact path = '/saleorders' component = {SaleOrders} />
+                                <Route exact path = '/customers' component = {Customers} />
+                                <Route exact path = '/customers/:id' component = {CustomerDetail} />
+                                <Route exact path = '/users/detail' component = {SelfInfo} />
+                                <Route exact path = '/employees' component = {Employees} />
+                                <Route exact path = '/employees/:id' component = {EmployeeDetail} />
+                                <Route exact path = '/map' component = {GoogleMap} />
+                                <Route exact path = '/loading' component = {Loading} />
+                                <Route component={Page404} />
+                            </Switch>
                         </Router>,
                     'seller': 
                         <Router history = {history} style = {{width:'100%', height:'100%'}}>
-                            <Route exact path='/' component={Products} />
-                            <Route exact path='/products/:id?' component={ProductDetail} />
-                            <Route exact path='/about' component={About} />
-                            <Route exact path = '/reset/:token' component = {ForgotPassword}/>
-                            <Route exact path = '/cards' component = {NewSaleOrder} />
-                            <Route exact path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
-                            <Route exact path = '/saleorder/payment' component = {Payment} />
-                            <Route exact path = '/saleorder/info' component = {SaleOrderInfo} />
-                            <Route exact path = '/saleorder/success' component = {SaleOrderSuccess} />
-                            <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
-                            <Route exact path = '/saleorders' component = {SaleOrders} />
-                            <Route exact path = '/customers' component = {Customers} />
-                            <Route exact path = '/customers/:id' component = {CustomerDetail} />
-                            <Route exact path = '/users/detail' component = {SelfInfo} />
+                            <Switch>
+                                <Route exact path='/' component={Products} />
+                                <Route exact path='/products/:id?' component={ProductDetail} />
+                                <Route exact path='/about' component={About} />
+                                <Route exact path = '/reset/:token' component = {ForgotPassword}/>
+                                <Route exact path = '/cards' component = {NewSaleOrder} />
+                                <Route exact path = '/saleorder/customer' component = {SaleOrder_ChooseCustomer} />
+                                <Route exact path = '/saleorder/payment' component = {Payment} />
+                                <Route exact path = '/saleorder/info' component = {SaleOrderInfo} />
+                                <Route exact path = '/saleorder/success' component = {SaleOrderSuccess} />
+                                <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
+                                <Route exact path = '/saleorders' component = {SaleOrders} />
+                                <Route exact path = '/customers' component = {Customers} />
+                                <Route exact path = '/customers/:id' component = {CustomerDetail} />
+                                <Route exact path = '/users/detail' component = {SelfInfo} />
+                                <Route component={Page404} />
+                            </Switch>
                         </Router>,
                     'guess':
                         <Router history = {history} style = {{width:'100%', height:'100%'}}>
-                            <Route exact path='/' component={Products} />
-                            <Route exact path='/:path' component={Page404} />
-                            <Route exact path='/:path/:path' component={Page404} />
+                            <Switch>
+                                <Route exact path='/' component={Products} />
+                                <Route exact path='/products/:id?' component={ProductDetail} />
+                                <Route exact path='/about' component={About} />
+                                <Route exact path = '/404' component={Page404} />
+                                <Route component={Page404} />
+                            </Switch>
                         </Router>,
                     null:
                         <Router history = {history} style = {{width:'100%', height:'100%'}}>

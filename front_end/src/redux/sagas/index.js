@@ -7,7 +7,7 @@ import {
     } from './User';
 import {
     LoadDepartment, RequestNewProduct, LoadProduct, ChangeProductDetail,
-    ShowProductDetail,AddProductToOrder
+    ShowProductDetail,AddProductToOrder,LoadTopProductBuyWith, LoadCustomerBuyedProduct
     } from './Product';
 import {CleanSaleOrder, LoadSaleOrderLocal, LoadSaleOrderDetail, GoToNextStateSaleOrder,
         ReloadSaleOrder, UpdateSaleOrderItem, CreateNewSaleOrder, LoadSaleOrderList} from './SaleOrder'
@@ -32,7 +32,7 @@ function* rootSaga(){
         yield takeLatest('LOGIN_SUCCESS', LoadUserFromToken),
         yield takeLatest('UPDATE_USER_DETAIL', UpdateUserDetail),
         yield takeLatest('UPDATE_USER_AVATAR', UpdateUserAvatar),
-
+        
         //employee
         yield takeLatest('LOAD_EMPLOYEE_LIST',LoadEmployeeList),
         yield takeLatest('SHOW_EMPLOYEE_DETAIL',ShowEmployeeDetail),
@@ -46,7 +46,10 @@ function* rootSaga(){
         yield takeLatest('GET_PRODUCT', LoadProduct),
         yield takeLatest('REQUEST_CREATE_NEW_PRODUCT', RequestNewProduct),
         yield takeLatest('LOAD_ALL_PRODUCT', LoadProduct),
+
         yield takeLatest('HANDLE_SHOW_PRODUCT_DETAIL', ShowProductDetail),
+        yield takeLatest('LOAD_PRODUCT_DETAIL_SUCCESS', LoadTopProductBuyWith),
+        yield takeLatest('LOAD_TOP_PRODUCT_BUY_WITH_SUCCESS', LoadCustomerBuyedProduct),
 
         //sale_order
         yield fork(LoadSaleOrderLocal),

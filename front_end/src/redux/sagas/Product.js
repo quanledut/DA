@@ -1,7 +1,9 @@
 import { call, put, } from 'redux-saga/effects';
 import { checkToken } from '../../api/AccountApi';
 import { apiUrl } from '../../config'
-import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder, createNewSaleOrder} from '../../api/ProductApi'
+import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder, createNewSaleOrder,
+        loadTopProductBuyWith, loadCustomerBuyedProduct
+        } from '../../api/ProductApi'
 import { NotificationManager } from 'react-notifications';
 
 export function* LoadDepartment() {
@@ -39,13 +41,36 @@ export function* LoadProduct(action) {
 export function* ShowProductDetail(action){
     try{
         let product = yield call(getProductDetail, action.payload);
-        yield put({type: 'LOAD_PRODUCT_DETAIL_SUCCESS', payload: product})
-        yield put({type: 'SCREEN_ROUTER', payload:`/products/${action.payload}`})
+        yield put({type: 'LOAD_PRODUCT_DETAIL_SUCCESS', payload: product, id: action.payload})
+        // yield put({type: 'SCREEN_ROUTER', payload:`/products/${action.payload}`})
     }
     catch(err){
         yield put({type: 'LOAD_PRODUCT_DETAIL_FAILED', payload: err});
     }
 }
+
+export function* LoadTopProductBuyWith(action){
+    try{
+        let product = yield call(loadTopProductBuyWith, action.id);
+        yield put({type: 'LOAD_TOP_PRODUCT_BUY_WITH_SUCCESS', payload: product, id:action.id})
+        // yield put({type: 'SCREEN_ROUTER', payload:`/products/${action.payload}`})
+    }
+    catch(err){
+        yield put({type: 'LOAD_TOP_PRODUCT_BUY_WITH_FAILED', payload: err});
+    }
+}
+
+export function* LoadCustomerBuyedProduct(action){
+    try{
+        let product = yield call(loadCustomerBuyedProduct, action.id);
+        yield put({type: 'LOAD_CUSTOMER_BUYED_PRODUCT_SUCCESS', payload: product, id:action.id})
+        // yield put({type: 'SCREEN_ROUTER', payload:`/products/${action.payload}`})
+    }
+    catch(err){
+        yield put({type: 'LOAD_CUSTOMER_BUYED_PRODUCT_FAILED', payload: err});
+    }
+}
+
 
 export function* ChangeProductDetail(action){
     try {
@@ -57,3 +82,4 @@ export function* ChangeProductDetail(action){
         NotificationManager.error('Lỗi khi cập nhật thông tin sản phẩm', 'Error', 2000);
     }   
 }
+

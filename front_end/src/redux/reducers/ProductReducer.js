@@ -1,10 +1,11 @@
-import { stat } from "fs";
-import { number } from "prop-types";
-
 const initialState = {
     departments: [],
     products: [],
-    product: {},
+    product: {
+        product:null,
+        customer_buyed: null,
+        top_product_buy_with: null
+    },
     department: {},
     productCount: 0,
     SaleOrder: [],
@@ -49,7 +50,19 @@ export const ProductReducer = (state = initialState, action) => {
         }
         case 'LOAD_PRODUCT_DETAIL_SUCCESS':{
             return {
-                ...state, product: action.payload
+                ...state, product:{...state.product,product: action.payload}
+            }
+            break;
+        }
+        case 'LOAD_TOP_PRODUCT_BUY_WITH_SUCCESS':{
+            return {
+                ...state, product:{...state.product,top_product_buy_with: action.payload}
+            }
+            break;
+        }
+        case 'LOAD_CUSTOMER_BUYED_PRODUCT_SUCCESS':{
+            return {
+                ...state, product:{...state.product,customer_buyed: action.payload}
             }
             break;
         }
