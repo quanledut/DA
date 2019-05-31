@@ -30,6 +30,9 @@ export function* handleLogout(action) {
 		yield put({
 			type: 'LOGOUT'
 		})
+		yield put({
+			type: 'SCREEN_ROUTER', payload:'/'
+		})
 	}
 	catch (err) { }
 }

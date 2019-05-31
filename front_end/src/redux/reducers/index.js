@@ -7,6 +7,7 @@ import SaleOrderReducer from './SaleOrderReducer'
 import UserReducer from './UserReducer';
 import EmployeeReducer from './EmployeeReducer';
 import ReportReducer from './ReportReducer'
+import SaleReducer from './SaleReducer'
 
 export default combineReducers({
     LoginReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
     SaleOrderReducer,
     UserReducer,
     EmployeeReducer,
-    ReportReducer
+    ReportReducer,
+    SaleReducer
 });

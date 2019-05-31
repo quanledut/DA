@@ -20,6 +20,7 @@ import {
 import {
     LoadSaleReport, LoadTopEmployee
     } from './Report';
+import { LoadTopDiscountProduct, LoadTopSaleProduct } from './Sale';
 
 function* rootSaga(){
     yield all ([
@@ -72,6 +73,10 @@ function* rootSaga(){
         //report
         yield takeLatest('GET_SALE_REPORT',LoadSaleReport),
         yield takeLatest('GET_TOP_EMPLOYEE',LoadTopEmployee),
+
+        //sales
+        yield takeLatest('GET_TOP_DISCOUNT_PRODUCT', LoadTopDiscountProduct),
+        yield takeLatest('TOP_DISCOUNT_PRODUCT_LOADED', LoadTopSaleProduct)
     ])
 }
 

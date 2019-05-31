@@ -104,7 +104,14 @@ export const Ranks = [
     rank_top_5
 ]
 
-export const Location = {
-    latitude:16.073742,
-    longitude:  108.150028
+export const ShowroomLocation = {
+    latitude:   16.025552,
+    longitude:  108.208965,
+    address:'Số 02 Nguyễn Hữu Thọ, Quận Hải Châu, TP. Đà Nẵng'
+}
+
+export const FactoryLocation = {
+    latitude:   16.073365,
+    longitude:  108.136250,
+    address:'Số 15 Âu Cơ, Quận Liên Chiểu, TP. Đà Nẵng'
 }

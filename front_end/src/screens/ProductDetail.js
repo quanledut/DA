@@ -113,7 +113,7 @@ export class ProductDetail extends Component {
 											</div>
 											: (<div></div>)}
 									</div>
-									<div style={{ lineHeight: 1.5 }}>
+									<div style={{ lineHeight: 2 }}>
 										<div>{'Mã : '}{product.no}</div>
 										<div>{'Kích thước: '}{(length || 'X') + ' x ' + (width || 'X') + ' x ' + (height || 'X') + ' mm'}</div>
 										<hr style = {{margin:5}}/>
@@ -305,7 +305,7 @@ export class ProductDetail extends Component {
 					/>
 				</div>
 				}
-
+				<hr style = {{margin:5}}/>
 				{!customer_buyed || role == 'guess' || role == null ? <div></div> :
 				<div>
 					<div style = {{fontWeight:'bold', fontSize: '0.8rem'}}>KHÁCH HÀNG ĐÃ MUA</div>
@@ -319,15 +319,15 @@ export class ProductDetail extends Component {
 					</div>
 				</div>
 				}
-
+				<hr style = {{margin:5}}/>
 				{!product_buy_with ? <div></div>:
 				<div>
-					<div style = {{fontWeight:'bold', fontSize: '0.8rem'}}>KHÁCH HÀNG KHÁC CŨNG MUA: </div>
+					<div style = {{fontWeight:'bold', fontSize: '0.8rem'}}>SẢN PHẨM ĐƯỢC MUA CÙNG: </div>
 					<div style = {{display: 'flex', flexDirection: 'row',  marginTop: 10, width: '100%'}}>
 						{product_buy_with.map(product => 
-							<div style = {{display: 'flex', flexDirection: 'column', alignItems: 'center',border: '1px solid green', borderRadius: 3,marginRight:15}}>
+							<div style = {{display: 'flex', flexDirection: 'column', alignItems: 'center', borderRadius: 3,marginRight:15}}>
 								<img src={`data:image/png;base64,${product._id.subImage}`} style = {{width:150, height: 150, margin: 10}}/>
-								<a href = 'javascript:;' onClick = {() => {this.props.loadProduct(product._id._id)}}>{product._id.name}</a>
+								<a style = {{fontSize:'0.8rem', fontWeight: 'bold'}} href = 'javascript:;' onClick = {() => {this.props.loadProduct(product._id._id)}}>{product._id.name}</a>
 							</div>
 						)}
 					</div>

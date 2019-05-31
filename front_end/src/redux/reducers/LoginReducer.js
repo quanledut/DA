@@ -43,7 +43,7 @@ export const LoginReducer = (state = initState, action) => {
             return {
                 ...state,
                 email: null,
-                role: null,
+                role: 'guess',
                 token: null,
                 avatar: null
             }

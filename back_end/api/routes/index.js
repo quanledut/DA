@@ -7,4 +7,5 @@ require('./Product')(router);
 require('./Customer')(router);
 require('./SaleOrder')(router);
 require('./Report')(router);
+require('./Sale')(router);
 module.exports = router;

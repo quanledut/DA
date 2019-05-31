@@ -6,6 +6,8 @@ import factory from '../data/images/factory.jpg';
 import GoogleMap from '../components/GoogleMap'
 import {Grid} from '@material-ui/core';
 import {Home, PhoneCallback, MailOutline, AccessAlarm} from '@material-ui/icons'
+import {ShowroomLocation, FactoryLocation} from '../data/Config'
+
 export class About extends Component {
   render() {
     return (
@@ -20,7 +22,7 @@ export class About extends Component {
               <Grid style = {{fontWeight:'bold', fontSize:'1.5rem'}}>SHOW ROOM PHÂN PHỐI</Grid>
               <Grid item style = {{display: 'flex'}}>
                 <Grid item xs = {1} style = {{display: 'flex',justifyContent:'center', alignItems: 'center'}}><Home style = {{width:20, height:20}}/></Grid>
-                <Grid item xs = {11} style = {{display: 'flex',justifyContent:'flex-start', alignItems: 'center', marginLeft:5}}>Số 02 Nguyễn Hữu Thọ, Quận Hải Châu, TP. Đà Nẵng</Grid>
+                <Grid item xs = {11} style = {{display: 'flex',justifyContent:'flex-start', alignItems: 'center', marginLeft:5}}>{ShowroomLocation.address}</Grid>
               </Grid>
               <Grid item style = {{display: 'flex'}}>
                 <Grid item xs = {1} style = {{display: 'flex',justifyContent:'center', alignItems: 'center'}}><PhoneCallback style = {{width:20, height:20}}/></Grid>
@@ -36,19 +38,27 @@ export class About extends Component {
               </Grid>
             </div>
             <div style = {{width:'35%', height:'40vh'}}>
-              <GoogleMap/>
+              <GoogleMap
+                lat = {ShowroomLocation.latitude}
+                lng = {ShowroomLocation.longitude}
+                location = {ShowroomLocation.address}
+              />
             </div>
           </div>
           <hr style = {{margin:2}}/>
           <div style = {{display:'flex', flexDirection: 'row', alignItems: 'center', marginTop:30}}>
             <div style = {{width:'35%', height:'40vh'}}>
-              <GoogleMap/>
+              <GoogleMap
+                lat = {FactoryLocation.latitude}
+                lng = {FactoryLocation.longitude}
+                location = {FactoryLocation.address}
+              />
             </div>
             <div style = {{width:'30%', height:'40vh', display:'flex', flexDirection:'column', fontSize:'0.9rem', padding:10, lineHeight:2, color:'#666666'}}>
               <Grid style = {{fontWeight:'bold', fontSize:'1.5rem'}}>NHÀ MÁY SẢN XUẤT</Grid>
               <Grid item style = {{display: 'flex'}}>
                 <Grid item xs = {1} style = {{display: 'flex',justifyContent:'center', alignItems: 'center'}}><Home style = {{width:20, height:20}}/></Grid>
-                <Grid item xs = {11} style = {{display: 'flex',justifyContent:'flex-start', alignItems: 'center', marginLeft:5}}>Số 02 Nguyễn Hữu Thọ, Quận Hải Châu, TP. Đà Nẵng</Grid>
+                <Grid item xs = {11} style = {{display: 'flex',justifyContent:'flex-start', alignItems: 'center', marginLeft:5}}>{FactoryLocation.address}</Grid>
               </Grid>
               <Grid item style = {{display: 'flex'}}>
                 <Grid item xs = {1} style = {{display: 'flex',justifyContent:'center', alignItems: 'center'}}><PhoneCallback style = {{width:20, height:20}}/></Grid>

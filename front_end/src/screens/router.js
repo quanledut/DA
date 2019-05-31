@@ -25,7 +25,8 @@ import GoogleMap from '../components/GoogleMap';
 import Loading from '../components/Loading';
 import Report from './Report';
 import Page404 from './Page404'
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
+import Sales from './Sales';
 
 export class ScreenRouter extends Component {
 
@@ -64,6 +65,7 @@ export class ScreenRouter extends Component {
                                 <Route exact path = '/report' component = {Report} />
                                 <Route exact path = '/map' component = {GoogleMap} />
                                 <Route exact path = '/loading' component = {Loading} />
+                                <Route exact path = '/sales' component = {Sales} />
                                 <Route component={Page404} />
                             </Switch>
                         </Router>,
@@ -89,6 +91,7 @@ export class ScreenRouter extends Component {
                                 <Route exact path = '/employees' component = {Employees} />
                                 <Route exact path = '/employees/:id' component = {EmployeeDetail} />
                                 <Route exact path = '/map' component = {GoogleMap} />
+                                <Route exact path = '/sales' component = {Sales} />
                                 <Route exact path = '/loading' component = {Loading} />
                                 <Route component={Page404} />
                             </Switch>
@@ -110,6 +113,7 @@ export class ScreenRouter extends Component {
                                 <Route exact path = '/customers' component = {Customers} />
                                 <Route exact path = '/customers/:id' component = {CustomerDetail} />
                                 <Route exact path = '/users/detail' component = {SelfInfo} />
+                                <Route exact path = '/sales' component = {Sales} />
                                 <Route component={Page404} />
                             </Switch>
                         </Router>,
@@ -120,6 +124,8 @@ export class ScreenRouter extends Component {
                                 <Route exact path='/products/:id?' component={ProductDetail} />
                                 <Route exact path='/about' component={About} />
                                 <Route exact path = '/404' component={Page404} />
+                                <Route exact path = '/cards' component = {NewSaleOrder} />
+                                <Route exact path = '/sales' component = {Sales} />
                                 <Route component={Page404} />
                             </Switch>
                         </Router>,
