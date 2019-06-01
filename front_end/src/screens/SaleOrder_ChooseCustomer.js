@@ -27,6 +27,7 @@ export class SaleOrder_ChooseCustomer extends Component {
         this.props.changeCustomer(selectedCustomer)
       }
     }
+    console.log(typeof(this.props.customer.birthday))
   }
 
   render() {
@@ -75,6 +76,9 @@ export class SaleOrder_ChooseCustomer extends Component {
                 </Grid>
                 <Grid xs={12} style = {{height: 15}}>
                   Địa chỉ : {this.props.customer.address}
+                </Grid>
+                <Grid xs={12} style = {{height: 15}}>
+                  Ngày sinh : {this.props.customer.birthday && this.props.customer.birthday.split('T')[0].replace(/-/g,'/')}
                 </Grid>
               </div>
               <div style = {{overflowY:'hidden',overflowX:'hidden', border: '1px solid #009688', padding: 2, height:150, width:150, margin:5}}>

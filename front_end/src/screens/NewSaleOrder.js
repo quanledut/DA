@@ -35,12 +35,12 @@ export class NewSaleOrder extends Component {
         <div style = {{height: 30, textAlign:'center', backgroundColor:'#00695c',  color:'white'}}>
           Giỏ hàng
         </div>
-        <div>
+        {this.props.role != 'guess' && this.props.role && <div>
           <MaterialStepper
             data = {StepperData}
             activeStep = {0}
           />
-        </div>
+        </div>}
         <div style = {{margin: 10, border: '1px solid green', borderRadius: 3}}>
           <Grid container style = {{display: 'flex', flexDirection: 'row',fontSize:'0.8rem', fontWeight:'bold',margin:10, alignItems: 'center' }}>
             <Grid item xs = {1} style = {{textAlign: 'center',display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Số TT</Grid>
@@ -112,9 +112,10 @@ export class NewSaleOrder extends Component {
           />
           <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
             <StyledButton onClick={() => this.setState({ showPrintDialog: true })}>In báo giá</StyledButton>
-            {!this.props.role || this.props.role == '' ?
+            {!this.props.role || this.props.role == 'guess' ?
               <div />
-              : <StyledButton onClick = {this.props.SaleOrder.filter(item => item.selected).length > 0 ? () => this.props.chooseCustomer(this.props.SaleOrder.filter(item => item.selected).reduce((total, saleOrderItem) => { return total + (parseInt(saleOrderItem.productQty) * ((parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) ? parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) : 0))) }, 0)) 
+              : <StyledButton onClick = {this.props.SaleOrder.filter(item => item.selected).length > 0 ? 
+                () => this.props.chooseCustomer((this.props.SaleOrder.filter(item => item.selected).reduce((total, saleOrderItem) => { return total + (parseInt(saleOrderItem.productQty) * ((parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) ? parseInt(saleOrderItem.product.saleprice[saleOrderItem.product.saleprice.length - 1].value) : 0))) }, 0)))
                   : () => {alert('Vui lòng chọn ít nhất 1 sản phẩm')}}>
                 Chọn khách hàng
               </StyledButton>}
@@ -193,6 +194,7 @@ const mapDispatch2Props = (dispatch) => {
       dispatch({ type: 'UPDATE_SALE_ORDER_ITEM', payload: SaleOrder })
     },
     chooseCustomer: (amount) => {
+      dispatch({type: 'SET_MAIN_SALE_ORDER_SUB_AMOUNT', payload: amount});
       dispatch({type: 'SCREEN_ROUTER', payload: '/saleorder/customer', amount})
     }
   }
