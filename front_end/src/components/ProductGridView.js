@@ -56,7 +56,6 @@ export class ProductGridView extends Component {
         {imageListContent}
         <Dialog
             style = {{position: 'static', width: '100%', height: '100%'}}
-
             actions = {actions}
             modal = {false}
             open = {this.state.isShowDialog}

@@ -1,229 +1,258 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import { AppBar, Toolbar, Typography, Avatar, Button, IconButton, Menu, MenuItem, Badge, Divider } from '@material-ui/core';
+import {
+  Menu as MenuIcon, Mail as MailIcon, MoreVert as MoreIcon, Notifications as NotificationsIcon,
+  ShoppingCart as ShoppingCartIcon, BubbleChart, Person, TrainRounded
+} from '@material-ui/icons';
+import { blue, red, purple } from '@material-ui/core/colors';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import LoginDialog from '../../components/LoginDialog';
+import ForgotPasswordDialog from '../../components/ForgotPasswordDialog';
+import {NotificationContainer} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+import {Roles} from '../../data/Role'
+import menu_icon from '../../data/menu_icon_1.png' 
+import logo from '../../data/logo.png'
+import wood_background from '../../data/wood.png' 
+import {GreenButton} from '../../components/Components'
 
-const styles1 = {
-  
-}
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
+    flexGrow: 1,
     width: '100%',
+  },
+  appBar: {
+    color: purple,
+    width:'100%',
+    height: '6%'
   },
   grow: {
     flexGrow: 1,
+    display: 'flex',
   },
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
   },
-  title: {
+  isDesktopMenu: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+      display: 'block'
+    }
   },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing.unit * 2,
-    marginLeft: 0,
-    width: '100%',
+  isMobileMenu: {
+    display: 'flex',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 3,
-      width: 'auto',
+      display: 'none'
     },
+    right: -10
   },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  badge: {
+    border: `2px solid ${theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[2000]}`
   },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
+  toolBar:{
+    height:40
+  }
 });
 
-class PrimarySearchAppBar extends React.Component {
+class Header extends React.Component {
   state = {
-    anchorEl: null,
-    mobileMoreAnchorEl: null,
-  };
+    accountAnchorEl: null,
+    isShowMenu: false,
+    isShowAccount: false,
+    isShowLogin: false,
+    showForgotPasswordForm: false
+  }
 
-  handleProfileMenuOpen = event => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+  handleUserOpen = e => {
+    this.setState({ accountAnchorEl: e.currentTarget })
+  }
 
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
-    this.handleMobileMenuClose();
-  };
+  profilePressHandle = () => {
+    this.handleAccountClose();
+    this.props.showUserDetail(this.props.token);
+  }
 
-  handleMobileMenuOpen = event => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
-  };
+  logoutPressHandle = () => {
+    this.handleAccountClose();
+    this.props.handleLogout();
+    //this.props.showSignUpDialog();
+  }
 
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
-  };
+  handleAccountClose = () => {
+    this.setState({ accountAnchorEl: null })
+  }
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const theme = createMuiTheme({
+      palette: {
+        primary: { main: blue[500] }, // Purple and green play nicely together.
+        secondary: { main: '#11cb5f' }, // This is just green.A700 as hex.
+        type: 'light'
+      },
+      typography: { useNextVariants: true },
+    });
 
-    const renderMenu = (
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isMenuOpen}
-        onClose={this.handleMenuClose}
+    const renderAccountMenu = (this.props.role ?
+      (<Menu
+        anchorEl={this.state.accountAnchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        getContentAnchorEl={null}
+        open={Boolean(this.state.accountAnchorEl)}
+        onClose={this.handleAccountClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
-      </Menu>
-    );
-
-    const renderMobileMenu = (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isMobileMenuOpen}
-        onClose={this.handleMenuClose}
+        <MenuItem onClick={this.profilePressHandle} style = {{display: 'flex', flexDirection: 'row', alignItems:'center', justifyContent: 'flex-start'}}>
+          <IconButton color="inherit">
+            <Person />
+          </IconButton>
+          <div style = {{marginLeft:5}}>Thông tin cá nhân</div>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={this.logoutPressHandle}>
+          <IconButton color="inherit">
+            <BubbleChart />
+          </IconButton>
+          <div style = {{marginLeft:5}}>Đăng xuất</div>
+        </MenuItem>
+      </Menu>)
+      :
+      ((<Menu
+        anchorEl={this.state.accountAnchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        // transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        getContentAnchorEl={null}
+        open={Boolean(this.state.accountAnchorEl)}
+        onClose={this.handleAccountClose}
       >
-        <MenuItem onClick={this.handleMobileMenuClose}>
+        <MenuItem onClick={this.props.showLoginForm}>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
+            <Person />
           </IconButton>
-          <p>Messages</p>
+          <p>Đăng nhập</p>
         </MenuItem>
-        <MenuItem onClick={this.handleMobileMenuClose}>
-          <IconButton color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
-      </Menu>
+      </Menu>))
     );
 
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              Material-UI
-            </Typography>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+        <div style = {{position: 'relative', display: 'flex', flexDirection:'row', width:'100%', justifyContent: 'center', alignItems: 'center', height:'8%', borderBottom: '2px solid green', 
+        // backgroundImage:`url(${wood_background})`, 
+        backgroundColor:'#fff',
+        backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
+          <div onClick={this.props.toggleMenuDisplay} style = {{margin: 10,paddingRight:10, height:'100%', display:'flex',justifyContent: 'center', alignItems: 'center'}}>
+              <img src = {menu_icon} style = {{height: '80%', }}/>
+              {/*} <MenuIcon style = {{height:100}}/>*/}
+          </div>
+          <div style = {{flexGrow: 1, display: 'flex', flexDirection: 'row', justifyContent: 'center', height:'100%'}}>
+            <img src= {logo} style = {{height:'100%'}}/>
+          </div>
+          <IconButton onClick = {() => {
+            this.props.reloadSaleOrder(this.props.SaleOrder);
+            this.props.showCards(this.props.token);
+          }}>
+            <Badge badgeContent={this.props.SaleOrder.length} color='secondary' classes={{ badge: classes.badge }}>
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+          {this.props.email ? 
+          <div onClick={this.handleUserOpen} style = {{height:'100%', display:'flex', flexDirection: 'row',justifyContent: 'center', alignItems: 'center', marginLeft:10}}>
+            <div style = {{height:40, width: 40, borderRadius: '50%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              <img src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} style = {{height: '100%'}}/> 
+            </div>
+            <div style = {{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start',height: '100%', marginRight:25, marginLeft: 15}}>
+                <div style = {{fontWeight: 700, fontSize: '0.9rem', fontStyle:'Helvetica Neue",Helvetica,Arial,sans-serif'}}>{this.props.user_detail && this.props.user_detail.name && this.props.user_detail.name != '' ? this.props.user_detail.name.toUpperCase() : this.props.email}</div>
+                <div style = {{ fontSize: '0.7rem'}}>{Roles.filter(role => role.name === this.props.role)[0] != null ? Roles.filter(role => role.name === this.props.role)[0].caption : 'Khách hàng'}</div>
+            </div>
+          </div>
+          :
+          <GreenButton onClick = {this.props.showLoginForm} style = {{marginRight: 15}}>Đăng nhập</GreenButton>
+          }
+          
+          
+          {/*<AppBar className={classes.appBar} position='static'>
+            <Toolbar className = {classes.toolBar}>
+              <IconButton className={classes.menuButton} aria-label="Menu" onClick={this.props.toggleMenuDisplay}>
+                <MenuIcon />
+              </IconButton>
+              <div style = {{display: 'flex', flexGrow: 1, color: 'white', fontWeight: 'bold', fontSize: '2.0rem'}}>
+                Nội thất Vinmus
+                </div>
+              <div className={classes.isDesktopMenu}>
+                <IconButton onClick = {() => {
+                  this.props.reloadSaleOrder(this.props.SaleOrder);
+                  this.props.showCards(this.props.SaleOrder);
+                }}>
+                  <Badge badgeContent={this.props.SaleOrder.length} color='secondary' classes={{ badge: classes.badge }}>
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  aria-owns='material-appbar'
+                  aria-haspopup="true"
+                  onClick={this.handleUserOpen}
+                  color="inherit"
+                  display='flex'
+                  style = {{height:50}}
+                >
+                  <Avatar style = {{top: -5}} id='userAvatar' alt='User' src={this.props.email ? `data:image/png;base64,${this.props.userAvatar}` : 'https://cdn.dribbble.com/users/199982/screenshots/4044699/furkan-avatar-dribbble.png'} />
+                  <div style={{ display: 'flex', flexDirection: 'column',right: -10, marginLeft: 10, justifyContent: 'left', lineHeight: 0.8 }}>
+                    <label htmlFor='userAvatar' style={{ fontSize: 15 }}>{!this.props.email ? 'example@gmail.com' : this.props.email}</label>
+                    <label htmlFor='userAvatar' style={{ fontSize: 20 }}>{Roles.filter(role => role.name === this.props.role)[0] != null ? Roles.filter(role => role.name === this.props.role)[0].caption : 'Khách hàng'}</label>
+                  </div>
+                </IconButton>
               </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton color="inherit">
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMenu}
-        {renderMobileMenu}
-      </div>
+              <div className={classes.isMobileMenu}>
+                <IconButton>
+                  <MoreIcon />
+                </IconButton>
+              </div>
+            </Toolbar>
+          </AppBar>
+              */}
+          <LoginDialog
+            open={this.props.loginFormState}
+            hideLoginForm={this.props.hideLoginForm}
+            requestLogin = {this.props.requestLogin}
+            showForgotPassForm = {() => {
+              this.setState({showLoginForm: false,
+                            showForgotPasswordForm: true})
+            }}
+          />
+          <div><NotificationContainer/></div>
+          <ForgotPasswordDialog/>
+          {renderAccountMenu}
+        </div>
     );
   }
 }
 
-PrimarySearchAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
+const mapState2Props = (state) => {
+  return {
+    mail: state.PageReducer.mail,
+    role: state.LoginReducer.role,
+    userAvatar: state.LoginReducer.avatar,
+    SaleOrder: state.ProductReducer.SaleOrder,
+    email: state.LoginReducer.email,
+    token: state.LoginReducer.token,
+    loginFormState: state.PageReducer.loginFormState,
+    user_detail: state.LoginReducer.user_detail
+  }
+}
 
-export default withStyles(styles)(PrimarySearchAppBar);
+const mapDispatch2Props = (dispatch) => {
+  return {
+    showLoginForm: () => {dispatch({type: 'SHOW_LOGIN_FORM'})},
+    hideLoginForm: () => {dispatch({type: 'HIDE_LOGIN_FORM'})},
+    toggleMenuDisplay: () => { return dispatch({ type: 'TOGGLE_MENU_DISPLAY' }) },
+    handleLogout: () => {return dispatch({type: 'HANDLE_LOGOUT'})},
+    showCards: (token) => {return dispatch({type:'SCREEN_ROUTER',payload:  '/cards', token})},
+    reloadSaleOrder: (SaleOrder) => {return dispatch({type: 'RELOAD_SALE_ORDER', payload: SaleOrder})},
+    requestLogin: (data) => {return dispatch({type: 'REQUEST_LOGIN', payload:data})},
+    showUserDetail: (token) => {return dispatch({type:'SCREEN_ROUTER',payload:'/users/detail', token})}
+  }
+}
+
+export default connect(mapState2Props, mapDispatch2Props)(withStyles(styles)(Header));

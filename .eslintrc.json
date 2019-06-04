@@ -1,0 +1,34 @@
+<span class="token punctuation">{</span>
+    <span class="token string">"env"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"es6"</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"browser"</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token string">"extends"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"airbnb"</span><span class="token punctuation">,</span>
+        <span class="token string">"prettier"</span><span class="token punctuation">,</span>
+        <span class="token string">"plugin:react/recommended"</span><span class="token punctuation">,</span>
+        <span class="token string">"plugin:prettier/recommended"</span><span class="token punctuation">,</span>
+        <span class="token string">"prettier/react"</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string">"parser"</span><span class="token punctuation">:</span> <span class="token string">"babel-eslint"</span><span class="token punctuation">,</span>
+    <span class="token string">"parserOptions"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"ecmaVersion"</span><span class="token punctuation">:</span> <span class="token number">2018</span><span class="token punctuation">,</span>
+        <span class="token string">"sourceType"</span><span class="token punctuation">:</span> <span class="token string">"module"</span><span class="token punctuation">,</span>
+        <span class="token string">"ecmaFeatures"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"impliedStrict"</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+            <span class="token string">"jsx"</span><span class="token punctuation">:</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token string">"plugins"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token string">"react"</span><span class="token punctuation">,</span>
+        <span class="token string">"prettier"</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string">"rules"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+         <span class="token string">"no-console"</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+         <span class="token operator">...</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token string">"globals"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"axios"</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+        <span class="token string">"PropTypes"</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>

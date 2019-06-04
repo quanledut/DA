@@ -1,0 +1,2 @@
+require('./ProductDepartment')
+require('./Product')

@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const config = require('../../config');
+const config = require('../../../config');
 
 const UserSchema = mongoose.Schema({
-        username: {
+        user_detail_id:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'UserDetail'
+        },
+        email: {
             type: String,
             required: true,
             trim: true,
@@ -16,6 +20,18 @@ const UserSchema = mongoose.Schema({
         hash: {
             type: String,
             required: true
+        },
+        avatar: {
+            type: String
+        },
+        role: {
+            type: String
+        },
+        resetPasswordToken: {
+            type: String
+        },
+        resetPasswordExpires: {
+            type: Date
         }
     },
     {
@@ -30,7 +46,7 @@ UserSchema.methods.generateHash = function(password){
 
 UserSchema.methods.validPassword = function(password){
     let passHash = crypto.pbkdf2Sync(password,this.salt,1000,64,config.algorithm).toString('hex');
-    return passHash = this.hash;
+    return passHash == this.hash;
 }
 
 mongoose.model('User', UserSchema);
