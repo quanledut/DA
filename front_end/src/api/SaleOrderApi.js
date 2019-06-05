@@ -45,9 +45,9 @@ export const loadSaleOrderList = (token, data) => {
     })
 }
 
-export const loadSaleOrderDetail = (token, data) => {
+export const loadSaleOrderDetail = (data) => {
     return new Promise((resolve, reject) => {
-        axios.get(`${apiUrl}/saleorders/detail/${data}`,{headers: {Authorization: `Bearer ${token}`}})
+        axios.get(`${apiUrl}/saleorders/detail/${data}`)
         .then(res => {
             if(res.status === 200) {
                 return resolve(res.data);
@@ -67,10 +67,26 @@ export const nextStateSaleOrder = (token, data) => {
             if(res.status === 200) {
                 return resolve(res.data);
             }
-            else return reject(res.data)
+            else return reject(res)
         })
         .catch(err => {
             return reject(err)
         })
     })
 }
+
+export const updateSaleOrder = (token, data) => {
+    return new Promise((resolve, reject) => {
+        axios.put(`${apiUrl}/saleorders/${data._id}`,data,{headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+            if(res.status === 200) {
+                return resolve(res.data);
+            }
+            else return reject(res)
+        })
+        .catch(err => {
+            return reject(err)
+        })
+    })
+}
+

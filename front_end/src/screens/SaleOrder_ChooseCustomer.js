@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import SelectAutoComplete from '../components/SelectAutoComplete';
 import MaterialStepper from '../components/MaterialStepper';
 import {StepperData} from '../data/Config';
-import {StyledButton} from '../components/Components'
+import {StyledButton} from '../components/Components';
 
 export class SaleOrder_ChooseCustomer extends Component {
   constructor(props) {

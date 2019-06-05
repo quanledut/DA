@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Product = mongoose.model('Product');
 const SaleOrder = mongoose.model('SaleOrder');
 const { getSubImage } = require('../../helpers/uploadImage');
-const { removeSignString } = require('../../helpers/removeSignText')
+const { removeSignString } = require('../../helpers/removeSignText');
+const StockChange = mongoose.model('StockChange')
 
 Array.prototype.sortBy = function(p) {
     return this.slice(0).sort(function(a,b) {
@@ -12,10 +13,7 @@ Array.prototype.sortBy = function(p) {
 
 const requestNewProduct = async (req, res) => {
     try {
-        console.log('New Product')
-        console.log(req.body);
-        console.log(req.files);
-        const { name, description, length, width, height, unitprice, saleprice, importqty, department } = req.body;
+        const { name, description, length, width, height, unitprice, saleprice, importqty, department, email } = req.body;
         const files = req.files;
         let newestProduct = await Product.findOne().sort({createdAt: -1});
         if(!newestProduct){
@@ -25,7 +23,7 @@ const requestNewProduct = async (req, res) => {
             let newIndexNo = '000' + (parseInt(newestProduct.no.split('-')[1]) + 1);
             no = 'SP-' + newIndexNo.substring(newIndexNo.length - 4, newIndexNo.length)
         }
-        Product.find().sort({ no: -1 }).limit(1).then(products => {
+        Product.find().sort({ no: -1 }).limit(1).then( async products => {
             newProduct = new Product();
             newProduct.name = name;
             newProduct.description = description;
@@ -39,8 +37,20 @@ const requestNewProduct = async (req, res) => {
             newProduct.subImage = files[0] != null ? files[0].filename : '';
             newProduct.department = department;
             newProduct.no = no;
-            newProduct.save();
-            res.status(201).send(newProduct);
+            let savedProduct = await newProduct.save();
+            let user = await email? user.findOne({email}) : null ;
+            let newStockChange = new StockChange({
+                description: `Tạo mới sản phẩm ${newProduct.no}`,
+                type: 'init',
+                user_id: user ? user._id : null,
+                items:{
+                    product_id:savedProduct._id,
+                    qty:savedProduct.importqty,
+                    price:savedProduct.unitprice
+                }
+            });
+            await newStockChange.save();
+            await res.status(201).send(savedProduct);
             console.log(products)
             return;
         })
@@ -219,6 +229,13 @@ const getProductMainInfo = async (req,res) => {
     }
 }
 
+const getAllProduct = (req, res) => {
+    Product.find({}).select({name:1, unitprice: 1, no:1}).then(products => {
+        res.status(200).send(products)
+    })
+    .catch(err => res.status(404).send(err))
+}
+
 module.exports = {
     requestNewProduct,
     getProduct,
@@ -227,5 +244,6 @@ module.exports = {
     deleteProduct,
     getProductMainInfo,
     getCustomerBuyedProduct,
-    getTopProductBuyWith
+    getTopProductBuyWith,
+    getAllProduct
 }

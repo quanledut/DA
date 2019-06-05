@@ -22,7 +22,8 @@ const initialState = {
         receiver_phone_number: '',
         paid_amount: 0,
         sub_total_amount: 0
-    }
+    },
+    list_all_product:[]
 }
 
 export const ProductReducer = (state = initialState, action) => {
@@ -131,6 +132,9 @@ export const ProductReducer = (state = initialState, action) => {
         case 'SET_MAIN_SALE_ORDER_SUB_AMOUNT': 
             return {...state, MainSaleOrder: {...state.MainSaleOrder,sub_total_amount: action.payload, total_amount: action.payload}};
             break;
+        case 'LOAD_ALL_PRODUCT_SUCCESS':{
+            return {...state, list_all_product: action.payload}
+        }
         default: {
             return state;
         }

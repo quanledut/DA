@@ -15,20 +15,42 @@ const checkInventoryQty = (saleOrderItem) => {
 }
 
 const divideInventoryStock = (saleOrderItem) => {
-    return new Promise((resolve, reject) => {
-        Product.findOne({_id: saleOrderItem.product_id}).then(product => {
-            try{
+    return new Promise(async (resolve, reject) => {
+        try{
+            let product = await Product.findOne({_id: saleOrderItem.product_id});
+            if(!product) reject('Not found product');
+            else{
                 product.importqty = product.importqty - saleOrderItem.qty;
-                product.save();
+                let savedProduct = await product.save();
+                resolve(savedProduct);
             }
-           catch(err){
-           }
-        })
-        .catch(err => {})
+        }
+        catch(err){
+            reject('Can not divide inventory')
+        }
+    })
+}
+
+
+const addInventoryStock = (importProductItem) => {
+    return new Promise(async (resolve, reject) => {
+        try{
+            let product = await Product.findOne({_id: importProductItem._id});
+            if(!product) reject('Not found product');
+            else{
+                product.importqty = product.importqty + importProductItem.qty;
+                let savedProduct = await product.save();
+                resolve(savedProduct);
+            }
+        }
+        catch(err){
+            reject('Can not add inventory')
+        }
     })
 }
 
 module.exports = {
     checkInventoryQty,
-    divideInventoryStock
+    divideInventoryStock,
+    addInventoryStock
 }

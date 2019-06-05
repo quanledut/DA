@@ -14,6 +14,7 @@ import {PropTypes} from 'prop-types';
 import Rating from '../components/RatingStart'
 import main_wood from '../data/main_bg.jpeg'
 import Loading from '../components/Loading'
+import './Products.css'
 
 
 const sortBy = [
@@ -117,7 +118,7 @@ export class Products extends Component {
   }
 
   componentDidMount(){
-    this.props.loadProductList({limit: numberOfProductPerPage, page:1})
+    this.props.loadProductList({limit: numberOfProductPerPage, page:1});
   }
 
   handleClickToProduct = (id) => {
@@ -164,7 +165,7 @@ export class Products extends Component {
     })
     return (
       // <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundImage:`url(${main_wood})`, backgroundPosition: 'center',backgroundSize: 'cover',backgroundRepeat: 'no-repeat'}}>
-      <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'hidden', borderRadius: 3, padding: 10, backgroundColor:'white'}}>
+      <div style = {{backgroundColor: '#f5f5f5', margin: 5 ,border:'1px solid gray',height:'100%', overflow: 'scroll', borderRadius: 3, padding: 10, backgroundColor:'white'}}>
           <div style={{ height: 30, display: 'flex', margin: 3, marginTop: 5 , marginBottom: 10}}>
             <div style={{ flexGrow: 1, display: 'flex', border: '1px solid #616161', borderRadius: 5, marginRight: 10 }}>
               <SearchIcon style={{ fontSize: 25 }} className={classes.searchIcon} />
@@ -205,7 +206,7 @@ export class Products extends Component {
             <div style = {{width: '100%',height: 30, backgroundColor: '#009688', fontWeight: 'bold', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
               DANH SÁCH SẢN PHẨM {`(${this.props.productCount} sản phẩm)`}
             </div>
-            <GridList cellHeight={((window.innerHeight*0.92 - 70)*0.29)} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
+            {/*<GridList cellHeight={((window.innerHeight*0.92 - 70)*0.29)} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
               {(products).map(product => (
                 <GridListTile key={product.name} style = {{borderRadius: 4}}>
                   <img src={`data:image/png;base64,${product.subImage}`} alt={product.name} style = {{width:'100%', height:'auto'}} onClick={() => {this.handleClickToProduct(product._id)}} />
@@ -223,7 +224,48 @@ export class Products extends Component {
                   />
                 </GridListTile>
               ))}
-            </GridList>
+            </GridList>*/}
+            <div className = 'products_container'>
+              {
+                [...Array(Math.ceil(products.length/numberOfProductPerLine)).keys()].map(lineIndex => (
+                  <div className = 'line_product'>
+                    {
+                      [...Array((lineIndex + 1) * numberOfProductPerLine<=products.length ? numberOfProductPerLine : products.length - lineIndex * numberOfProductPerLine).keys()].map(columnIndex => 
+                        {
+                          let product = products[lineIndex * numberOfProductPerLine + columnIndex];
+                          return (
+                            <div className = 'product_container' onClick={() => {this.handleClickToProduct(product._id)}}>
+                              <img src={`data:image/png;base64,${product.subImage}`}/>
+                              <div className = 'product_info'>
+                                <div className = 'product_name'>
+                                  {product.name}
+                                </div>
+                                <div className = 'team_price'>
+                                  <div className = 'actual_price'> 
+                                    {parseFloat(product.saleprice[product.saleprice.length -1].value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} vnđ
+                                  </div>
+                                  {product.saleprice[0].value > product.saleprice[product.saleprice.length - 1].value && 
+                                  <div className =  'original_price'>
+                                    {parseFloat(product.saleprice[0].value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} vnđ
+                                  </div>}
+                                </div>
+                              </div>
+                              {product.saleprice[0].value > product.saleprice[product.saleprice.length - 1].value 
+                                && <div className = 'product_discount'>
+                                  <div className = 'discount_content'>
+                                    <div style = {{color: 'red', fontSize:'0.8rem'}}>{Math.ceil((product.saleprice[0].value - product.saleprice[product.saleprice.length - 1].value) / product.saleprice[0].value * 100)} %</div>
+                                    <div>GIẢM</div>
+                                  </div>
+                                  <div className = 'discount_2_triangle'></div>
+                                </div>
+                              }
+                            </div> 
+                       )})
+                    }
+                  </div>
+                ))
+              }
+            </div>
             <div style = {{width: '100%', display: 'flex', justifyContent: 'center'}}>
               <div style = {{width: 150, fontStyle: 'italic', fontSize: '0.8rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 Sản phẩm {(this.state.pageOfProduct - 1)*numberOfProductPerPage + 1} - {(this.state.pageOfProduct)*numberOfProductPerPage < this.props.productCount ? (this.state.pageOfProduct)*numberOfProductPerPage : this.props.productCount} của {this.props.productCount} </div>  

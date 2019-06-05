@@ -14,12 +14,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
 import {InputAdornment, Divider } from '@material-ui/core'
-import {AccountCircle} from '@material-ui/icons'
+import {LocalShipping} from '@material-ui/icons'
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 250,
+    height: 36,
   },
   input: {
     display: 'flex',
@@ -89,7 +89,7 @@ function Control(props) {
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <AccountCircle />
+            <LocalShipping />
             <Divider/>
           </InputAdornment>
         ),
@@ -180,7 +180,7 @@ const components = {
   ValueContainer,
 };
 
-class ProductSelectAutoComplete extends React.Component {
+class SelectAutoComplete extends React.Component {
   state = {
     single: null,
     multi: null,
@@ -224,11 +224,11 @@ class ProductSelectAutoComplete extends React.Component {
   }
 }
 
-ProductSelectAutoComplete.propTypes = {
+SelectAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   suggestions: PropTypes.array.isRequired,
   customer: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(ProductSelectAutoComplete);
+export default withStyles(styles, { withTheme: true })(SelectAutoComplete);

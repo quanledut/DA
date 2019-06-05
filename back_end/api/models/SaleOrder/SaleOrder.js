@@ -51,6 +51,10 @@ const SaleOrderSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
+        confirmed_user_id:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
         items: [{
             product_id: {
                 type: mongoose.Schema.Types.ObjectId,

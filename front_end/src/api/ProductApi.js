@@ -98,3 +98,12 @@ export const changeProductDetail = (token, product) => {
     })
 }
 
+export const loadAllProduct = () => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/all_products`).then(res => {
+            if(res.status == 200) resolve(res.data);
+            else reject('Not found')
+        }).catch(err => reject(err))
+    })
+}
+

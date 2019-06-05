@@ -3,3 +3,4 @@ require('./Toolbar');
 require('./Product')
 require('./Customer')
 require('./SaleOrder')
+require('./StockChange')

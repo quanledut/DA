@@ -20,8 +20,63 @@ export class NewSaleOrder extends Component {
     }
   }
 
+  componentDidMount(){
+    this.props.updateSaleOrderItem(this.props.SaleOrder.map(item => {
+      item.selected = true;
+      return item;
+    }))
+  }
+
   onChangeCheck = (id, event) => {
     this.setState({ items: this.state.items.map(item => { if (item._id == id) item.selected = event.target.checked; return item }) })
+  }
+
+  decreaseItemQty = (id) => {
+    this.props.updateSaleOrderItem(
+      this.props.SaleOrder.map(item => {
+        if(item.product._id == id){
+          if(item.productQty > 1) item.productQty = parseFloat(item.productQty) -1 ;
+        }
+        return item;
+      })
+    )
+  }
+
+  increaseItemQty = (id) => {
+    this.props.updateSaleOrderItem(
+      this.props.SaleOrder.map(item => {
+        if(item.product._id == id){
+          if(!item.productQty) item.productQty = 1;
+          else if(item.productQty < item.product.importqty) item.productQty = parseFloat(item.productQty) + 1 ;
+          else alert('Vuợt quá số sản phẩm còn lại trong kho');
+        }
+        return item;
+      })
+    )
+  }
+
+  updateItemQty = (id, event) => {
+    if(parseFloat(event.target.value)){
+      this.props.updateSaleOrderItem(this.props.SaleOrder.map(item => {
+        if(item.product._id == id){
+          if(parseFloat(event.target.value) <= item.product.importqty){
+            item.productQty = parseFloat(event.target.value);
+          }
+          else{
+            alert('Vuợt quá số sản phẩm còn lại trong kho');
+          }
+        }
+        return item;
+      }))
+    }
+    else if(event.target.value == ''){
+      this.props.updateSaleOrderItem(this.props.SaleOrder.map(item => {
+        if(item.product._id == id){
+          item.productQty = event.target.value;
+        }
+        return item;
+      }))
+    }
   }
 
   onChangeQty = (index, event) => {
@@ -60,14 +115,21 @@ export class NewSaleOrder extends Component {
                 <Grid item xs = {1} style = {{textAlign: 'center'}}>{index + 1}</Grid>
                 <Grid item xs = {1} style = {{textAlign: 'center'}}><Checkbox checked={item.selected} color='secondary' onChange={(event) => { this.props.updateSaleOrderItem(this.props.SaleOrder.map(saleOrderItem => { if (saleOrderItem.product._id == item.product._id) saleOrderItem.selected = event.target.checked; return saleOrderItem; })) }} /></Grid>
                 <Grid item xs = {2} style = {{textAlign: 'center'}}><img style={{ width: 100, height: 100 }} src={`data:image/png;base64,${item.product.subImage}`} /></Grid>
-                <Grid item xs = {4}>{item.product.name}</Grid>
+                <Grid item xs = {4} style = {{fontWeight:'bold'}}>
+                  <a href = 'javascript:;' onClick = {() => {this.props.showProductDetail(item.product._id)}}>
+                    {item.product.name.toUpperCase()}
+                  </a>
+                </Grid>
                 <Grid item xs = {1} style = {{textAlign: 'center', paddingLeft: 20, paddingRight: 20}}>
-                  <input 
-                    type = 'number' 
-                    value = {item.productQty} 
-                    onChange={(event) => { this.props.updateSaleOrderItem(this.props.SaleOrder.map(saleOrderItem => { if (saleOrderItem.product._id == item.product._id) item.productQty = event.target.value; return saleOrderItem })) }}
-                    style = {{border: '1px solid #e6e6e6', width: '100%', borderRadius: 2, paddingLeft: 10}}
+                  <div style = {{width:'100%', display:'flex'}}>
+                    <div onClick = {() => {this.decreaseItemQty(item.product._id)}} style = {{width:35, display: 'flex', justifyContent:'center', alignItems: 'center', border: '1px solid #999', borderTopLeftRadius: 3, borderBottomLeftRadius:3}}>-</div>
+                    <input 
+                      value = {item.productQty} 
+                      onChange={(event) => {this.updateItemQty(item.product._id, event)}}
+                      style = {{width:30, display: 'flex', justifyContent:'center', alignItems: 'center', border: '1px solid #999', textAlign:'center', fontWeight: 'bold'}}
                     />
+                    <div onClick = {() => {this.increaseItemQty(item.product._id)}} style = {{width:35, display: 'flex', justifyContent:'center', alignItems: 'center', border: '1px solid #999',  borderTopRightRadius: 3, borderBottomRightRadius:3}}>+</div>
+                  </div>
                 </Grid>
                 <Grid item xs = {1} style = {{textAlign: 'center'}}>{(parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) || 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
                 <Grid item xs = {1} style = {{textAlign: 'center'}}>{(parseInt(item.productQty) * ((parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) ? parseFloat(item.product.saleprice[item.product.saleprice.length - 1].value) : 0))).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Grid>
@@ -196,7 +258,10 @@ const mapDispatch2Props = (dispatch) => {
     chooseCustomer: (amount) => {
       dispatch({type: 'SET_MAIN_SALE_ORDER_SUB_AMOUNT', payload: amount});
       dispatch({type: 'SCREEN_ROUTER', payload: '/saleorder/customer', amount})
-    }
+    },
+    showProductDetail:(id) => {
+      dispatch({type: 'SCREEN_ROUTER', payload: `/products/${id}`})
+    },
   }
 }
 

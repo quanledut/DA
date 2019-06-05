@@ -1,11 +1,17 @@
 const mongoose = require('mongoose')
-const SaleOrder = mongoose.model('SaleOrder')
-const Product = mongoose.model('Product')
+const SaleOrder = mongoose.model('SaleOrder');
+const Product = mongoose.model('Product');
+const User = mongoose.model('User');
+const StockChange = mongoose.model('StockChange');
 const {getSubImage} = require('../helpers/uploadImage');
 const {removeSignString} = require('../helpers/removeSignText');
 const {getProductDetail} = require('./Product/Product');
 const {checkInventoryQty, divideInventoryStock} = require('../helpers/Product');
-const UserDetail = mongoose.model('UserDetail')
+const UserDetail = mongoose.model('UserDetail');
+const {transporter} = require('../helpers/nodemailer');
+const moment = require('moment');
+const {front_end_base_url} = require('../../config')
+
 const find = async (req, res) => {
     try {
         const {page,limit,search_text,status} = req.query;
@@ -93,32 +99,72 @@ const getSaleOrderById = (req, res) => {
 
 const nextStatusSaleOrder = (req, res) => {
     const {id} = req.params;
-    SaleOrder.findOne({_id:id}).then(async saleOrder => {
+    const {email} = req.body;
+    SaleOrder.findOne({_id:id}).populate('seller_id').populate('customer_id').then(async saleOrder => {
         try{
             if(saleOrder != null) {
-                await Promise.all(saleOrder.items.map(async saleOrderItem => {
-                   checkInventoryQty(saleOrderItem);
+                let seller = await User.findOne({email});
+                saleOrder = await UserDetail.populate(saleOrder,'seller_id.user_detail_id');
+                stockChange = new StockChange({description:`Xuất kho đơn hàng ${saleOrder.no}`, type:'export', user_id: seller._id, saleorder_id: saleOrder._id, items:[]});
                 if(saleOrder.status ==  'New') {
                     await Promise.all(saleOrder.items.map(async saleOrderItem => {
-                    divideInventoryStock(saleOrderItem);
-                 })) 
+                        console.log(JSON.stringify(saleOrderItem))
+                        divideInventoryStock(saleOrderItem);
+                        await stockChange.items.push({product_id: saleOrderItem.product_id, qty:saleOrderItem.qty, price: saleOrderItem.sale_price});
+                        await stockChange.save();
+                    }));
+                    const currentTime = new Date();
+                    const content = `<p>Đơn hàng của bạn đã được xác nhận vào lúc ${moment(currentTime).format('DD/MM/YYYY HH:mm:SS')}</p>`+
+                    `<p>Thông tin chi tiết đơn hàng tại </p>` + 
+                    `${front_end_base_url}/saleorders/${saleOrder._id}` +
+                    `<p>Nếu có bất kỳ câu hỏi nào vui lòng liên hệ nhân viên ${saleOrder.seller_id.user_detail_id.name} 
+                        tại ${saleOrder.seller_id.user_detail_id.phone_number ? 'số điện thoại ' + saleOrder.seller_id.user_detail_id.phone_number : 'email' + saleOrder.seller_id.email}</p>`
+                    const mailOptions = {
+                        from: 'Nhóm hỗ trợ Vinmus comunity',
+                        to: `${saleOrder.customer_id.email}`,
+                        subject: 'Đã xác nhận đơn hàng',
+                        html: content
+                    };
+                    
+                    saleOrder.status = await 'Confirmed';
+                    saleOrder.confirmed_user_id = seller._id;
+                    transporter.sendMail(mailOptions);
+                    await saleOrder.save().then(res.status(200).send(saleOrder))
                 }
-                saleOrder.status = await saleOrder.status == 'New' ? 'Confirmed' : 'Done'
-                await saleOrder.save();
-                })) 
-               res.status(200).send(saleOrder)
-        }
-        else res.status(404).send('Not found');
+                else if(saleOrder.status == 'Done') {
+                    res.status(404).send('Current Sale Order status is done')
+                }
+                else{
+                    saleOrder.paid_amount = saleOrder.total_amount;
+                    saleOrder.status = 'Done';
+                    await saleOrder.save().then(res.status(200).send(saleOrder))
+                }
+            }
+            else res.status(404).send('Not found');
         }
         catch(err){
-            res.status(403).send(err)
+            res.status(403).send('err')
         }
         
     })
     .catch(err =>
         {
-            res.status(403).send(err);
+            res.status(403).send('Can not find');
         })
+}
+
+const updateSaleOrder = async (req, res) => {
+    try{
+        const {id} = req.params;
+        let newSaleOrder = req.body;
+        let saleOrder = await SaleOrder.findOne({_id:id});
+        await Object.assign(saleOrder, newSaleOrder);
+        await saleOrder.save();
+        await res.status(200).send(saleOrder)
+    }
+    catch(err){
+        res.status(404).send('Query err')
+    }
 }
 
 module.exports = {
@@ -126,4 +172,5 @@ module.exports = {
     requestNewSaleOrder,
     getSaleOrderById,
     nextStatusSaleOrder,
+    updateSaleOrder
 }
