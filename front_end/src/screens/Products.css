@@ -1,0 +1,109 @@
+.product_wrapper {
+    display: inline;
+    width:30%;
+    height: 300px;
+}
+
+.products_container {
+    display: inline;
+    background: #999;
+    /* color: red; */
+}
+
+.line_product {
+    display: flex;
+}
+
+.product_container {
+    position: relative;
+    height:300px;
+    width:30%;
+    padding:3px;
+    margin:10px;
+    border-radius: 5px;
+    color: blue;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.6);
+}
+
+.product_container:hover {
+    width:30%;
+    transform: scale(1.03);
+    /* filter: blur(1px); */
+    border: 1px solid red;
+}
+
+.product_info{
+    position: relative;
+    opacity: 1;
+}
+
+.product_discount{
+    box-sizing: border-box;
+    position: absolute;
+    right: 5px;
+    top:5px;
+    text-align: center;
+    font-size: 0.6rem;
+    font-weight: bold;
+    /* background-color: red; */
+    width: 40px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.discount_content {
+    height: 40px;
+    font-size: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #ff9800;
+
+}
+
+.discount_2_triangle {
+    box-sizing: border-box;
+    width: 40px;
+    border-left: 20px solid #ff9800;
+    border-right: 20px solid #ff9800;
+    border-bottom: 15px solid transparent;
+}
+
+.team_price{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.actual_price{
+    font-weight: bold;
+    color: red;
+    margin-right: 15px;
+}
+
+.original_price{
+    text-decoration: line-through;
+    font-weight: normal;
+    color: rgb(88, 85, 85);
+    font-size: 0.8rem;
+}
+
+.product_action{
+    opacity: 0;
+    position: absolute;
+    top:25%;
+    left: 25%;
+}
+
+.product_container img{
+    border:1px solid rgb(180, 174, 174);
+    border-radius: 3px;
+    object-fit: cover;
+    width: 100%;
+    height: 85%
+}
+
+.product_name{
+    color: #111;
+    font-weight: bold;
+}
+

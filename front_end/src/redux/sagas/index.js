@@ -6,11 +6,11 @@ import {
     LoadEmployeeList, ShowEmployeeDetail
     } from './User';
 import {
-    LoadDepartment, RequestNewProduct, LoadProduct, ChangeProductDetail,
+    LoadDepartment, RequestNewProduct, LoadProduct, ChangeProductDetail, LoadAllProduct,
     ShowProductDetail,AddProductToOrder,LoadTopProductBuyWith, LoadCustomerBuyedProduct
     } from './Product';
 import {CleanSaleOrder, LoadSaleOrderLocal, LoadSaleOrderDetail, GoToNextStateSaleOrder,
-        ReloadSaleOrder, UpdateSaleOrderItem, CreateNewSaleOrder, LoadSaleOrderList} from './SaleOrder'
+        ReloadSaleOrder, UpdateSaleOrderItem, CreateNewSaleOrder, LoadSaleOrderList, UpdateSaleOrder} from './SaleOrder'
 import {
     handleRouteScreen
     } from './RouteScreen';
@@ -21,6 +21,7 @@ import {
     LoadSaleReport, LoadTopEmployee
     } from './Report';
 import { LoadTopDiscountProduct, LoadTopSaleProduct } from './Sale';
+import {ImportInventoryStock} from './Stock'
 
 function* rootSaga(){
     yield all ([
@@ -51,6 +52,7 @@ function* rootSaga(){
         yield takeLatest('HANDLE_SHOW_PRODUCT_DETAIL', ShowProductDetail),
         yield takeLatest('LOAD_PRODUCT_DETAIL_SUCCESS', LoadTopProductBuyWith),
         yield takeLatest('LOAD_TOP_PRODUCT_BUY_WITH_SUCCESS', LoadCustomerBuyedProduct),
+        yield takeLatest('LOAD_ALL_PRODUCT', LoadAllProduct),
 
         //sale_order
         yield fork(LoadSaleOrderLocal),
@@ -60,6 +62,8 @@ function* rootSaga(){
         yield takeLatest('LOAD_SALE_ORDER_LIST', LoadSaleOrderList),
         yield takeLatest('LOAD_SALE_ORDER_DETAIL', LoadSaleOrderDetail),
         yield takeLatest('NEXT_STATE_SALE_ORDER', GoToNextStateSaleOrder),
+        yield takeLatest('UPDATE_SALE_ORDER', UpdateSaleOrder),
+        
         //customer
         yield takeLatest('CREATE_NEW_CUSTOMER', CreateNewCustomer),
         yield takeLatest('GET_ALL_CUSTOMERS', GetAllCustomers),
@@ -76,7 +80,10 @@ function* rootSaga(){
 
         //sales
         yield takeLatest('GET_TOP_DISCOUNT_PRODUCT', LoadTopDiscountProduct),
-        yield takeLatest('TOP_DISCOUNT_PRODUCT_LOADED', LoadTopSaleProduct)
+        yield takeLatest('TOP_DISCOUNT_PRODUCT_LOADED', LoadTopSaleProduct),
+
+        //stock
+        yield takeLatest('IMPORT_INVENTORY_STOCK', ImportInventoryStock)
     ])
 }
 

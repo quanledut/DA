@@ -19,6 +19,7 @@
     "material-ui-flat-pagination": "^3.2.0",
     "material-ui-rating": "^3.1.1",
     "mdbreact": "^4.13.0",
+    "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-alice-carousel": "^1.13.11",

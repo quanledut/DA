@@ -2,7 +2,7 @@ import { call, put, } from 'redux-saga/effects';
 import { checkToken } from '../../api/AccountApi';
 import { apiUrl } from '../../config'
 import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder, createNewSaleOrder,
-        loadTopProductBuyWith, loadCustomerBuyedProduct
+        loadTopProductBuyWith, loadCustomerBuyedProduct, loadAllProduct
         } from '../../api/ProductApi'
 import { NotificationManager } from 'react-notifications';
 
@@ -82,4 +82,17 @@ export function* ChangeProductDetail(action){
         NotificationManager.error('Lỗi khi cập nhật thông tin sản phẩm', 'Error', 2000);
     }   
 }
+
+export function* LoadAllProduct(action){
+    try {
+        let products = yield call(loadAllProduct);
+        yield put({type: 'LOAD_ALL_PRODUCT_SUCCESS',payload: products})
+    }   
+    catch(err){
+        yield put({type: 'LOAD_ALL_PRODUCT_ERR',payload: err});
+    }   
+}
+
+
+
 

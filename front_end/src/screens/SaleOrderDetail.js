@@ -5,12 +5,17 @@ import { ShipmentType, PaymentType, SaleOrderStatus} from '../data/Config';
 import {StyledButton} from '../components/Components';
 import {Dialog} from '@material-ui/core';
 import ReactToPrint from 'react-to-print';
-import Loading from '../components/Loading'
+import Loading from '../components/Loading';
+import {IconButton} from '@material-ui/core';
+import {DeleteForever} from '@material-ui/icons'
 
 export class SaleOrderDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = {openPrintDialog: false}
+    this.state = {
+        openPrintDialog: false,
+        isEditSaleOrder: false,
+    }
   }
 
   componentDidMount() {
@@ -18,8 +23,58 @@ export class SaleOrderDetail extends Component {
       this.props.loadSaleOrderDetail(this.props.token, currentUrl.split('saleorders/')[1])
   }
 
+  enableEdit = () => {
+      if(!this.state.isEditSaleOrder) {
+          this.setState({isEditSaleOrder: true})
+      }
+  }
+
+  updateSaleOrder = () => {
+    this.props.updateSaleOrder(this.props.token, {...this.props.SaleOrder, items:this.props.SaleOrder.items.map(item => {return {...item,product_id:item.product_id._id}})})
+    this.setState({isEditSaleOrder: true});
+    }
+
+  decreaseItemQty = (id) => {
+      console.log(id);
+            this.props.updateSaleOrderItem({...this.props.SaleOrder, 
+                items: this.props.SaleOrder.items.map(item => {
+                                                                if(item.product_id._id == id) {
+                                                                    item.qty = parseFloat(item.qty) > 0 ? parseFloat(item.qty) - 1 : 0 ;  
+                                                                }
+                                                            return item;
+                                                                }
+                                                    )
+                                            })
+  }
+
+  increaseItemQty = (id) => {
+    this.props.updateSaleOrderItem({...this.props.SaleOrder, items: this.props.SaleOrder.items.map(item => {
+        if(item.product_id._id == id) {
+            item.qty = parseFloat(item.qty) ? parseFloat(item.qty) + 1 : 1 ;  
+        }
+        return item;
+        })
+    })
+  }
+
+  updateItemQty = (id, event) => {
+    this.props.updateSaleOrderItem({...this.props.SaleOrder, items: this.props.SaleOrder.items.map(item => {
+        if(item.product_id._id == id) {
+            item.qty = event.target.value == '' ? '' : parseFloat(event.target.value) ? parseFloat(event.target.value) : item.qty ;  
+        }
+        return item;
+        })
+    })
+  }
+
+  deleteItem = (id) => {
+    this.props.updateSaleOrderItem({...this.props.SaleOrder, items: this.props.SaleOrder.items.filter(item => item.product_id._id != id)
+    })
+  }
+
   render() {
-      const {SaleOrder, token} = this.props
+      const {SaleOrder, token, role, loadSaleOrderDetail} = this.props;
+      const {isEditSaleOrder} = this.state;
     return (
       <div style={{ margin: 2, border: '1px solid #9e9d24', borderRadius: 3, height: '100%' , overflow:'scroll'}}>
         <div style={{ backgroundColor: '#00695c', textAlign: 'center', height: 30, color: 'white' }}>
@@ -127,27 +182,67 @@ export class SaleOrderDetail extends Component {
                 <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575'}}>Đơn giá</Grid>
                 <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575'}}>Số lượng</Grid>
                 <Grid item xs = {2} style = {{textAlign: 'center'}}>Thành tiền</Grid>
+                {isEditSaleOrder && 
+                    <Grid item xs = {1} style = {{textAlign: 'center'}}>
+                       Xoá sản phẩm
+                    </Grid>
+                }
             </div>
             <hr style = {{margin: 2, color: 'red'}}></hr>
-            {SaleOrder.items.map((item, index) => (
-                <div style = {{display: 'flex', flexDirection: 'row', backgroundColor: index % 2 == 0 ? '#e0e0e0' : 'white'}}>                  
-                    <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575', display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
-                        <img style={{ width: 50, height: 50 }} src={`data:image/png;base64,${item.product_id.subImage}`} />
-                    </Grid>
-                    <Grid item xs = {4} style = {{textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
-                        <a href = 'javascript:;'  onClick = {() => this.props.showProduct(item.product_id._id)}>{item.product_id.name}</a>
-                    </Grid>
-                    <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
-                        {(parseFloat(item.sale_price)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-                    </Grid>
-                    <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575', display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
-                        {item.qty}
-                    </Grid>
-                    <Grid item xs = {2} style = {{textAlign: 'center',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center', justifyContent:'center' }}>
-                        {(item.sale_price * item.qty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-                    </Grid>
-                </div> 
-                ))}
+            {SaleOrder.items.map((item, index) => 
+                { return this.state.isEditSaleOrder ? 
+                    <div style = {{display: 'flex', flexDirection: 'row', backgroundColor: index % 2 == 0 ? '#e0e0e0' : 'white'}}>                  
+                        <Grid item xs = {2} style = {{ textAlign: 'center', borderRight:'1px dotted #757575', display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            <img style={{ width: 50, height: 50 }} src={`data:image/png;base64,${item.product_id.subImage}`} />
+                        </Grid>
+                        <Grid item xs = {4} style = {{color: item.not_enounght_inventory ? 'red' : '#007bff',textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            <a href = 'javascript:;'  onClick = {() => this.props.showProduct(item.product_id._id)}>{item.product_id.name}</a>
+                        </Grid>
+                        <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            {(parseFloat(item.sale_price)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                        </Grid>
+                        <Grid item xs = {2} style = {{textAlign: 'center', paddingLeft: 20, paddingRight: 20, justifyContent: 'center'}}>
+                            <div style = {{width:'100%', height: '100%', display:'flex', alignItems: 'center', justifyContent:'center'}}>
+                                <div onClick = {() => {this.decreaseItemQty(item.product_id._id)}} style = {{width:35, display: 'flex', justifyContent:'center', alignItems: 'center', border: '1px solid #999', borderTopLeftRadius: 3, borderBottomLeftRadius:3}}>-</div>
+                                <input 
+                                value = {item.qty} 
+                                onChange={(event) => {this.updateItemQty(item.product_id._id, event)}}
+                                style = {{width:30, display: 'flex', justifyContent:'center', alignItems: 'center', border: '1px solid #999', textAlign:'center', fontWeight: 'bold'}}
+                                />
+                                <div onClick = {() => {this.increaseItemQty(item.product_id._id)}} style = {{width:35, display: 'flex', justifyContent:'center', alignItems: 'center', border: '1px solid #999',  borderTopRightRadius: 3, borderBottomRightRadius:3}}>+</div>
+                            </div>
+                        </Grid>
+                        <Grid item xs = {2} style = {{textAlign: 'center',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center', justifyContent:'center' }}>
+                            {(item.sale_price * item.qty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                        </Grid>
+                        {isEditSaleOrder && 
+                            <Grid item xs = {1} style = {{textAlign: 'center'}}>
+                                <IconButton onClick = {() => {this.deleteItem(item.product_id._id)}}>
+                                    <DeleteForever/>
+                                </IconButton>
+                        </Grid>}
+                    </div> 
+                :
+                    <div style = {{display: 'flex', flexDirection: 'row', backgroundColor: index % 2 == 0 ? '#e0e0e0' : 'white'}}>                  
+                        <Grid item xs = {2} style = {{ textAlign: 'center', borderRight:'1px dotted #757575', display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            <img style={{ width: 50, height: 50 }} src={`data:image/png;base64,${item.product_id.subImage}`} />
+                        </Grid>
+                        <Grid item xs = {4} style = {{color: item.not_enounght_inventory ? 'red' : '#007bff',textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            <a href = 'javascript:;'  onClick = {() => this.props.showProduct(item.product_id._id)}>{item.product_id.name}</a>
+                        </Grid>
+                        <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            {(parseFloat(item.sale_price)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                        </Grid>
+                        <Grid item xs = {2} style = {{textAlign: 'center', borderRight:'1px dotted #757575', display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center'}}>
+                            {item.qty}
+                            {item.not_enounght_inventory && <div style = {{color: 'red'}}> (Chỉ còn {item.qty - item.not_enounght_inventory_qty} sản phẩm)</div>}
+                        </Grid>
+                        <Grid item xs = {2} style = {{textAlign: 'center',display: 'flex',flexGrow:1, alignItems: 'center', justifyContent:'center', justifyContent:'center' }}>
+                            {(item.sale_price * item.qty).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                        </Grid>
+                    </div> 
+                }
+                )}
             
                 <hr style = {{margin: 2, color:'red'}}></hr>
                 <div style = {{display: 'flex', flexDirection: 'row', padding: 5, fontWeight: 'bold'}}>
@@ -173,17 +268,63 @@ export class SaleOrderDetail extends Component {
                     </Grid>
                 </div>
         </div>
-        <Grid item xs = {12} style = {{display: 'flex', flexDirection: 'row'}}>
-            <Grid item xs = {2}/>
-            <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30, display: this.props.SaleOrder.status == 'Confirmed' || this.props.SaleOrder.status == 'Done' ? 'flex' : 'none'}}> <StyledButton onClick = {() => {this.setState({openPrintDialog: true})}} fullWidth> In đơn hàng </StyledButton> </Grid>
-            <Grid item xs = {2}/>
-            <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30, display: this.props.role == 'admin' || this.props.role == 'manager' ? 'flex' : 'none'}}>
-                <StyledButton fullWidth onClick = {() => this.props.goToNextState(this.props.token, this.props.SaleOrder._id)} style = {{display: this.props.SaleOrder.status == 'Done' ? 'none' : 'flex'}}>
-                    {this.props.SaleOrder.status == 'New' ? 'Xác nhận' : 'Hoàn tất'}
-                </StyledButton>
+
+        {role == 'admin' || role == 'manager' ? 
+            <Grid item xs = {12} style = {{display: 'flex', flexDirection: 'row'}}>
+                <Grid item xs = {2}/>
+                {
+                    this.props.SaleOrder.status == 'New' ? 
+                        <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30}}>
+                        {!this.state.isEditSaleOrder ?
+                            <StyledButton onClick = {this.enableEdit} fullWidth>
+                                 Chỉnh sửa mặt hàng
+                            </StyledButton> 
+                        :
+                            <div style = {{display:'flex',justifyContent:'space-around', alignItems: 'center'}}>
+                                <StyledButton onClick = {this.updateSaleOrder}>
+                                    Cập nhật
+                                </StyledButton> 
+                                <StyledButton onClick = {() => {
+                                    loadSaleOrderDetail(token, SaleOrder._id)
+                                    this.setState({isEditSaleOrder: false})
+                                }}>
+                                    Huỷ 
+                                </StyledButton> 
+                            </div>
+                        }
+                        </Grid>
+                    :
+                        <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30}}> <StyledButton onClick = {() => {this.setState({openPrintDialog: true})}} fullWidth>
+                            In đơn hàng </StyledButton> 
+                        </Grid>
+                }
+                
+                <Grid item xs = {2}/>
+
+                {!isEditSaleOrder && <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30}}>
+                    {this.props.SaleOrder.status != 'Done' &&
+                        <StyledButton fullWidth onClick = {() => this.props.goToNextState(this.props.token, this.props.SaleOrder._id)}>
+                            {this.props.SaleOrder.status == 'New' ? 'Xác nhận' : 'Hoàn tất'}
+                        </StyledButton>
+                    }
+                </Grid>
+                }
+                <Grid item xs = {2}/>
             </Grid>
-            <Grid item xs = {2}/>
-        </Grid>
+        : 
+            <Grid item xs = {12} style = {{display: 'flex', flexDirection: 'row'}}>
+                <Grid item xs = {2}/>
+                {
+                    this.props.SaleOrder.status != 'New' &&   
+                        <Grid item xs = {3} style = {{marginLeft:30, marginRight: 30}}> <StyledButton onClick = {() => {this.setState({openPrintDialog: true})}} fullWidth>
+                            In đơn hàng </StyledButton> 
+                        </Grid>
+                }
+                
+                <Grid item xs = {2}/>
+            </Grid>
+        }
+        
 
         <Dialog
             open = {this.state.openPrintDialog}
@@ -372,7 +513,13 @@ const mapDispatch2Props = (dispatch) => {
         return dispatch({type:'NEXT_STATE_SALE_ORDER', token: token, payload: id})
     },
     showProduct: (id) => {
-        return dispatch({type:'HANDLE_SHOW_PRODUCT_DETAIL', payload: id})
+        return dispatch({type:'SCREEN_ROUTER', payload: `/products/${id}`})
+    },
+    updateSaleOrderItem: (saleOrder) =>  {
+        return dispatch({type: 'UPDATE_SALE_ORDER_ITEM_DETAIL', payload: saleOrder})
+    },
+    updateSaleOrder: (token, saleOrder) => {
+        return dispatch({type:'UPDATE_SALE_ORDER', token: token, payload:saleOrder})
     }
   }
 }

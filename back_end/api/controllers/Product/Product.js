@@ -219,6 +219,13 @@ const getProductMainInfo = async (req,res) => {
     }
 }
 
+const getAllProduct = (req, res) => {
+    Product.find({}).select({name:1, unitprice: 1, no:1}).then(products => {
+        res.status(200).send(products)
+    })
+    .catch(err => res.status(404).send(err))
+}
+
 module.exports = {
     requestNewProduct,
     getProduct,
@@ -227,5 +234,6 @@ module.exports = {
     deleteProduct,
     getProductMainInfo,
     getCustomerBuyedProduct,
-    getTopProductBuyWith
+    getTopProductBuyWith,
+    getAllProduct
 }

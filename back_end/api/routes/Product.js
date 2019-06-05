@@ -1,6 +1,6 @@
 const {
     requestNewProduct, getProduct, getProductDetail,changeProductDetail
-    ,deleteProduct, getProductMainInfo, getCustomerBuyedProduct,getTopProductBuyWith
+    ,deleteProduct, getProductMainInfo, getCustomerBuyedProduct,getTopProductBuyWith, getAllProduct
         } = require('../controllers/Product/Product');
 const {checkRoleAdmin, checkLogin} = require('../helpers/checkRole');
 const {gfs,upload} = require('../helpers/uploadImage');
@@ -14,5 +14,6 @@ module.exports = (router) => {
     router.get('/products/:id/top_product_buy_with', showReqInfo, getTopProductBuyWith),
     router.get('/products/mainInfo/:id', showReqInfo, getProductMainInfo )
     router.put('/products/:id', showReqInfo, checkRoleAdmin, changeProductDetail),
-    router.delete('/products/:id', showReqInfo, checkRoleAdmin, deleteProduct)
+    router.delete('/products/:id', showReqInfo, checkRoleAdmin, deleteProduct),
+    router.get('/all_products', showReqInfo, getAllProduct )
 }

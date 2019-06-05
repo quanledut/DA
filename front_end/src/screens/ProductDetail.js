@@ -135,15 +135,15 @@ export class ProductDetail extends Component {
 										</div>
 										: <div></div>
 									}
-									<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-end' }}>
+									<div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-end' , marginTop:10}}>
 										<div style = {{display: 'flex', alignItems: 'center'}}>
 											<div style = {{marginRight:30, color: '#6c757d', fontSize: '0.8rem', display: 'flex', alignItems: 'center'}}>Số lượng:</div>
 											<div style = {{width:120, display: 'flex', justifyContent: 'center'}}>
-												<div onClick = {this.decreaseBuyQty} style = {{width:30, height:30,color:'#6c757d', border:'1px solid rgba(0,0,0,.4)', borderRight: '0px', borderTopLeftRadius:5, borderBottomLeftRadius: 5, display:'flex', alignItems:'center', justifyContent: 'center',fontWeight:'bold', fontSize:'1.5rem'}}>
+												<div onClick = {this.decreaseBuyQty} style = {{width:30, height:25,color:'#6c757d', border:'1px solid rgba(0,0,0,.4)', borderRight: '0px', borderTopLeftRadius:5, borderBottomLeftRadius: 5, display:'flex', alignItems:'center', justifyContent: 'center',fontWeight:'bold', fontSize:'1.5rem'}}>
 													-
 												</div>
-												<input name='buyQty' onChange={this.onChangeText} value = {this.state.buyQty} style = {{width:40,height:30, border:'1px solid rgba(0,0,0,.4)', textAlign: 'center', fontSize:'0.8rem', fontWeight:'bold'}}></input>
-												<div onClick = {this.increaseBuyQty} style = {{width:30, height:30,color:'#6c757d', border:'1px solid rgba(0,0,0,.4)', borderLeft: '0px', borderTopRightRadius:5, borderBottomRightRadius: 5, display:'flex', alignItems:'center', justifyContent: 'center',fontWeight:'bold', fontSize:'1.5rem'}}>
+												<input name='buyQty' onChange={this.onChangeText} value = {this.state.buyQty} style = {{width:40,height:25, border:'1px solid rgba(0,0,0,.4)', textAlign: 'center', fontSize:'0.8rem', fontWeight:'bold'}}></input>
+												<div onClick = {this.increaseBuyQty} style = {{width:30, height:25,color:'#6c757d', border:'1px solid rgba(0,0,0,.4)', borderLeft: '0px', borderTopRightRadius:5, borderBottomRightRadius: 5, display:'flex', alignItems:'center', justifyContent: 'center',fontWeight:'bold', fontSize:'1.5rem'}}>
 													+
 												</div>
 												{}

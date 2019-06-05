@@ -8,5 +8,6 @@ module.exports = {
     algorithm: process.env.algorithm || 'sha1',
     secretKey: process.env.secretKey || 'secret_key',
     EMAIL_ADDRESS: 'quanle.ddk0147@gmail.com',
-    EMAIL_PASSWORD: 'Khongchien96gm'
+    EMAIL_PASSWORD: 'Khongchien96gm',
+    front_end_base_url: 'http://localhost:3000'
 }
