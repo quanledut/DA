@@ -7,7 +7,8 @@ import SelectAutoComplete from '../components/SelectAutoComplete';
 import MaterialStepper from '../components/MaterialStepper';
 import {StepperData, BankName} from '../data/Config';
 import {StyledButton} from '../components/Components';
-import {PaymentType, ShipmentType} from '../data/Config'
+import {PaymentType, ShipmentType} from '../data/Config';
+import moment from 'moment';
 
 export class Payment extends Component {
   constructor(props) {
@@ -200,9 +201,9 @@ export class Payment extends Component {
                   <div style = {{display: 'flex', flexDirection: 'row'}}> 
                     <Grid xs = {3}>Ngày giao</Grid>
                     <Grid xs = {3} style = {{border: '1px solid green', borderRadius: 3, display: 'flex', flexDirection: 'row', paddingLeft: 10, paddingRight: 10}}>
-                      <input type = 'date' defaultValue = {this.state.shipment_date} name = 'shipment_date' value = {MainSaleOrder.shipment_date} placeholder = '0.00' style = {{border:'0px', flexGrow: 1, width: 100}} onChange = {this.onChangeText}/>
+                      <input type = 'date' name = 'shipment_date' value = {moment(MainSaleOrder.shipment_date || (new Date())).format('YYYY-MM-DD')} placeholder = '0.00' style = {{border:'0px', flexGrow: 1, width: 100}} onChange = {this.onChangeText}/>
                     </Grid>
-                    <Grid xs= {6}/>
+                    <Grid item xs= {7}/>
                   </div>
                   <div style = {{display: 'flex', flexDirection: 'row'}}>
                     <Grid xs = {3}>Địa chỉ giao</Grid>
@@ -228,7 +229,7 @@ export class Payment extends Component {
                   <div style = {{display: 'flex', flexDirection: 'row'}}> 
                     <Grid xs = {3}>Ngày giao</Grid>
                     <Grid xs = {3} >
-                      {(new Date()).toUTCString().split('T')[0]}
+                      {moment(new Date()).format('DD/MM/YYYY')}
                     </Grid>
                   </div>
                   <div style = {{display: 'flex', flexDirection: 'row'}}>

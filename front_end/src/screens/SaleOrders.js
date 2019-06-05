@@ -8,7 +8,8 @@ import {numberOfSaleOrderPerPage} from '../config';
 import { ToggleCheckBoxOutlineBlank } from 'material-ui/svg-icons';
 import employee from '../data/employee.png'
 import customer_avatar from '../data/customer_avatar.png';
-import {GreenButton, BlueButton, GrayButton} from '../components/Components'
+import {GreenButton, BlueButton, GrayButton} from '../components/Components';
+import moment from 'moment';
 
 export class SaleOrderInfo extends Component {
     constructor(props){
@@ -57,7 +58,7 @@ export class SaleOrderInfo extends Component {
 						{this.props.SaleOrders.map(saleOrder => (
                             <Grid item style = {{display: 'flex', flexDirection: 'row', border: '1px solid green', borderRadius: 3, padding:5, margin:10}}>   
                                 <Grid item xs = {1} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center'}}> <a href="javascript:;" onClick = {() => {this.props.showSaleOrderInfo(this.props.token, saleOrder._id)}}>{saleOrder.no}</a> </Grid>
-                                <Grid item xs = {2} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}> {saleOrder.createdAt.split('T')[0].replace(/-/g,'/')} </Grid>
+                                <Grid item xs = {2} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}> {moment(saleOrder.createdAt).format('DD/MM/YYYY')} </Grid>
                                 <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {customer_avatar} alt = '' style = {{width:45, marginRight:10}}/> 
                                     <a href = 'javascript:;' onClick = {() => {this.props.showCustomer(this.props.token, saleOrder.customer_id._id)}}>{saleOrder.customer_id.name}</a> 
                                 </Grid>
