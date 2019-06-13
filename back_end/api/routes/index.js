@@ -9,4 +9,5 @@ require('./SaleOrder')(router);
 require('./Report')(router);
 require('./Sale')(router);
 require('./Stock')(router);
+require('./Currency')(router);
 module.exports = router;

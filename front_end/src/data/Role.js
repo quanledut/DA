@@ -13,6 +13,7 @@ export const Roles = [
     },
     {
         name: 'admin',
-        caption:'Quản lý cấp cao'  
+        //caption:'Quản lý cấp cao'  
+        caption:'Quản lý'  
     }
 ]
