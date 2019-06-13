@@ -80,7 +80,8 @@ export class Employees extends Component {
                                     'manager':
                                         <BlueButton disabled style = {{width:220, color: 'white'}}>Quản lý</BlueButton>,
                                     'admin': 
-                                        <RedButton disabled style = {{width:220, color: 'white'}}>Quản lý cấp cao</RedButton>
+                                        <RedButton disabled style = {{width:220, color: 'white'}}>Quản lý</RedButton>
+                                        //<RedButton disabled style = {{width:220, color: 'white'}}>Quản lý cấp cao</RedButton>
                                     }[employee.role]}
                                 </Grid>
                                 <Grid item xs = {1} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row', color:'red'}}>{employee.user_detail_id && employee.user_detail_id.birthday ? employee.user_detail_id.birthday.split('-')[0] : 'YYYY'} </Grid>

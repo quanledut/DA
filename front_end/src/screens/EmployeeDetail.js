@@ -122,7 +122,8 @@ export class EmployeeDetail extends Component {
                         <div style = {{flex: 1, marginLeft: 40}}>
                             <div style = {{display: 'flex', flexDirection: 'column'}}>
                                 <div style = {{fontStyle: 'italic', fontSize: '0.8rem', }}>Chức vụ:</div>
-                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.role == 'admin' ? 'Quản lý cấp cao' : this.props.user.role == 'manager' ? 'Quản lý' : 'Nhân viên'}</div>
+                                {/* <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.role == 'admin' ? 'Quản lý cấp cao' : this.props.user.role == 'manager' ? 'Quản lý' : 'Nhân viên'}</div> */}
+                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.role == 'admin' ? 'Quản lý' : this.props.user.role == 'manager' ? 'Quản lý' : 'Nhân viên'}</div>
                             </div>
                             <div style = {{display: 'flex', flexDirection: 'column', marginTop: 10}}>
                                 <div style = {{fontStyle: 'italic', fontSize: '0.8rem', }}>Giới tính:</div>
