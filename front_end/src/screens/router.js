@@ -27,6 +27,7 @@ import Report from './Report';
 import Page404 from './Page404'
 import {connect} from 'react-redux';
 import Sales from './Sales';
+import Sale1 from './Sale1';
 import ImportStock from './ImportStock';
 
 export class ScreenRouter extends Component {
@@ -128,6 +129,7 @@ export class ScreenRouter extends Component {
                                 <Route exact path = '/404' component={Page404} />
                                 <Route exact path = '/cards' component = {NewSaleOrder} />
                                 <Route exact path = '/sales' component = {Sales} />
+                                <Route exact path = '/sale' component = {Sale1} />
                                 <Route exact path = '/saleorders/:id' component={SaleOrderDetail} />
                                 <Route component={Page404} />
                             </Switch>
