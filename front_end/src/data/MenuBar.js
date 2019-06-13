@@ -9,13 +9,13 @@ export const Menu  = {
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>),
         }, 
-        {
-            name: '/sales',
-            caption: 'Khuyến mãi',
-            icon: ( <div>
-                        <img style = {{width:24, height:24}} src = {sales}></img>
-                    </div>)
-        },
+        // {
+        //     name: '/sales',
+        //     caption: 'Khuyến mãi',
+        //     icon: ( <div>
+        //                 <img style = {{width:24, height:24}} src = {sales}></img>
+        //             </div>)
+        // },
         {
             name: '/about',
             caption: 'Liên hệ',
@@ -55,13 +55,13 @@ export const Menu  = {
             caption: 'Sản phẩm',
             icon: (<ShoppingCart/>)
         },
-        {
-            name: '/sales',
-            caption: 'Khuyến mãi',
-            icon: ( <div>
-                        <img style = {{width:24, height:24}} src = {sales}></img>
-                    </div>)
-        },
+        // {
+        //     name: '/sales',
+        //     caption: 'Khuyến mãi',
+        //     icon: ( <div>
+        //                 <img style = {{width:24, height:24}} src = {sales}></img>
+        //             </div>)
+        // },
         {
             name: '/report',
             caption: 'Thống kê',
