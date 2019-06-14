@@ -31,7 +31,7 @@ export class SaleOrderDetail extends Component {
 
   updateSaleOrder = () => {
     this.props.updateSaleOrder(this.props.token, {...this.props.SaleOrder, items:this.props.SaleOrder.items.map(item => {return {...item,product_id:item.product_id._id}})})
-    this.setState({isEditSaleOrder: true});
+    this.setState({isEditSaleOrder: false});
     }
 
   decreaseItemQty = (id) => {

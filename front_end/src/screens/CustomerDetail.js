@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {Grid} from '@material-ui/core';
-import Loading from '../components/Loading'
- 
+import Loading from '../components/Loading';
+import moment from 'moment'
+
 export class CustomerDetail extends Component {
     componentWillMount(){
         this.props.getCustomerDetail(this.props.token, window.location.href.split('/')[4]);
@@ -18,10 +19,11 @@ export class CustomerDetail extends Component {
             <Grid container xs = {5} style = {{display: 'flex', flexDirection: 'column'}}>
             <img src={`data:image/png;base64,${customer.avatar}`}  style = {{width:350, height: 350}}/>
             </Grid>
-            <Grid container xs = {7} style = {{display: 'flex', flexDirection: 'column', marginTop: 15, fontSize: '0.8rem'}}>
+            <Grid container xs = {7} style = {{display: 'flex', flexDirection: 'column', marginTop: 15, fontSize: '1.2rem', lineHeight:1.3}}>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30 }}>
                     <Grid item xs = {3}>Họ tên:</Grid>
-                    <Grid item xs = {9}>{customer.name}</Grid>
+                    <Grid item xs = {5}>{customer.name}</Grid>
+                    <Grid item xs = {4}><a href = 'javascript:;' style = {{fontStyle:'italic', fontSize:'1rem'}}>Chỉnh sửa thông tin khách hàng</a></Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
                     <Grid item xs = {3}>Số điện thoại:</Grid>
@@ -29,7 +31,7 @@ export class CustomerDetail extends Component {
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
                     <Grid item xs = {3}>Ngày sinh:</Grid>
-                    <Grid item xs = {9}>{customer.birthday}</Grid>
+                    <Grid item xs = {9}>{moment(customer.birthday).format('DD/MM/YYYY')}</Grid>
                 </Grid>
                 <Grid item cs = {12} style = {{display: 'flex', flexDirection: 'row', height: 30}}>
                     <Grid item xs = {3}>Địa chỉ email:</Grid>

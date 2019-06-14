@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {GreenButton} from '../components/Components'
 import customer_avatar from '../data/customer_avatar.png'
 import {BarChart} from '../components/Chart';
-import {BackgroundColor} from '../data/Config'
+import {BackgroundColor} from '../data/Config';
+import moment from 'moment';
 
 export class EmployeeDetail extends Component {
     constructor(props) {
@@ -15,7 +16,7 @@ export class EmployeeDetail extends Component {
             birthday: '',
             gender: '',
             avatar: '',
-            chartTitle: 'BÁO CÁO DOANH SỐ NĂM ' + (new Date()).getFullYear() + ' NHÂN VIÊN ' + (props.user.user_detail_id ? props.user.user_detail_id.name.toUpperCase() : '')
+            chartTitle: 'BÁO CÁO DOANH SỐ NĂM ' + (new Date()).getFullYear() + ' NHÂN VIÊN ' + (props.user && props.user.user_detail_id ? props.user.user_detail_id.name.toUpperCase() : '')
         }
     }
 
@@ -131,11 +132,11 @@ export class EmployeeDetail extends Component {
                             </div>
                             <div style = {{display: 'flex', flexDirection: 'column', marginTop: 10}}>
                                 <div style = {{fontStyle: 'italic', fontSize: '0.8rem', }}>Ngày sinh:</div>
-                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.user_detail_id ? this.props.user.user_detail_id.birthday.split('T')[0].replace(/-/g,'/') : 'Chưa cập nhật'}</div>
+                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.user_detail_id ? moment(this.props.user.user_detail_id.birthday).format('DD/MM/YYYY') : 'Chưa cập nhật'}</div>
                             </div>
                             <div style = {{display: 'flex', flexDirection: 'column', marginTop: 10}}>
                                 <div style = {{fontStyle: 'italic', fontSize: '0.8rem', }}>Ngày tham gia:</div>
-                                <div style = {{fontWeight:'bold', color: '#616161'}}>{this.props.user.createdAt.split('T')[0].replace(/-/g,'/')}</div>
+                                <div style = {{fontWeight:'bold', color: '#616161'}}>{moment(this.props.user.createdAt).format('DD/MM/YYYY')}</div>
                             </div>
                         </div>
                     </div>
@@ -147,7 +148,7 @@ export class EmployeeDetail extends Component {
                     {this.props.top_5_sale_orders.map(saleOrder => (
                         <div style = {{border:'1px solid green', marginTop:10, padding:5, borderRadius:3, display: 'flex', flexDirection: 'column'}}>
                             <a href = 'javascript:;' onClick = {() => {this.props.showSaleOrder(this.props.token, saleOrder._id)}}  style = {{fontWeight:'bold'}}>{saleOrder.no}</a>
-                            <div>Ngày: {saleOrder.createdAt.split('T')[0].replace(/-/g,'/')}</div>
+                            <div>Ngày: {moment(saleOrder.createdAt).format('DD/MM/YYYY')}</div>
                             <div style = {{color:'green'}}>{saleOrder.total_amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} vnđ</div>
                         </div>
                     ))}                    

@@ -71,9 +71,9 @@ const getSaleReport = async (req, res) => {
                 }
             }
         ])
-        let productCount = await Product.count({status: {$nin:['deleted']}});
-        let employeeCount = await User.count({status:{$nin:['deleted']}});
-        let customerCount = await Customer.count({status:{$nin:['deleted']}});
+        let productCount = await Product.count({status: {$nin:['Deleted']}});
+        let employeeCount = await User.count({status:{$nin:['Deleted']}});
+        let customerCount = await Customer.count({status:{$nin:['Deleted']}});
         await res.status(200).send({docs, productCount, employeeCount, customerCount})
     }
     catch(err){

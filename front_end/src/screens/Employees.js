@@ -34,7 +34,7 @@ export class Employees extends Component {
 
     changePageOfEmployee = (number) => {
         this.setState({page: number}, () => {
-            this.props.loadSaleOrderList(this.props.token , { status: this.state.status, search_text: this.state.search_text, page: this.state.page, limit: numberOfEmployeePerPage })
+            this.props.loadEmployeeList(this.props.token , { status: this.state.status, search_text: this.state.search_text, page: this.state.page, limit: numberOfEmployeePerPage })
         })
     }
 

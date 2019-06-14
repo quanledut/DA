@@ -88,7 +88,8 @@ export function* GoToNextStateSaleOrder(action){
 export function* UpdateSaleOrder(action){
     try{
         yield call(updateSaleOrder, action.token, action.payload);
-        NotificationManager.success('Đã cập nhật đơn hàng', 'Xong', 2000)
+        NotificationManager.success('Đã cập nhật đơn hàng', 'Xong', 2000);
+        yield call(loadSaleOrderDetail, action.payload._id);
         yield put({type: 'UPDATE_SALE_ORDER_SUCCESSED'});
         yield put({type:'LOAD_SALE_ORDER_DETAIL', payload:action.payload._id})
     }

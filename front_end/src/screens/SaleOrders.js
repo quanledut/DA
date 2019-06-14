@@ -62,8 +62,11 @@ export class SaleOrderInfo extends Component {
                                 <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {customer_avatar} alt = '' style = {{width:45, marginRight:10}}/> 
                                     <a href = 'javascript:;' onClick = {() => {this.props.showCustomer(this.props.token, saleOrder.customer_id._id)}}>{saleOrder.customer_id.name}</a> 
                                 </Grid>
-                                <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {employee} alt = '' style = {{width:45, marginRight:10}}/> <a href = 'javascript:;' >
-                                    {saleOrder.seller_id.user_detail_id && saleOrder.seller_id.user_detail_id.name ? saleOrder.seller_id.user_detail_id.name : saleOrder.seller_id.email}</a> </Grid>
+                                <Grid item xs = {3} style = {{display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row'}}><img src = {employee} alt = '' style = {{width:45, marginRight:10}}/> 
+                                    <a href = 'javascript:;' onClick = {() => this.props.showEmployeeDetail(this.props.token,saleOrder.seller_id._id)}>
+                                        {saleOrder.seller_id.user_detail_id && saleOrder.seller_id.user_detail_id.name ? saleOrder.seller_id.user_detail_id.name : saleOrder.seller_id.email}
+                                    </a> 
+                                </Grid>
                                 <Grid item xs = {2} style = {{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}> {{
                                     'New':
                                         <GreenButton>Chưa duyệt</GreenButton>,
@@ -116,6 +119,9 @@ const mapDispatch2Props = (dispatch) => {
         },
         showUser: (token, id) => {
             dispatch({ type: 'SHOW_USER_INFO', payload: id, token: token})
+        },
+        showEmployeeDetail: (token, payload) => {
+            dispatch({type: 'SHOW_EMPLOYEE_DETAIL', token, payload})
         }
     }
 }

@@ -206,10 +206,10 @@ export class NewSaleOrder extends Component {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'left' }}>Số TT</div></TableCell>
+                  <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>Số TT</div></TableCell>
                   <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'left' }}>Hình ảnh</div></TableCell>
                   <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'left' }}>Tên sản phẩm</div></TableCell>
-                  <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'left' }}>Số lượng</div></TableCell>
+                  <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'center' }}>Số lượng</div></TableCell>
                   <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'left' }}>Đơn giá</div></TableCell>
                   <TableCell><div style={{ fontSize: 12, fontWeight: 'bold', textAlign: 'left' }}>Tổng tiền</div></TableCell>
                 </TableRow>
@@ -217,10 +217,10 @@ export class NewSaleOrder extends Component {
               <TableBody>
                 {this.props.SaleOrder.filter(item => item.selected).map((item, index) => (
                   <TableRow>
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell style = {{textAlign:'center'}}>{index + 1}</TableCell>
                     <TableCell><img style={{ width: 100, height: 100 }} src={`data:image/png;base64,${item.product.subImage}`} /></TableCell>
                     <TableCell>{item.product.name}</TableCell>
-                    <TableCell>
+                    <TableCell style = {{textAlign:'center'}}>
                       {item.productQty}
                     </TableCell>
                     <TableCell>{item.product.saleprice[item.product.saleprice.length - 1].value || 0}</TableCell>
