@@ -1,10 +1,20 @@
 import { call, put, } from 'redux-saga/effects';
 import { checkToken } from '../../api/AccountApi';
 import { apiUrl } from '../../config'
-import { loadDepartment, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder, createNewSaleOrder,
-        loadTopProductBuyWith, loadCustomerBuyedProduct, loadAllProduct
+import { loadDepartment, loadCurrencies, requestNewProduct, loadProduct, getProductDetail, changeProductDetail, reloadSaleOrder, createNewSaleOrder,
+        loadTopProductBuyWith, loadCustomerBuyedProduct, loadAllProduct, deleteProduct
         } from '../../api/ProductApi'
 import { NotificationManager } from 'react-notifications';
+
+export function* LoadCurrencies() {
+    try {
+        let currencies = yield call(loadCurrencies);
+        yield put({ type: 'LOAD_CURRENCIES_SUCCESS', payload: currencies })
+    }
+    catch (err) {
+        yield put({ type: 'LOAD_CURRENCIES_FAILED', payload: err })
+    }
+}
 
 export function* LoadDepartment() {
     try {
@@ -92,6 +102,19 @@ export function* LoadAllProduct(action){
         yield put({type: 'LOAD_ALL_PRODUCT_ERR',payload: err});
     }   
 }
+
+export function* DeleteProduct(action){
+    try {
+        let products = yield call(deleteProduct, action.token, action.payload);
+        NotificationManager.success('Đã xóa sản phẩm', 'Xóa thành công', 2000);
+        yield put({type: 'DELETE_PRODUCT_SUCCESS',payload: products});
+        yield put({type:'SCREEN_ROUTER', payload:'/'})
+    }   
+    catch(err){
+        yield put({type: 'DELETE_PRODUCT_ERR',payload: err});
+    }   
+}
+
 
 
 

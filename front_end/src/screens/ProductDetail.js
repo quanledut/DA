@@ -78,7 +78,7 @@ export class ProductDetail extends Component {
 	}
 
 	render() {
-		const { product, role, customer_buyed, product_buy_with } = this.props;
+		const { product, role, customer_buyed, product_buy_with, token } = this.props;
 		const { description, name, length, width, height, saleprice } = this.state;
 		return (
 			<div style = {{padding: 10, border:'1px solid green', padding:10, margin:5}}>
@@ -126,6 +126,12 @@ export class ProductDetail extends Component {
 										<div style = {{fontStyle:'italic', fontSize: '1rem', marginRight:10, display: 'flex', alignItems: 'flex-end', marginBottom: 2}}>Giá:</div>
 										<div style={{ color: '#dd2c00', fontWeight: 'bold', fontSize: '1.2rem', display: 'flex', alignItems: 'flex-end' }}>
 											{saleprice > 0 ? saleprice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' VNĐ' : 'Liên hệ'}
+										</div>
+									</div>
+									<div style = {{display:'flex'}}>
+										<div style = {{fontStyle:'italic', fontSize: '1rem', marginRight:10, display: 'flex', alignItems: 'flex-end', marginBottom: 2}}>Đơn vị tính:</div>
+										<div style={{ color: 'green', fontStyle: 'italic',  fontSize: '1.2rem', display: 'flex', alignItems: 'flex-end' }}>
+											{(product && product.currency_id) ? product.currency_id.caption : 'cái'}
 										</div>
 									</div>
 									{this.props.product.saleprice.length >= 2 && this.props.product.saleprice[this.props.product.saleprice.length - 1].value < this.props.product.saleprice[0].value ? 
@@ -293,9 +299,7 @@ export class ProductDetail extends Component {
 						open={this.state.showDeleteDialog}
 						handleClickNo={this.hideYesNoDialog}
 						handleClickYes={() => {
-							this.props.DeleteProduct({
-								_id: product._id
-							})
+							this.props.DeleteProduct(token,product._id);
 							this.hideYesNoDialog();
 						}}
 						title='Xác nhận xóa'
@@ -371,7 +375,7 @@ const mapDispatch2Props = (dispatch) => {
 			dispatch({ type: 'CHANGE_PRODUCT_DETAIL', token: token,payload: product })
 		},
 		DeleteProduct: (token,data) => {
-			dispatch({ type: 'DELETE_PRODUCT', token,payload: data._id })
+			dispatch({ type: 'DELETE_PRODUCT', token,payload: data })
 		},
 		showCustomer:(token, id) => {
 			dispatch({type:'GET_CUSTOMER_DETAIL',payload:id, token: token})

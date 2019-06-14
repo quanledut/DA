@@ -1,3 +1,35 @@
 .sale-container{
-    
+    margin:0px;
+    padding: 0px;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: rgb(12, 122, 21)!important;
+    padding:10px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.add-btn{
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 20px;
+    top: 10px;
+    border: 3px solid white;
+    border-radius: 50%;
+}
+
+.add-btn:hover{
+    transform: scale(1.1);
 }

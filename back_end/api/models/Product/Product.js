@@ -9,6 +9,9 @@ const ProductSchema = mongoose.Schema({
             type: String,
             required: true 
         },
+        status:{
+            type: String,
+        },
         description: {
             type: String
         },
@@ -38,6 +41,10 @@ const ProductSchema = mongoose.Schema({
         },
         department: {
             type: String,
+        },
+        currency_id:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Currency'
         }
     },
     {

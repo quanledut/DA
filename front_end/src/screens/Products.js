@@ -148,15 +148,28 @@ export class Products extends Component {
         name: this.state.name,
         page: 1,
         limit: numberOfProductPerPage,
-        sort_by: this.state.sort_by
+        sort_by: this.state.sort_by,
+        department: this.props.department.name
       }
       this.props.getProduct(data);
     });
   }
 
+  onChangeDepartment = (department) => {
+    this.props.onChangeDepartment(department)
+    let data = {
+      name: this.state.name,
+      page: 1,
+      limit: numberOfProductPerPage,
+      sort_by: this.state.sort_by,
+      department
+    }
+    this.props.getProduct(data);
+  }
+
   render() {
     var exampleItems = [...Array(150).keys()].map(i => ({ id: (i + 1), name: 'Item ' + (i + 1) }));
-    const { classes, products, productCount } = this.props;
+    const { classes, products, productCount, departments, department } = this.props;
     const { history } = this.props;
     const theme = createMuiTheme({
       type: 'light',
@@ -205,6 +218,12 @@ export class Products extends Component {
           <div style = {{dislay: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
             <div style = {{width: '100%',height: 30, backgroundColor: '#009688', fontWeight: 'bold', color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
               DANH SÁCH SẢN PHẨM {`(${this.props.productCount} sản phẩm)`}
+            </div>
+            <div className = 'department-group'>
+              {departments.map(currentDepartment => (
+                <div className = {(!department.name && currentDepartment.name == 'all') || department.name == currentDepartment.name ? 'department-item active' : 'department-item'} onClick = {() => this.onChangeDepartment(currentDepartment.name)}>{currentDepartment.caption.toUpperCase()}</div>
+              ))}
+
             </div>
             {/*<GridList cellHeight={((window.innerHeight*0.92 - 70)*0.29)} className={classes.gridList} cols={numberOfProductPerLine} rows = {numberOfProductPerPage/numberOfProductPerLine}>            
               {(products).map(product => (
@@ -312,6 +331,9 @@ const mapDispatch2Props = (dispatch) => {
     },
     loadProductList: (payload) => {
       dispatch({type:'LOAD_PRODUCT_LIST', payload})
+    },
+    onChangeDepartment: (department) => {
+      dispatch({type:'CHANGE_DEPARTMENT', payload: department})
     }
   }
 }

@@ -13,7 +13,8 @@ Array.prototype.sortBy = function(p) {
 
 const requestNewProduct = async (req, res) => {
     try {
-        const { name, description, length, width, height, unitprice, saleprice, importqty, department, email } = req.body;
+        console.log(req.body);
+        const { name, description, length, width, height, unitprice, saleprice, importqty, department, email, currency_id } = req.body;
         const files = req.files;
         let newestProduct = await Product.findOne().sort({createdAt: -1});
         if(!newestProduct){
@@ -37,6 +38,7 @@ const requestNewProduct = async (req, res) => {
             newProduct.subImage = files[0] != null ? files[0].filename : '';
             newProduct.department = department;
             newProduct.no = no;
+            newProduct.currency_id = currency_id;
             let savedProduct = await newProduct.save();
             let user = await email? user.findOne({email}) : null ;
             let newStockChange = new StockChange({
@@ -50,7 +52,7 @@ const requestNewProduct = async (req, res) => {
                 }
             });
             await newStockChange.save();
-            await res.status(201).send(savedProduct);
+            await res.status(200).send(savedProduct); //201
             console.log(products)
             return;
         })
@@ -68,7 +70,10 @@ const getProduct = async (req, res) => {
     try {
         const { name, page, limit, department, sort_by } = req.query;
         console.log(JSON.stringify(req.query))
-        let products = await Product.find({});
+        // let products = await Product.find({status:{$ne:'Deleted'}, department});
+        let products = (!department || department == 'all') ?
+            await Product.find({status:{$ne:'Deleted'}}) : 
+            await Product.find({status:{$ne:'Deleted'}, department});
         let productFilter = name ? products.filter(product => removeSignString(product.name).indexOf(removeSignString(name)) >= 0) : products;
         let productFilterSort = sort_by == 'priceassending' ? productFilter.sort(function(a,b){return b.saleprice[b.saleprice.length -1].value - a.saleprice[a.saleprice.length -1].value})
         : sort_by == 'pricedecending' ? productFilter.sort(function(a,b){return a.saleprice[a.saleprice.length -1].value - b.saleprice[b.saleprice.length -1].value}) : productFilter.sort(function(a,b){return a.createdAt < b.createdAt ? 1 : -1})
@@ -87,7 +92,7 @@ const getProductDetail = async (req, res) => {
         console.log(req.params)
         const { id } = req.params;
         if (id != null && id != '') {
-            let product = await Product.findOne({ _id: id });
+            let product = await Product.findOne({ _id: id }).populate('currency_id');
             product.subImage = await getSubImage(product.subImage);
             product.images = await Promise.all(product.images.map(async (image) => { return await getSubImage(image)}));
             res.status(200).send(product);
@@ -205,11 +210,22 @@ const changeProductDetail = async (req,res) => {
    }
 }
 
-const deleteProduct = (req, res) => {
-    // try{
-    //     const {_id} = req.params;
-    //     Product.findOneAndRemove({_id},);
-    // }
+const deleteProduct = async (req, res) => {
+    try{
+        const {id} = req.params;
+        let product = await Product.findOne({_id: id});
+        if(product) {
+            product.status = 'Deleted';
+            let newProduct = await product.save();
+            res.status(200).send(newProduct);
+        }
+        else{
+            res.status(400).send('Can not find product')
+        }
+    }
+    catch(err){
+        res.status(400).send('Mongoose err');
+    }
 }
 
 const getProductMainInfo = async (req,res) => {
@@ -230,7 +246,7 @@ const getProductMainInfo = async (req,res) => {
 }
 
 const getAllProduct = (req, res) => {
-    Product.find({}).select({name:1, unitprice: 1, no:1}).then(products => {
+    Product.find({status:{$ne:'Deleted'}}).select({name:1, unitprice: 1, no:1}).then(products => {
         res.status(200).send(products)
     })
     .catch(err => res.status(404).send(err))

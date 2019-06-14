@@ -1,5 +1,6 @@
 const initialState = {
     departments: [],
+    currencies: [],
     products: [],
     product: {
         product:null,
@@ -36,6 +37,9 @@ export const ProductReducer = (state = initialState, action) => {
                 },...action.payload]
             }
             break;
+        }
+        case 'LOAD_CURRENCIES_SUCCESS':{
+            return {...state, currencies:action.payload}
         }
         case 'HANDLE_CHANGE_DEPARTMENT':{
             return {
@@ -134,6 +138,9 @@ export const ProductReducer = (state = initialState, action) => {
             break;
         case 'LOAD_ALL_PRODUCT_SUCCESS':{
             return {...state, list_all_product: action.payload}
+        }
+        case 'CHANGE_DEPARTMENT':{
+            return {...state, department: state.departments.filter(item => item.name == action.payload)[0]}
         }
         default: {
             return state;

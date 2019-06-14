@@ -16,6 +16,21 @@ export const loadDepartment = () => {
     })
 }
 
+export const loadCurrencies = () => {
+    return new Promise((resolve, reject) => {
+        axios.get(`${apiUrl}/currencies`)
+        .then(res => {
+            if(res.status === 200){
+                resolve(res.data)
+            }
+            reject(res)
+        })
+        .catch(err => {
+            reject(err)
+        })
+    })
+}
+
 export const requestNewProduct = (token, data) => {
     return new Promise((resolve, reject) =>{
         axios.post(`${apiUrl}/products/new`,data,{headers:{'Authorization': `Bearer ${token}`}})
@@ -106,4 +121,15 @@ export const loadAllProduct = () => {
         }).catch(err => reject(err))
     })
 }
+
+export const deleteProduct = (token, id) => {
+    return new Promise((resolve, reject) => {
+        axios.delete(`${apiUrl}/products/${id}`,{headers:{authorization: `Bearer ${token}`}}).then(res => {
+            if(res.status == 200) resolve(res.data);
+            else reject('Not found')
+        }).catch(err => reject(err))
+    })
+}
+
+
 

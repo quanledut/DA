@@ -65,7 +65,7 @@ const styles = {
   },
   departmentTextField: {
     width: 400,
-    left: 0
+    margin:10
   }
 }
 
@@ -82,7 +82,8 @@ export class NewProduct extends Component {
     subImage: {},
     subImageLink: '',
     images: [],
-    department: 'all'
+    department: 'all',
+    currency_id:''
   }
 
   chooseSubImage = (event) => {
@@ -112,7 +113,8 @@ export class NewProduct extends Component {
     data.append('unitprice', this.state.unitprice);
     data.append('saleprice',this.state.saleprice);
     data.append('importqty', this.state.importqty);
-    data.append('files', this.state.subImage, this.state.subImage.name);
+    data.append('files', this.state.subImage, this.state.subImage);
+    data.append('currency_id', this.state.currency_id);
     this.state.images.map(image => {data.append('files',image,image.name)})
     data.append('department', this.state.department);
     this.props.createNewProduct(data, this.props.token);
@@ -279,6 +281,30 @@ export class NewProduct extends Component {
                     </option>
                   ))}
                 </TextField>
+                <TextField
+                  id='filled-select-currency-native'
+                  select
+                  label='Đơn vị tính'
+                  className={classes.departmentTextField}
+                  value={this.state.currency_id}
+                  onChange={this.onChangeText}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                  variant="filled"
+                  name='currency_id'
+                  fullWidth
+                >
+                  {this.props.currencies.map(currency => (
+                    <option key={currency.name} value={currency._id}>
+                      {currency.caption}
+                    </option>
+                  ))}
+                </TextField>
               </div>
             </Paper>
 
@@ -334,7 +360,8 @@ export class NewProduct extends Component {
 const mapState2Props = (state) => {
   return {
     departments: state.ProductReducer.departments,
-    token: state.LoginReducer.token
+    token: state.LoginReducer.token,
+    currencies: state.ProductReducer.currencies
   }
 }
 
